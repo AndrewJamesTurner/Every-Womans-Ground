@@ -1,0 +1,2 @@
+pygame==1.9.3
+EzPyGame==0.3.1
