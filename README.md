@@ -29,13 +29,22 @@ pygame / EzPyGame (handles drawing to screen, consolers etc, very simple to use,
 
 if we need physics pybox2d (very simple good 2D physics engine, uses box2d underneath)
 
-### install ###
-* 'sudo apt-get install swig`
+### install linux ###
+* `sudo apt-get install swig`
 * `sudo apt-get install python-box2d`
 * `sudo apt-get install python3-dev`
 * `pip install box2d`
 * `sudo pip3 install -r requirements.txt`
 
+### install windows ###
+* Install Visual C++ build tools from `http://landinghub.visualstudio.com/visual-cpp-build-tools`
+* Install SWIG from `http://www.swig.org/`
+* Follow the "Building from source: Windows" instructions from `https://github.com/pybox2d/pybox2d/blob/master/INSTALL.md`
+    * `git clone https://github.com/pybox2d/pybox2d`
+    * `python setup.py build`
+    * `python setup.py install`
+* `sudo pip3 install -r requirements.txt`
 
+### run the game ###
 
-
+* `python3 game.py`
