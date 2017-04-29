@@ -14,27 +14,27 @@ to_remove = []
 
 class ContactListener(b2ContactListener):
 
-    def BeginContact(self, conctact):
-        game_object_a = conctact.fixtureA.body.userData
-        game_object_b = conctact.fixtureB.body.userData
+    def BeginContact(self, contact):
+        game_object_a = contact.fixtureA.body.userData
+        game_object_b = contact.fixtureB.body.userData
 
         # When landing on a planet, change to the lander scene
         if (isinstance(game_object_a, Planet) and isinstance(game_object_b, SpaceShip)) or \
                 (isinstance(game_object_a, SpaceShip) and isinstance(game_object_b, Planet)):
-            # print(conctact.fixtureB.body.userData.info)
+            # print(conctact.fixtureB.body.userData.info)a
 
             get_space_scene().planet_info = game_object_b.info
 
             get_space_scene().application.change_scene(get_lander_scene())
 
-        if isinstance(conctact.fixtureA.body.userData, Asteroid) and not isinstance(conctact.fixtureB.body.userData, Asteroid):
+        if isinstance(contact.fixtureA.body.userData, Asteroid) and not isinstance(contact.fixtureB.body.userData, Asteroid):
 
-            if conctact.fixtureA not in to_remove:
-                to_remove.append(conctact.fixtureA)
+            if contact.fixtureA not in to_remove:
+                to_remove.append(contact.fixtureA)
 
-        if isinstance(conctact.fixtureB.body.userData, Asteroid) and not isinstance(conctact.fixtureA.body.userData, Asteroid):
-            if conctact.fixtureB not in to_remove:
-                to_remove.append(conctact.fixtureB)
+        if isinstance(contact.fixtureB.body.userData, Asteroid) and not isinstance(contact.fixtureA.body.userData, Asteroid):
+            if contact.fixtureB not in to_remove:
+                to_remove.append(contact.fixtureB)
 
 
 class SpaceScene(ezpygame.Scene):

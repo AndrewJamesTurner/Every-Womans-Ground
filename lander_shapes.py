@@ -20,15 +20,28 @@ class Lander(DynamicGameObject):
         self.body.linearDamping = 0.01
         self.body.angularDamping = 0.05
 
-        #Bit hacky - make the sensor box the same as the lander but only the top half(ish) to avoid using the coords system above return from pygame and alter a bit
-        #Points 4 and 5 are the bottom, so move the y of these upwards
+        # May not need sensor - commented out for now
+        # #Bit hacky - make the sensor box the same as the lander but only the top half(ish) to avoid using the coords system above return from pygame and alter a bit
+        # #Points 3 and 4 are the bottom, so move the y of these upwards
+        #
+        # sensorPolygonTuples = self.body.fixtures[0].shape.vertices
+        # sensorPolygon = []
+        # #Change to array from tuple and scale slightly larger than the ship
+        # for tuple in sensorPolygonTuples:
+        #     point = [tuple[0]*1.1, tuple[1]*1.1]
+        #     sensorPolygon.append(point)
+        #
+        # currentHeight = abs(sensorPolygon[0][1] - sensorPolygon[3][1])
+        #
+        # #Two lower points are for some reason at 0 and 5
+        # sensorPolygon[0][1] = sensorPolygon[0][1] + currentHeight/3
+        # sensorPolygon[5][1] = sensorPolygon[5][1] + currentHeight/3
+        #
+        # #Add a sensor for collisions1
+        # self.sensor = self.body.CreatePolygonFixture(vertices=sensorPolygon)
+        # self.sensor.sensor = True
+        # self.sensor.userData = "LanderCollisionArea"
 
-        # sensorPolygon = self.body.fixtures[0].shape.vertices
-
-
-        #Add a sensor for collisions1
-        #sensor = self.body.CreatePolygonFixture(vertices=polygon)
-        #sensor.sensor = True
 
 class StationaryLander(DynamicGameObject):
 
