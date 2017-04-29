@@ -7,9 +7,10 @@ import math
 import random
 
 
-FIRE_TIMEOUT = 500
+FIRE_TIMEOUT = 200
 
 to_remove = []
+
 
 class ContactListener(b2ContactListener):
 
@@ -24,23 +25,40 @@ class ContactListener(b2ContactListener):
 
             get_space_scene().application.change_scene(get_lander_scene())
 
-
-        if isinstance(conctact.fixtureA.body.userData, Asteroid) and isinstance(conctact.fixtureB.body.userData, Bullet):
+        if isinstance(conctact.fixtureA.body.userData, Asteroid) and not isinstance(conctact.fixtureB.body.userData, Asteroid):
 
             if conctact.fixtureA not in to_remove:
                 to_remove.append(conctact.fixtureA)
 
-
-        if isinstance(conctact.fixtureB.body.userData, Asteroid) and isinstance(conctact.fixtureA.body.userData, Bullet):
-            if conctact.fixtureA not in to_remove:
-                to_remove.append(conctact.fixtureA)
-
+        if isinstance(conctact.fixtureB.body.userData, Asteroid) and not isinstance(conctact.fixtureA.body.userData, Asteroid):
+            if conctact.fixtureB not in to_remove:
+                to_remove.append(conctact.fixtureB)
 
 
 class SpaceScene(ezpygame.Scene):
 
+    def createSolarSystem(self, numPlanets, numBelt, position):
 
-    def createPlanet(self, name, size, type, centre, angular_vel, radius_x, radius_y):
+        sun = Sun(self.world, position)
+        self.suns.append(sun)
+
+        self.createAsteroidBelt(sun, 40, 10)
+
+        planet = self.createPlanet("Earth", 4, "rock", sun, 0.0001, 20, 25, 1)
+
+
+
+
+        self.createPlanet("Mars", 5, "rock", sun, 0.0001, 30, 35, 0)
+        self.createPlanet("Andy", 10, "rock", sun, 0.0001, 50, 50, 4)
+
+        self.createAsteroidBelt(sun, 60, 10)
+
+
+        self.createAsteroid(5, (22,22))
+
+
+    def createPlanet(self, name, size, type, centre, angular_vel, radius_x, radius_y, num_moons):
 
             planet = Planet(self.world, (15, 5), size)
 
@@ -58,8 +76,13 @@ class SpaceScene(ezpygame.Scene):
             planet.distance_to_sum = 10
             self.planets.append(planet)
 
-            return planet
+            for i in range(num_moons):
+                radius_x = random.randint(size, 3*size);
+                radius_y = radius_x + random.randint(0,6) - 3;
 
+                moon = self.createPlanet("Moon", 1, "rock", planet, 0.0005, radius_x, radius_y, 0)
+
+            return planet
 
     def createAsteroidBelt(self, centre, radius, thickness):
 
@@ -70,12 +93,11 @@ class SpaceScene(ezpygame.Scene):
             pos_x = centre.body.position[0] + radius * math.sin(angle)
             pos_y = centre.body.position[1] + radius * math.cos(angle) + random.random() * thickness
 
-            bullet = Bullet(self.world, (pos_x, pos_y))
+            bullet = AsteroidBeltBit(self.world, (pos_x, pos_y))
 
             self.bullets.append(bullet)
 
         return bullet
-
 
     def createAsteroid(self, size, position):
 
@@ -92,8 +114,6 @@ class SpaceScene(ezpygame.Scene):
 
         return asteroid
 
-
-
     def __init__(self):
         # Called once per game, when game starts
 
@@ -101,27 +121,14 @@ class SpaceScene(ezpygame.Scene):
         self.planets = []
         self.bullets = []
         self.asteroids = []
+        self.suns = []
 
         self.world = b2World([0,0], contactListener=ContactListener())
-
 
         space_ship = SpaceShip(self.world, (20, 20))
         self.space_ship = space_ship
 
-        sun = Sun(self.world, (0, 0))
-        self.sun = sun
-
-        self.createAsteroidBelt(sun, 40, 10)
-
-        planet = self.createPlanet("Earth", 4, "rock", sun, 0.0001, 20, 25)
-        moon = self.createPlanet("Moon", 1, "rock", planet, 0.0005, 6, 6)
-
-
-        self.createPlanet("Mars", 5, "rock", sun, 0.0001, 30, 35)
-        self.createPlanet("Andy", 10, "rock", sun, 0.0001, 50, 50)
-
-        self.createAsteroid(5, (22,22))
-
+        self.createSolarSystem(9, 2, (0, 0))
 
 
     def on_enter(self, previous_scene):
@@ -151,9 +158,8 @@ class SpaceScene(ezpygame.Scene):
         for asteroid in self.asteroids:
             asteroid.draw(screen)
 
-        self.sun.draw(screen)
-
-
+        for sun in self.suns:
+            sun.draw(screen)
 
     def update(self, dt):
         # Called once per frame, to update the state of the game

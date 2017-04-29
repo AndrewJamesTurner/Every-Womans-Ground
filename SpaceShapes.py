@@ -44,6 +44,23 @@ class Bullet(DynamicGameObject):
         self.colour = white
 
 
+class AsteroidBeltBit(DynamicGameObject):
+
+    def __init__(self, world, position):
+        polygon_points = [[[0,0], [1,0], [1,1], [0,1]]]
+        circle_shapes = []
+        image_path = None
+        scale = 0.5
+
+        density = 1
+        friction = 0.3
+        restitution = 0.4
+
+        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+                                                   density, friction, restitution)
+        self.colour = white
+
+
 
 class Asteroid(DynamicGameObject):
 
@@ -90,16 +107,32 @@ class Planet(StaticGameObject):
         polygon_points.append(part)
 
         circle_shapes = []
-        image_path = None
+
+        possible_images = [
+            "assets/world.png",
+            "assets/mars.png",
+            "assets/mars2.png",
+            "assets/mars3.png",
+            "assets/moon.png",
+            "assets/oddPlanet.png",
+            "assets/planet.png",
+            "assets/uranus.png",
+            "assets/venus.png",
+            "assets/venus2.png",
+            "assets/world.png",
+        ]
+
+
+        image_path = random.choice(possible_images)
         scale = scale
 
         density = 1
         friction = 0.3
         restitution = 0.4
 
-        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+        self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
-        self.colour = white
+        # self.colour = white
 
 
 
@@ -117,13 +150,13 @@ class Sun(StaticGameObject):
         polygon_points.append(part)
 
         circle_shapes = []
-        image_path = None
+        image_path = "assets/sun.png"
         scale = 10
 
         density = 1
         friction = 0.3
         restitution = 0.4
 
-        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+        self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
-        self.colour = yellow
+        # self.colour = yellow
