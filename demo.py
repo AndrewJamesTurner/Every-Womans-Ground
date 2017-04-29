@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 import ezpygame
 from Box2D import b2World, b2PolygonShape
 
 import shapes
+from random import random
 from game import *
 
 
@@ -13,11 +15,12 @@ class DemoScene(ezpygame.Scene):
         self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
         # Create an object that moves in the box2d world and can be rendered to the screen
-        self.demo_shape = shapes.LLeftShape(self.world, (5, 5))
+        self.many_shapes = [ shapes.LLeftShape(self.world, (random()*100 - 50, random()*30)) for x in range(1,100) ]
+        #self.demo_shape = shapes.LLeftShape(self.world, (5, 5))
 
         # A box2d object that doesn't move and isn't rendered to screen
         body_bottom_wall = self.world.CreateStaticBody(
-            position=(SCREEN_WIDTH / 2, -5),
+            position=(0, -10),
             shapes=b2PolygonShape(box=(SCREEN_WIDTH / 2, 5)))
 
     def on_enter(self, previous_scene):
@@ -30,14 +33,16 @@ class DemoScene(ezpygame.Scene):
         # Processing keyboard input here gives one event per key press
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                # Kick the demo shape
-                self.demo_shape.body.ApplyLinearImpulse((0, 30), self.demo_shape.body.position, True)
+                # Kick a shape
+                kick_shape = self.many_shapes[int(random() * len(self.many_shapes))]
+                kick_shape.body.ApplyLinearImpulse((0, 100), kick_shape.body.position, True)
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
 
         screen.fill(black)
-        self.demo_shape.draw(screen)
+        for shape in self.many_shapes:
+            shape.draw(screen)
 
     def update(self, dt):
         # Called once per frame, to update the state of the game
