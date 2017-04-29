@@ -1,15 +1,21 @@
-
-import os
-
+import ezpygame
 import pygame
 
 from constants import *
+from lander import LanderScene
+from menu import MenuScene
+from space import SpaceScene
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (50, 50)
 
 pygame.init()
 
 CAMERA_POSITION = (0, 0)
+
+# Create all the scenes
+menu_scene = MenuScene()
+space_scene = SpaceScene()
+lander_scene = LanderScene()
 
 
 def set_camera_position(x,y):
@@ -32,6 +38,5 @@ def screen_to_world_coordinates(screen_coords):
     return world_coords
 
 if __name__ == '__main__':
-    pass
-    # TODO: Make a scene for the menu
-    # TODO: Load the menu scene here
+    app = ezpygame.Application(title="No Woman's Sky", resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
+    app.run(MenuScene())
