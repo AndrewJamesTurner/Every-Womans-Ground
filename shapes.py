@@ -2,7 +2,7 @@
 import constants
 
 from GameObject import *
-
+import terrainblocks
 
 class LLeftShape(DynamicGameObject):
 
@@ -22,20 +22,17 @@ class LLeftShape(DynamicGameObject):
 
 
 class TerrainBlock(StaticGameObject):
-
-    def __init__(self, world, position, image_fp):
+    def __init__(self, world, position, blocktype):
         polygon_points = [[[0, 0], [0, 1], [1, 1], [1, 0]]]
         circle_shapes = []
-        scale = 1
 
-        density = 1
-        friction = 0.3
-        restitution = 0.4
+        asset, tint, density, friction, restitution = terrainblocks.BLOCK_DEFS[blocktype]
 
-        self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_fp, scale,
-                                                   density, friction, restitution)
+        self.body, nothing = self.prepare_shape(
+            world, position, polygon_points, circle_shapes, None, 1,
+            density, friction, restitution )
+        self.image = terrainblocks.BLOCK_IMAGES[blocktype]
 
 
-def terrain_block_factory(biome, position, world):
-    return TerrainBlock(world, position, constants.BIOME_TEXTURES[biome])
-
+def terrain_block_factory(blocktype, position, world):
+    return TerrainBlock(world, position, blocktype)

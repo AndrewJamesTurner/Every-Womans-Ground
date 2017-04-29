@@ -62,7 +62,7 @@ def create_terrain(coords, world):
     """
     Creates an array of TerrainBlock items, which ultimately subclass GameObject and
     can be drawn by pygame.
-    
+
     :param biome: A string, available choices are:
         - 'desert'
         - 'forest'
@@ -77,8 +77,7 @@ def create_terrain(coords, world):
     width, height = coords.shape
     for w in range(width):
         for h in range(height):
-            biome = coords[w, h]
-            if biome > 0:
-                terrain.append(shapes.terrain_block_factory(biome, (w - round(0.5*width), h - round(0.5*height)), world))
+            blocktype = coords[w, h]
+            if blocktype > 0:
+                terrain.append(shapes.terrain_block_factory(blocktype, (w - round(0.5*width), h - round(0.5*height)), world))
     return terrain
-

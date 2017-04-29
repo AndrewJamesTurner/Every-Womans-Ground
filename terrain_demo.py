@@ -7,12 +7,13 @@ import constants
 
 import shapes
 from game import *
-
+import terrainblocks
 
 class DemoScene(ezpygame.Scene):
 
     def __init__(self):
         # Called once per game, when game starts
+        terrainblocks.make_blocks(1.0)
 
         self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
