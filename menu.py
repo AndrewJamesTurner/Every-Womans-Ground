@@ -46,6 +46,9 @@ class MenuScene(ezpygame.Scene):
                 # Kick the demo shape
                 self.demo_shape.body.ApplyLinearImpulse((0, 30), self.demo_shape.body.position, True)
 
+            if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                self.application.change_scene(get_space_scene())
+
     def draw(self, screen):
         # Called once per frame, to draw to the screen
 
@@ -61,7 +64,6 @@ class MenuScene(ezpygame.Scene):
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         self.world.ClearForces()
-
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
