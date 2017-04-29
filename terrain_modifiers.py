@@ -87,13 +87,13 @@ def add_craters(terrain, params):
             continue
 
         # Obtain pixels that are covered by this radius
-        subset = terrain[(x - crater_radius) : (x + crater_radius), (curr_y - crater_radius) : curr_y]
+        subset = terrain[(x - crater_radius) : (x + crater_radius), (curr_y - crater_radius) : (curr_y + crater_radius)]
 
         # Create a distance array to every cell
         distances = np.zeros(shape=subset.shape)
         for i in range(distances.shape[0]):
             for j in range(distances.shape[1]):
-                distances[i, j] = np.sqrt((i+1)**2 + (j+1)**2)
+                distances[i, j] = np.sqrt((i-crater_radius)**2 + (j-crater_radius)**2)
 
         subset[distances <= crater_radius] = 0
 
