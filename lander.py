@@ -9,6 +9,8 @@ from GameScene import GameScene
 
 from GameObject import *
 
+change_to_space_scene = False
+
 class LanderScene(GameScene):
 
     def __init__(self):
@@ -107,6 +109,14 @@ class LanderScene(GameScene):
         # if keys[pygame.K_SPACE]:
         #     self.lander.body.ApplyLinearImpulse((0, 30), self.lander.body.position, True)
 
+        # Box2d physics step
+        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
+        self.world.ClearForces()
+
+        global change_to_space_scene
+        if change_to_space_scene:
+            self.application.change_scene(get_space_scene())
+
         xxx = -math.sin(self.lander.body.angle)
         yyy = math.cos(self.lander.body.angle)
 
@@ -129,9 +139,15 @@ class LanderScene(GameScene):
 
         set_camera_position(self.lander.body.position[0],self.lander.body.position[1])
 
+        angleOfImpact = self.lander.body.angle
+        angleOfImpact = abs(math.fmod(angleOfImpact, 2 * math.pi))
+
+        if angleOfImpact > math.pi:
+            angleOfImpact -= math.pi
+
         countDownLen = 3000
         #Get velocity of lander
-        if self.lander.body.linearVelocity == (0,0):
+        if self.lander.body.linearVelocity == (0,0) and angleOfImpact < 0.5:
             if self.countdown == None:
                 self.countdown = 0
             else:
@@ -146,10 +162,6 @@ class LanderScene(GameScene):
                 self.application.change_scene(get_planet_scene())
 
 
-        # Box2d physics step
-        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
-        self.world.ClearForces()
-
 class ContactListener(b2ContactListener):
 
     def BeginContact(self, contact):
@@ -157,12 +169,13 @@ class ContactListener(b2ContactListener):
         #If using sensor use this
         # if contact.fixtureA.userData == "LanderCollisionArea" or contact.fixtureB.userData == "LanderCollisionArea":
         #     print('ouch! Damage - lose some health')
-
         if isinstance(contact.fixtureA.body.userData, landershapes.Lander) or isinstance(contact.fixtureB.body.userData, landershapes.Lander):
 
             if isinstance(contact.fixtureA.body.userData, landershapes.StationarySpaceship) or isinstance(contact.fixtureB.body.userData, landershapes.StationarySpaceship):
 
-                get_lander_scene().application.change_scene(get_space_scene())
+                #get_lander_scene().application.change_scene(get_space_scene())
+                global change_to_space_scene
+                change_to_space_scene = True
 
             else:
                 #Check for silly angle
@@ -177,10 +190,13 @@ class ContactListener(b2ContactListener):
                     angleOfImpact -= math.pi
 
                 if angleOfImpact > 0.5:
+                    get_shared_values().health -= 2.0;
                     print('angle small damage')
                 if angleOfImpact > 1.5:
+                    get_shared_values().health -= 5.0;
                     print('angle big damage')
                 if angleOfImpact > 2.0:
+                    get_shared_values().health -= 10.0;
                     print('angle huge damage')
 
                 #Check for extreme velocity
@@ -189,8 +205,10 @@ class ContactListener(b2ContactListener):
 
                 velocity = (fixtureAVelocity-fixtureBVelocity).length
                 if velocity >= 5:
+                    get_shared_values().health -= 2.0;
                     print('hit small damage')
                 if velocity >= 10:
+                    get_shared_values().health -= 5.0;
                     print('hit big damage')
 
 if __name__ == '__main__':

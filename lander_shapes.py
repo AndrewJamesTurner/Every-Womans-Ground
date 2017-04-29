@@ -55,7 +55,6 @@ class StationaryLander(DynamicGameObject):
         friction = 1.0
         restitution = 0.4
 
-        self.colour = red
 
         self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
