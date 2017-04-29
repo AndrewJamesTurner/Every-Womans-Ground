@@ -19,6 +19,9 @@ class LanderScene(ezpygame.Scene):
         self.world.gravity = (0, -5)
 
         #Set camera to centre
+        print((SCREEN_HEIGHT/PPM)/2)
+
+        #set_camera_position(0,0)
         set_camera_position((SCREEN_WIDTH/PPM),(SCREEN_HEIGHT/PPM)/2)
 
         # Create an object that moves in the box2d world and can be rendered to the screen
@@ -43,11 +46,14 @@ class LanderScene(ezpygame.Scene):
                 pointCountDown -= 1
             else:
                 #finish block and reset counter
+                polygonPoints.append([index * xGap, 0])
                 polygonArray.append(polygonPoints)
 
                 #Use 9 here because we initialise with two values
                 pointCountDown = 9
                 polygonPoints = [[index*xGap, 0], [index*xGap, terrainVal]]
+
+        print(polygonArray)
 
         self.ground = landershapes.PlanetGround(self.world, (SCREEN_WIDTH / PPM / 2, -5), polygonArray)
 
@@ -79,8 +85,7 @@ class LanderScene(ezpygame.Scene):
         # if keys[pygame.K_SPACE]:
         #     self.lander.body.ApplyLinearImpulse((0, 30), self.lander.body.position, True)
 
-        print(self.lander.body.position)
-        # print(self.ground.body.position)
+        #print(self.lander.body.position)
 
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
