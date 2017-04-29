@@ -26,6 +26,24 @@ class SpaceShip(DynamicGameObject):
         self.colour = red
 
 
+class Bullet(DynamicGameObject):
+
+    def __init__(self, world, position):
+        polygon_points = [[[0,0], [1,0], [1,1], [0,1]]]
+        circle_shapes = []
+        image_path = None
+        scale = 0.5
+
+        density = 1
+        friction = 0.3
+        restitution = 0.4
+
+        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+                                                   density, friction, restitution)
+        self.colour = white
+
+
+
 class Planet(StaticGameObject):
 
     def __init__(self, world, position, scale):

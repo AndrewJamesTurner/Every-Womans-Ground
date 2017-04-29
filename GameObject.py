@@ -102,4 +102,3 @@ class DynamicGameObject(GameObject):
 
     def create(self, world, position):
         return world.CreateDynamicBody(position=position)
-
