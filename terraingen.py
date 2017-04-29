@@ -44,7 +44,6 @@ def rasterize_heightmap_layers(terrain, parameters):
         y = 0
         for p in parameters:
             heightmap,blocktype = p
-            print("y=%d, h=%d, b=%d" % (y, heightmap[x], blocktype))
             while y < heightmap[x]:
                 terrain[x,y] = blocktype
                 y += 1
