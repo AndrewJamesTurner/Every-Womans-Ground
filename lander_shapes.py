@@ -30,6 +30,22 @@ class Lander(DynamicGameObject):
         #sensor = self.body.CreatePolygonFixture(vertices=polygon)
         #sensor.sensor = True
 
+class StationaryLander(DynamicGameObject):
+
+    def __init__(self, world, position):
+        polygon_points = [[[0.39,0], [0.66,0], [1,0.3], [1,0.9], [0,0.9],[0,0.3]]]
+        circle_shapes = []
+        image_path = "assets/lander.png"
+        scale = 2
+
+        density = 20
+        friction = 1.0
+        restitution = 0.4
+
+        self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+                                                   density, friction, restitution)
+
+
 class PlanetGround(StaticGameObject):
 
     def __init__(self, world, position, polygonPointArray):

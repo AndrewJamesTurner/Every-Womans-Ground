@@ -30,6 +30,13 @@ class GameObject:
         :param screen:
         """
 
+        # Draw image for the body
+        if self.image is not None:
+            image_rect = self.image.get_rect()
+            rotated_image = pygame.transform.rotate(self.image, self.body.angle * 180 / math.pi)
+            rotated_image_rect = rotated_image.get_rect(center=world_to_screen_coordinates(self.body.position))
+            screen.blit(rotated_image, rotated_image_rect)
+
         # Draw box2d collision boxes of body
         if self.colour is not None:
             for fixture in self.body.fixtures:
@@ -37,12 +44,6 @@ class GameObject:
                 vertices = [world_to_screen_coordinates(self.body.transform * v) for v in shape.vertices]
                 pygame.draw.polygon(screen, self.colour, vertices)
 
-        # Draw image for the body
-        if self.image is not None:
-            image_rect = self.image.get_rect()
-            rotated_image = pygame.transform.rotate(self.image, self.body.angle * 180 / math.pi)
-            rotated_image_rect = rotated_image.get_rect(center=world_to_screen_coordinates(self.body.position))
-            screen.blit(rotated_image, rotated_image_rect)
 
     def prepare_shape(self, world, position, polygon_points, circle_shapes, image_path, scale,
                       density=1, friction=0.9, restitution=0.1):
@@ -77,7 +78,7 @@ class GameObject:
         body.userData = self
 
         for polygon in polygon_points:
-            polygon = [[scale * x - 0.5 * scale, ratio * scale * (1 - y) - 0.5 * scale] for x, y in polygon]
+            polygon = [[scale * (x - 0.5), ratio * scale * ((1 - y) - 0.5)] for x, y in polygon]
             body.CreatePolygonFixture(vertices=polygon, density=density, friction=friction, restitution=restitution)
 
         for circle in circle_shapes:

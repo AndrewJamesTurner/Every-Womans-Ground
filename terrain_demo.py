@@ -3,6 +3,7 @@ import ezpygame
 from Box2D import b2World, b2PolygonShape
 import random
 
+import lander_shapes
 import terrain_utils
 import terraingen
 import constants
@@ -27,11 +28,15 @@ class DemoScene(ezpygame.Scene):
 
         terrain_raw = terraingen.generate_planet_test(17, round(constants.SCREEN_WIDTH/constants.PPM),
                                                       round(constants.SCREEN_HEIGHT/constants.PPM))
-        self.terrain = terraingen.create_terrain(terrain_raw, self.world)
-        self.person = shapes.LLeftShape(self.world, (5, 5))
+
+        self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
+        self.lander = lander_shapes.StationaryLander(self.world, (0, 25))
+        self.person = shapes.AstronautShape(self.world, (5, 25))
+        self.person.body.fixedRotation = True
         self.person_xspeed = 0
         self.person_yspeed = 0
         self.gravity = 1
+        set_camera_position(0,20)
 
         # Create an object that moves in the box2d world and can be rendered to the screen
 
@@ -56,9 +61,9 @@ class DemoScene(ezpygame.Scene):
     def draw(self, screen):
         # Called once per frame, to draw to the screen
         screen.fill(black)
-        for block in self.terrain:
-            block.draw(screen)
+        self.terrain.draw(screen)
         self.person.draw(screen)
+        self.lander.draw(screen)
 
     def update(self, dt):
         keys = pygame.key.get_pressed()

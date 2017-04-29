@@ -1,6 +1,7 @@
 from GameObject import *
 from game import *
 import math
+import random
 
 def get_point(i, n):
             angle_deg = ((360/n) * i) + (360/n)
@@ -42,6 +43,37 @@ class Bullet(DynamicGameObject):
                                                    density, friction, restitution)
         self.colour = white
 
+
+
+class Asteroid(DynamicGameObject):
+
+    def __init__(self, world, position, scale):
+
+        polygon_points = []
+        part = []
+        num_points = 16
+
+        for p in range(num_points):
+            point = get_point(p, num_points)
+
+            point[0] += 0.4 * random.random() - 0.8
+            point[1] += 0.4 * random.random() - 0.8
+
+            part.append(point)
+
+        polygon_points.append(part)
+
+        circle_shapes = []
+        image_path = None
+        scale = scale
+
+        density = 1
+        friction = 0.3
+        restitution = 0.4
+
+        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+                                                   density, friction, restitution)
+        self.colour = grey
 
 
 class Planet(StaticGameObject):
