@@ -1,26 +1,10 @@
-
+from SpaceShapes import *
 import ezpygame
 from Box2D import b2World, b2PolygonShape
 
 from game import *
 from GameObject import GameObject
-
-
-class SpaceShip(GameObject):
-
-    def __init__(self, world, position):
-        polygon_points = [[[0.5, 0], [1, 1], [0, 1]]]
-        circle_shapes = []
-        image_path = "assets/l_left_shape.png"
-        scale = 3
-
-        density = 1
-        friction = 0.3
-        restitution = 0.4
-
-        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
-                                                   density, friction, restitution)
-        self.colour = white
+import math
 
 
 class SpaceScene(ezpygame.Scene):
@@ -31,7 +15,8 @@ class SpaceScene(ezpygame.Scene):
         self.world = b2World([0,0])  # default gravity is (0,-10) and doSleep is True
 
         # Create an object that moves in the box2d world and can be rendered to the screen
-        self.demo_shape = SpaceShip(self.world, (5, 5))
+        self.space_ship = SpaceShip(self.world, (5, 5))
+        self.planet = Planet(self.world, (10, 5))
 
         # A box2d object that doesn't move and isn't rendered to screen
         # body_bottom_wall = self.world.CreateStaticBody(
@@ -47,22 +32,15 @@ class SpaceScene(ezpygame.Scene):
 
     def handle_event(self, event):
         # Called every time a pygame event is fired
-
-        # Processing keyboard input here gives one event per key press
-        if event.type == pygame.KEYDOWN:
-
-            if event.key == pygame.K_SPACE:
-                # Kick the demo shape
-                self.demo_shape.body.ApplyLinearImpulse((0, 30), self.demo_shape.body.position, True)
-
-
+        pass
 
 
     def draw(self, screen):
-        # Called once per frame, to draw to the screen
+        # Called once per frame, to draw to thwe screen
 
         screen.fill(black)
-        self.demo_shape.draw(screen)
+        self.space_ship.draw(screen)
+        self.planet.draw(screen)
 
 
 
@@ -72,7 +50,25 @@ class SpaceScene(ezpygame.Scene):
         # Processing keyboard events here lets you track which keys are being held down
         # keys = pygame.key.get_pressed()
         # if keys[pygame.K_SPACE]:
-        #     self.demo_shape.body.ApplyLinearImpulse((0, 30), self.demo_shape.body.position, True)
+        #     self.space_ship.body.ApplyLinearImpulse((0, 30), self.space_ship.body.position, True)
+        power = 1
+        spin = 0.1
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE]:
+            self.space_ship.body.ApplyLinearImpulse((0, 30), self.space_ship.body.position, True)
+
+        if keys[pygame.K_w]:
+            xxx = -math.sin(self.space_ship.body.angle)
+            yyy = math.cos(self.space_ship.body.angle)
+            self.space_ship.body.ApplyLinearImpulse((xxx * power, yyy * power), self.space_ship.body.worldCenter, True)
+
+        if keys[pygame.K_d]:
+            self.space_ship.body.ApplyAngularImpulse(-spin, True)
+
+        if keys[pygame.K_a]:
+            self.space_ship.body.ApplyAngularImpulse(spin, True)
 
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)

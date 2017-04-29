@@ -17,3 +17,4 @@ class LLeftShape(GameObject):
 
         self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
+

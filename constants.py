@@ -22,3 +22,4 @@ SHAPE_UNITS_TO_METRES = 20
 # Pygame colour
 black = 0, 0, 0, 0
 white = 255, 255, 255, 0
+red = 255, 0, 0, 0
