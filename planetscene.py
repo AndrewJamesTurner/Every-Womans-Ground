@@ -30,8 +30,6 @@ class PlanetScene(ezpygame.Scene):
         self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
         terrain_raw = terraingen.generate_planet_test(17, 500, 80)
-        init_pos = terraingen.get_initial_position(terrain_raw, 0)
-        init_lander = terraingen.get_initial_position(terrain_raw, -5)
 
         # TODO Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
@@ -40,12 +38,31 @@ class PlanetScene(ezpygame.Scene):
                   'tunnel_depth': 0.3,
                   'num_craters': 0.02,
                   'crater_radius_mean': 5,
-                  'crater_radius_sd': 2}
+                  'crater_radius_sd': 2,
+                  'vegetation_seed': 7,
+                  'vegetation': [
+                      {
+                      'seedrate':0.8,
+                      'root_block':5,
+                      'root_depth':1,
+                      'grow_block':4,
+                      'grow_height':2
+                      },
+                    {
+                    'seedrate':0.1,
+                    'root_block':4,
+                    'root_depth':2,
+                    'grow_block':3,
+                    'grow_height':5
+                    }
+                  ]}
 
         for modifier in modifiers:
             print("On {}".format(modifier.__name__))
             terrain_raw = modifier(terrain_raw, params)
 
+        init_pos = terraingen.get_initial_position(terrain_raw, 0)
+        init_lander = terraingen.get_initial_position(terrain_raw, -5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, init_pos)
@@ -85,7 +102,7 @@ class PlanetScene(ezpygame.Scene):
         if cam_x >  width/2 - halfwidth: cam_x =  width/2 - halfwidth
 
         set_camera_position(cam_x, cam_y)
-    
+
         screen.fill(black)
         self.terrain.draw(screen)
         self.person.draw(screen)
