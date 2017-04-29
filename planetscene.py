@@ -81,4 +81,4 @@ class PlanetScene(ezpygame.Scene):
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
-    app.run(DemoScene())
+    app.run(PlanetScene())
