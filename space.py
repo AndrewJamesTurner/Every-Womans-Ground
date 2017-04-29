@@ -25,7 +25,9 @@ class ContactListener(b2ContactListener):
 
             get_space_scene().planet_info = game_object_b.info
 
-            get_space_scene().application.change_scene(get_lander_scene())
+            # get_space_scene().application.change_scene(get_lander_scene())
+            pass
+
 
         if isinstance(contact.fixtureA.body.userData, Asteroid) and not isinstance(contact.fixtureB.body.userData, Asteroid):
 
@@ -49,7 +51,7 @@ class SpaceScene(ezpygame.Scene):
         planet = self.createPlanet("Earth", 4, "rock", sun, 0.0001, 20, 25, 1)
 
 
-        self.createPlanet("Mars", 5, "earth", sun, 0.0001, 30, 35, 0)
+        # self.createPlanet("Mars", 5, "earth", sun, 0.0001, 30, 35, 0)
         self.createPlanet("Andy", 10, "desert", sun, 0.0001, 50, 50, 4)
         self.createPlanet("Andy", 10, "gas", sun, 0.0001, 60, 70, 4)
 
