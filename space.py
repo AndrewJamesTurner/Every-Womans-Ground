@@ -3,10 +3,12 @@ import ezpygame
 from Box2D import *
 from game import *
 from GameObject import GameObject
+from GameScene import GameScene
 import math
 import random
 
 
+ptypes = ["rock", "earth", "desert", "gas", "other"]
 FIRE_TIMEOUT = 200
 
 to_remove = []
@@ -25,8 +27,7 @@ class ContactListener(b2ContactListener):
 
             get_space_scene().planet_info = game_object_b.info
 
-            # get_space_scene().application.change_scene(get_lander_scene())
-            pass
+            get_space_scene().application.change_scene(get_lander_scene())
 
 
         if isinstance(contact.fixtureA.body.userData, Asteroid) and not isinstance(contact.fixtureB.body.userData, Asteroid):
@@ -39,7 +40,7 @@ class ContactListener(b2ContactListener):
                 to_remove.append(contact.fixtureB)
 
 
-class SpaceScene(ezpygame.Scene):
+class SpaceScene(GameScene):
 
     def createSolarSystem(self, numPlanets, numBelt, position):
 
@@ -48,12 +49,12 @@ class SpaceScene(ezpygame.Scene):
 
         self.createAsteroidBelt(sun, 40, 10)
 
-        planet = self.createPlanet("Earth", 4, "rock", sun, 0.0001, 20, 25, 1)
+        planet = self.createPlanet("Earth", 4, random.choice(ptypes), sun, 0.0001, 20, 25, 1)
 
 
         # self.createPlanet("Mars", 5, "earth", sun, 0.0001, 30, 35, 0)
-        self.createPlanet("Andy", 10, "desert", sun, 0.0001, 50, 50, 4)
-        self.createPlanet("Andy", 10, "gas", sun, 0.0001, 60, 70, 4)
+        self.createPlanet("Andy", 10, random.choice(ptypes), sun, 0.0001, 50, 50, 4)
+        self.createPlanet("Andy", 10, random.choice(ptypes), sun, 0.0001, 60, 70, 4)
 
         self.createAsteroidBelt(sun, 60, 10)
 
@@ -118,6 +119,8 @@ class SpaceScene(ezpygame.Scene):
         return asteroid
 
     def __init__(self):
+        super(SpaceScene, self).__init__()
+
         # Called once per game, when game starts
 
         self.planet_info = None
@@ -165,12 +168,14 @@ class SpaceScene(ezpygame.Scene):
         for sun in self.suns:
             sun.draw(screen)
 
+        self.draw_overlays(screen)
+
     def update(self, dt):
         # Called once per frame, to update the state of the game
 
         shared_values = get_shared_values()
 
-        print(shared_values.fuel)
+        # print(shared_values.fuel)
 
         global to_remove
         to_remove = []
@@ -178,7 +183,7 @@ class SpaceScene(ezpygame.Scene):
         self.timeSinceLastFired += dt
 
         power = 1
-        spin = 0.1
+        spin = 0.3
 
         keys = pygame.key.get_pressed()
 

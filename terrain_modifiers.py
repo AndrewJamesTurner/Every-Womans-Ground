@@ -17,9 +17,10 @@ import random
 import numpy as np
 
 import constants
+import terrain_utils
 
 
-def add_tunnels(terrain, params):
+def tunnel_modifier(terrain, params):
     """
     Creates tunnels in the terrain, one brick wide.
 
@@ -29,12 +30,13 @@ def add_tunnels(terrain, params):
         - tunnel_depth
     :return: The modified terran as a 2D numpy array of ints.
     """
-    digging_directions = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0)]  # Possible (x,y) pairs where can dig next square
     width, height = terrain.shape
+    r = random.Random(params['seed'])
+    digging_directions = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0)]  # Possible (x,y) pairs where can dig next square
 
     # Find how many tunnels will have and their x values
-    num_tunnels = round(params['num_tunnels'] * width)
-    tunnel_x_points = np.random.randint(0, width, num_tunnels)
+    num_tunnels = round(params['frequency'] * width)
+    tunnel_x_points = [r.randint(0, width) for _ in range(num_tunnels)]
 
     # Identify coordinates for starting hole, uniformally distributed across terrain
     for x in tunnel_x_points:
@@ -44,21 +46,24 @@ def add_tunnels(terrain, params):
         curr_x = x
 
         # Generate tunnel depth
-        tunnel_depth = int(np.random.normal(params['tunnel_depth'], scale=constants.TERRAIN_TUNNEL_SD) * col_depth)
+        tunnel_depth = int(r.gauss(params['depth_mean'], params['depth_sd']) * col_depth)
 
         for _ in range(tunnel_depth):
-            # Set ground to 0
-            terrain[curr_x, curr_y] = 0
-            # Obtain next move
-            next_x, next_y = random.choice(digging_directions)
+            # Choose direction that will dig in
+            next_x, next_y = r.choice(digging_directions)
 
-            # Guard against digging off screen
+            # Dig a randomly generated width
+            tunnel_radius = int(r.gauss(params['width_mean'], params['width_sd']))
+            terrain_utils.destroy_circle(terrain, tunnel_radius, (curr_x, curr_y))
+
+            # Update digging direction
             curr_x = curr_x + next_x if (curr_x + next_x < width) and (curr_x + next_x > 0) else curr_x
             curr_y = curr_y + next_y if (curr_y + next_y > 0) else curr_y
 
     return terrain
 
-def add_craters(terrain, params):
+
+def crater_modifier(terrain, params):
     """
     Adds craters to the terrain.
 
@@ -70,10 +75,11 @@ def add_craters(terrain, params):
     :return: The modified terran as a 2D numpy array of ints.
 """
     width, height = terrain.shape
+    r = random.Random(params['seed'])
 
     # Find how many tunnels will have and their x values
-    num_craters = round(params['num_craters'] * width)
-    crater_foci_x = np.random.randint(0, width, num_craters)
+    num_craters = round(params['frequency'] * width)
+    crater_foci_x = [r.randint(0, width) for _ in range(num_craters)]
 
     # Identify coordinates for starting hole, uniformally distributed across terrain
     for x in crater_foci_x:
@@ -81,32 +87,23 @@ def add_craters(terrain, params):
         curr_y = np.argmin(terrain[x, ]) - 1
 
         # Generate a random radius
-        crater_radius = int(np.random.normal(params['crater_radius_mean'], scale=params['crater_radius_sd']))
+        crater_radius = int(r.gauss(params['radius_mean'], params['radius_sd']))
 
         if crater_radius == 0:
             continue
 
         # Obtain pixels that are covered by this radius
-        subset = terrain[(x - crater_radius) : (x + crater_radius), (curr_y - crater_radius) : (curr_y + crater_radius)]
-
-        # Create a distance array to every cell
-        distances = np.zeros(shape=subset.shape)
-        for i in range(distances.shape[0]):
-            for j in range(distances.shape[1]):
-                distances[i, j] = np.sqrt((i-crater_radius)**2 + (j-crater_radius)**2)
-
-        subset[distances <= crater_radius] = 0
+        terrain_utils.destroy_circle(terrain, crater_radius, (x, curr_y))
 
     return terrain
 
 
-def add_vegetation(terrain, params):
+def vegetation_modifier(terrain, params):
     width, height = terrain.shape
 
-    vegparams = params['vegetation']
-    seed = params['vegetation_seed']
+    seed = params['seed']
     r = random.Random(seed)
-    for p in vegparams:
+    for p in params['types']:
         rr = random.Random(r.getrandbits(32))
         seedrate   = p['seedrate']
         root_block = p['root_block']
@@ -136,9 +133,6 @@ def add_vegetation(terrain, params):
     return terrain
 
 
-def add_water(terrain, params):
+def water_modifier(terrain, params):
     return terrain
 
-
-def add_water(terrain, params):
-    return terrain

@@ -5,12 +5,15 @@ from Box2D import b2World, b2PolygonShape, b2ContactListener
 import lander_shapes as landershapes
 from game import *
 from terraingen import *
+from GameScene import GameScene
 
 from GameObject import *
 
-class LanderScene(ezpygame.Scene):
+class LanderScene(GameScene):
 
     def __init__(self):
+        super(LanderScene, self).__init__()
+
         # Called once per game, when game starts
 
         self.world = b2World(contactListener=ContactListener())  # default gravity is (0,-10) and doSleep is True
@@ -90,6 +93,8 @@ class LanderScene(ezpygame.Scene):
         # shape = self.lander.sensor.shape
         # vertices = [world_to_screen_coordinates(self.lander.body.transform * v) for v in shape.vertices]
         # pygame.draw.polygon(screen, (255,255,255,0), vertices)
+
+        self.draw_overlays(screen)
 
     def update(self, dt):
         # Called once per frame, to update the state of the game

@@ -14,13 +14,16 @@ import terrain_modifiers
 
 import shapes
 from game import *
+from GameScene import GameScene
 import random
 
 import terrainblocks
 
-class PlanetScene(ezpygame.Scene):
+class PlanetScene(GameScene):
 
     def __init__(self):
+        super(PlanetScene, self).__init__()
+
         # Called once per game, when game starts
         terrainblocks.make_blocks(1.0)
 
@@ -31,35 +34,51 @@ class PlanetScene(ezpygame.Scene):
 
         terrain_raw = terraingen.generate_planet_test(17, 500, 80)
 
-        # TODO Terrain Modifiers
+        # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
         # TODO Have these values randomly generated from an appropriate distribution (possibly related to a planet's characteristics)
-        params = {'num_tunnels': 0.05,
-                  'tunnel_depth': 0.3,
-                  'num_craters': 0.02,
-                  'crater_radius_mean': 10,
-                  'crater_radius_sd': 2,
-                  'vegetation_seed': 7,
-                  'vegetation': [
-                      {
-                      'seedrate':0.8,
-                      'root_block':5,
-                      'root_depth':1,
-                      'grow_block':4,
-                      'grow_height':1
+
+        params = {'tunnel': {
+                      'seed': 3,
+                      'frequency': 0.05,
+                      'depth_mean': 0.3,
+                      'depth_sd': 0.05,
+                      'width_mean': 2,
+                      'width_sd': 0.1
                       },
-                    {
-                    'seedrate':0.1,
-                    'root_block':4,
-                    'root_depth':2,
-                    'grow_block':3,
-                    'grow_height':5
-                    }
-                  ]}
+                  'crater': {
+                      'seed': 2,
+                      'frequency': 0.02,
+                      'radius_mean': 10,
+                      'radius_sd': 2,
+                  },
+                  'vegetation': {
+                      'seed': 7,
+                      'types':  [
+                          {
+                          'seedrate':0.8,
+                          'root_block':5,
+                          'root_depth':1,
+                          'grow_block':4,
+                          'grow_height':1
+                          },
+                         {
+                        'seedrate':0.1,
+                        'root_block':4,
+                        'root_depth':2,
+                        'grow_block':3,
+                        'grow_height':5
+                        }
+                      ]
+                    },
+                  'water': {
+                      'seed': 12
+                     }
+                  }
 
         for modifier in modifiers:
             print("On {}".format(modifier.__name__))
-            terrain_raw = modifier(terrain_raw, params)
+            terrain_raw = modifier(terrain_raw, params[modifier.__name__.replace('_modifier', '')])
 
         init_pos = terraingen.get_initial_position(terrain_raw, 0)
         init_lander = terraingen.get_initial_position(terrain_raw, -5)
@@ -74,10 +93,18 @@ class PlanetScene(ezpygame.Scene):
 
         # Create an object that moves in the box2d world and can be rendered to the screen
 
+        # Level barriers
+        width, height = self.terrain.terrain.shape
+        self.world.CreateStaticBody(
+            position=(0,0),
+            shapes=b2PolygonShape(box=(width, 0.5)))
         # A box2d object that doesn't move and isn't rendered to screen
-        body_bottom_wall = self.world.CreateStaticBody(
-            position=(0, -20),
-            shapes=b2PolygonShape(box=(SCREEN_WIDTH / 2, 5)))
+        self.world.CreateStaticBody(
+            position=(-width/2, 5*height),
+            shapes=b2PolygonShape(box=(0.5, 10*height)))
+        self.world.CreateStaticBody(
+            position=(width/2, 5*height),
+            shapes=b2PolygonShape(box=(0.5, 10*height)))
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -97,9 +124,10 @@ class PlanetScene(ezpygame.Scene):
         cam_x, cam_y = self.person.body.position
 
         width, height = self.terrain.terrain.shape
-        halfwidth = SCREEN_WIDTH / PPM
-        if cam_x < -width/2 + halfwidth: cam_x = -width/2 + halfwidth
-        if cam_x >  width/2 - halfwidth: cam_x =  width/2 - halfwidth
+        halfwidth = SCREEN_WIDTH / 2 / PPM
+        cam_right = width/2 - halfwidth
+        cam_left  = -cam_right
+        cam_x = min(cam_right, max(cam_left, cam_x))
 
         set_camera_position(cam_x, cam_y)
 
@@ -107,6 +135,8 @@ class PlanetScene(ezpygame.Scene):
         self.terrain.draw(screen)
         self.person.draw(screen)
         self.lander.draw(screen)
+
+        self.draw_overlays(screen)
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
