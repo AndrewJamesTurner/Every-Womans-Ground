@@ -63,7 +63,7 @@ class GameObject:
         :return: body, image
         """
 
-        if self.image:
+        if image_path:
             image = pygame.image.load(image_path).convert_alpha()
             ratio = image.get_height() / image.get_width()
             w, h = int(scale * SHAPE_UNITS_TO_METRES), int(ratio * scale * SHAPE_UNITS_TO_METRES)
@@ -73,8 +73,8 @@ class GameObject:
             image = None
 
 
-        body = world.CreateDynamicBody(position=position)
-        # body = self.create(world, position)
+        # body = world.CreateDynamicBody(position=position)
+        body = self.create(world, position)
         body.userData = self
 
         for polygon in polygon_points:
