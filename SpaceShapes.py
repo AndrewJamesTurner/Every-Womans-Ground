@@ -12,10 +12,9 @@ def get_point(i, n):
 class SpaceShip(DynamicGameObject):
 
     def __init__(self, world, position):
-        polygon_points = [[[0.5, 0], [1, 1], [0, 1]]]
-        # polygon_points = [[[0, -1], [1, 1], [-1, 1]]]
+        polygon_points = [[[0.5, 0], [0.7, 1], [0.3, 1]]]
         circle_shapes = []
-        image_path = "assets/l_left_shape.png"
+        image_path = None
         scale = 3
 
         density = 1
@@ -29,7 +28,7 @@ class SpaceShip(DynamicGameObject):
 
 class Planet(StaticGameObject):
 
-    def __init__(self, world, position):
+    def __init__(self, world, position, scale):
 
         polygon_points = []
         part = []
@@ -42,7 +41,7 @@ class Planet(StaticGameObject):
 
         circle_shapes = []
         image_path = None
-        scale = 5
+        scale = scale
 
         density = 1
         friction = 0.3
