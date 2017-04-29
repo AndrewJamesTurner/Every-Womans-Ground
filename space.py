@@ -249,6 +249,8 @@ class SpaceScene(GameScene):
 
     def update(self, dt):
         # Called once per frame, to update the state of the game
+        global to_remove
+        to_remove = []
 
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
@@ -261,9 +263,6 @@ class SpaceScene(GameScene):
         shared_values = get_shared_values()
 
         # print(shared_values.fuel)
-
-        global to_remove
-        to_remove = []
 
         self.timeSinceLastFired += dt
 
