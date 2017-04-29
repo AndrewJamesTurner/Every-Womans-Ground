@@ -84,16 +84,28 @@ class TerrainBulk(StaticGameObject):
         """
         width, height = self.terrain.shape
         xoffset = width / 2
-        for x in range(width):
-            for y in range(height):
+        xmin,ymax = screen_to_world_coordinates((0, 0))
+        xmax,ymin = screen_to_world_coordinates((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        xmin += xoffset # Fix up for array
+        xmax += xoffset # Fix up for array
+        xmin = max(0, math.floor(xmin))
+        ymin = max(0, math.floor(ymin))
+        xmax = min( width,  1 + math.ceil(xmax) )
+        ymax = min( height, 1 + math.ceil(ymax) )
+        ox,oy = world_to_screen_coordinates((0.5 + xmin - xoffset, 0.5 + ymin))
+        rect_x = terrainblocks.BLOCK_IMAGES[1].get_rect(center=(ox,oy))
+        for x in range(xmin,xmax):
+            rect = rect_x.copy()
+            for y in range(ymin,ymax):
                 blocktype = self.terrain[x, y]
                 image = terrainblocks.BLOCK_IMAGES[blocktype]
                 if image is None:
                     continue
                 # Draw image for the body
-                image_rect = image.get_rect(center=world_to_screen_coordinates((0.5 + x - xoffset, 0.5 + y)))
-                screen.blit(image, image_rect)
-                # Draw box2d collision boxes of body
+                screen.blit(image, rect)
+                rect.move_ip(0, -PPM)
+            rect_x.move_ip(PPM, 0)
+        # Draw box2d collision boxes of body
         if DEBUG_GRID:
             for b in self.bodies:
                 for fixture in b.fixtures:
