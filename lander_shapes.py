@@ -61,6 +61,21 @@ class StationaryLander(DynamicGameObject):
                                                    density, friction, restitution)
 
 
+class StationarySpaceship(StaticGameObject):
+
+    def __init__(self, world, position):
+        polygon_points = [[[0,0], [1,0.53], [0.06,1]]]
+        circle_shapes = []
+        image_path = "assets/spaceship-side.png"
+        scale = 10
+
+        density = 100
+        friction = 1.0
+        restitution = 0.4
+
+        self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+                                                   density, friction, restitution)
+
 class PlanetGround(StaticGameObject):
 
     def __init__(self, world, position, polygonPointArray):

@@ -58,6 +58,7 @@ class LanderScene(ezpygame.Scene):
         #Add the lander in the middle of the ground
         landerStartHeight = 5
         self.lander = landershapes.Lander(self.world, ((xGap*numPoints)/2, landerStartHeight + (SCREEN_HEIGHT/PPM)/2))
+        self.ship = landershapes.StationarySpaceship(self.world, ((xGap*numPoints)/2 -(SCREEN_WIDTH/PPM)/3, landerStartHeight + (3*SCREEN_HEIGHT/PPM)/4))
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -81,7 +82,9 @@ class LanderScene(ezpygame.Scene):
         screen.fill(black)
 
         self.ground.draw(screen)
+        self.ship.draw(screen)
         self.lander.draw(screen)
+
 
         #If using sensors use this
         # shape = self.lander.sensor.shape
