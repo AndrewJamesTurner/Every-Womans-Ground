@@ -29,6 +29,7 @@ grey = 160, 160, 160, 0
 
 PLAYER_MOVEMENT_SPEED = 30
 PLAYER_JUMP_SPEED = 15
+TERRAIN_TUNNEL_SD = 0.05
 
 ASSETS_PATH = 'assets'
 BIOMES = ['desert', 'water', 'ice', 'lava', 'forest']

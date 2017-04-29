@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import ezpygame
+import sys
 from Box2D import b2World, b2PolygonShape
 import random
 
@@ -8,6 +9,8 @@ import terrain_utils
 import terraingen
 import constants
 import numpy as np
+import types
+import terrain_modifiers
 
 import shapes
 from game import *
@@ -15,28 +18,42 @@ import random
 
 import terrainblocks
 
-class DemoScene(ezpygame.Scene):
+class PlanetScene(ezpygame.Scene):
 
     def __init__(self):
         # Called once per game, when game starts
         terrainblocks.make_blocks(1.0)
 
         # Randomly generate generate gravity
-        gravity = random.gauss(-10, 0)
+        gravity = random.gauss(-10, 0.05)
 
         self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
-        terrain_raw = terraingen.generate_planet_test(17, round(constants.SCREEN_WIDTH/constants.PPM),
-                                                      round(constants.SCREEN_HEIGHT/constants.PPM))
+        terrain_raw = terraingen.generate_planet_test(17, 500, 80)
+        init_pos = terraingen.get_initial_position(terrain_raw, 0)
+        init_lander = terraingen.get_initial_position(terrain_raw, -5)
+
+        # TODO Terrain Modifiers
+        modifiers = terrain_utils.get_modifiers()
+        # TODO Have these values randomly generated from an appropriate distribution (possibly related to a planet's characteristics)
+        params = {'num_tunnels': 0.05,
+                  'tunnel_depth': 0.3,
+                  'num_craters': 0.02,
+                  'crater_radius_mean': 5,
+                  'crater_radius_sd': 2}
+
+        for modifier in modifiers:
+            print("On {}".format(modifier.__name__))
+            terrain_raw = modifier(terrain_raw, params)
+
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
-        self.lander = lander_shapes.StationaryLander(self.world, (0, 25))
-        self.person = shapes.AstronautShape(self.world, (5, 25))
+        self.lander = lander_shapes.StationaryLander(self.world, init_pos)
+        self.person = shapes.AstronautShape(self.world, (init_pos[0] - 5, init_pos[1]))
         self.person.body.fixedRotation = True
         self.person_xspeed = 0
         self.person_yspeed = 0
         self.gravity = 1
-        set_camera_position(0,20)
 
         # Create an object that moves in the box2d world and can be rendered to the screen
 
@@ -60,6 +77,15 @@ class DemoScene(ezpygame.Scene):
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
+        cam_x, cam_y = self.person.body.position
+
+        width, height = self.terrain.terrain.shape
+        halfwidth = SCREEN_WIDTH / PPM
+        if cam_x < -width/2 + halfwidth: cam_x = -width/2 + halfwidth
+        if cam_x >  width/2 - halfwidth: cam_x =  width/2 - halfwidth
+
+        set_camera_position(cam_x, cam_y)
+    
         screen.fill(black)
         self.terrain.draw(screen)
         self.person.draw(screen)
@@ -81,4 +107,4 @@ class DemoScene(ezpygame.Scene):
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
-    app.run(DemoScene())
+    app.run(get_planet_scene())

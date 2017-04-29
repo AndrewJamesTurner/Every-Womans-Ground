@@ -61,6 +61,9 @@ class LanderScene(ezpygame.Scene):
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
+
+        self.planet_info = get_space_scene().planet_info
+
         pass
 
     def handle_event(self, event):
@@ -158,4 +161,4 @@ class ContactListener(b2ContactListener):
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
-    app.run(LanderScene())
+    app.run(get_lander_scene())
