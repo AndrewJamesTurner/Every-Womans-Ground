@@ -9,6 +9,8 @@ from GameScene import GameScene
 
 from GameObject import *
 
+change_to_space_scene = False
+
 class LanderScene(GameScene):
 
     def __init__(self):
@@ -107,6 +109,14 @@ class LanderScene(GameScene):
         # if keys[pygame.K_SPACE]:
         #     self.lander.body.ApplyLinearImpulse((0, 30), self.lander.body.position, True)
 
+        # Box2d physics step
+        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
+        self.world.ClearForces()
+
+        global change_to_space_scene
+        if change_to_space_scene:
+            self.application.change_scene(get_space_scene())
+
         xxx = -math.sin(self.lander.body.angle)
         yyy = math.cos(self.lander.body.angle)
 
@@ -152,10 +162,6 @@ class LanderScene(GameScene):
                 self.application.change_scene(get_planet_scene())
 
 
-        # Box2d physics step
-        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
-        self.world.ClearForces()
-
 class ContactListener(b2ContactListener):
 
     def BeginContact(self, contact):
@@ -167,7 +173,9 @@ class ContactListener(b2ContactListener):
 
             if isinstance(contact.fixtureA.body.userData, landershapes.StationarySpaceship) or isinstance(contact.fixtureB.body.userData, landershapes.StationarySpaceship):
 
-                get_lander_scene().application.change_scene(get_space_scene())
+                #get_lander_scene().application.change_scene(get_space_scene())
+                global change_to_space_scene
+                change_to_space_scene = True
 
             else:
                 #Check for silly angle

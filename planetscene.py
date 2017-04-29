@@ -12,6 +12,7 @@ from GameScene import GameScene
 import random
 import terrainblocks
 
+change_to_lander_scene = False
 
 class PlanetScene(GameScene):
 
@@ -139,6 +140,16 @@ class PlanetScene(GameScene):
         self.draw_overlays(screen)
 
     def update(self, dt):
+        # Box2d physics step
+        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
+        self.world.ClearForces()
+
+        global change_to_lander_scene
+        if change_to_lander_scene:
+            # TODO Get user input
+            print("Do you want to leave the planet?")
+            get_planet_scene().application.change_scene(get_lander_scene())
+
         keys = pygame.key.get_pressed()
 
         if get_shared_values().fuel <= 0:
@@ -155,9 +166,6 @@ class PlanetScene(GameScene):
             self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
             get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
 
-        # Box2d physics step
-        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
-        self.world.ClearForces()
 
 
 class EnterLanderListener(b2ContactListener):
@@ -170,9 +178,8 @@ class EnterLanderListener(b2ContactListener):
         if (isinstance(game_object_a, shapes.AstronautShape) and isinstance(game_object_b, lander_shapes.StationaryLander)) or \
                 (isinstance(game_object_a, lander_shapes.StationaryLander) and isinstance(game_object_b, shapes.AstronautShape)):
 
-            # TODO Get user input
-            print("Do you want to leave the planet?")
-            get_planet_scene().application.change_scene(get_lander_scene())
+            global change_to_lander_scene
+            change_to_lander_scene = True
 
 
 

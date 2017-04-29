@@ -14,6 +14,8 @@ FIRE_TIMEOUT = 200
 to_remove = []
 
 
+change_to_lander_scene = False
+
 class ContactListener(b2ContactListener):
 
     def BeginContact(self, contact):
@@ -27,7 +29,8 @@ class ContactListener(b2ContactListener):
 
             get_space_scene().planet_info = game_object_b.info
 
-            get_space_scene().application.change_scene(get_lander_scene())
+            global change_to_lander_scene
+            change_to_lander_scene = True
 
 
         if isinstance(contact.fixtureA.body.userData, Asteroid) and not isinstance(contact.fixtureB.body.userData, Asteroid):
@@ -232,6 +235,14 @@ class SpaceScene(GameScene):
     def update(self, dt):
         # Called once per frame, to update the state of the game
 
+        # Box2d physics step
+        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
+        self.world.ClearForces()
+
+        global change_to_lander_scene
+        if change_to_lander_scene:
+            self.application.change_scene(get_lander_scene())
+
         shared_values = get_shared_values()
 
         # print(shared_values.fuel)
@@ -289,10 +300,6 @@ class SpaceScene(GameScene):
 
             planet.body.position = (planet_position_x, planet_position_y)
 
-
-        # Box2d physics step
-        self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
-        self.world.ClearForces()
 
         for remove_me in to_remove:
             if isinstance(remove_me.body.userData, Asteroid):
