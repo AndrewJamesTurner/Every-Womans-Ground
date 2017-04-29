@@ -58,7 +58,7 @@ def print_terrain(terrain, chars):
         list = [ chars[int(i)] for i in line ]
         print( ''.join(list) )
 
-def create_terrain(coords, world):
+def create_terrain(terrain, world):
     """
     Creates an array of TerrainBlock items, which ultimately subclass GameObject and
     can be drawn by pygame.
@@ -73,11 +73,13 @@ def create_terrain(coords, world):
     :param world: A reference to a world object (pygame object).
     :return: A list of TerrainBlock objects.
     """
-    terrain = []
-    width, height = coords.shape
-    for w in range(width):
-        for h in range(height):
-            blocktype = coords[w, h]
+    width, height = terrain.shape
+    blocks = []
+    for x in range(width):
+        for y in range(height):
+            blocktype = terrain[x, y]
             if blocktype > 0:
-                terrain.append(shapes.terrain_block_factory(blocktype, (w - round(0.5*width), h - round(0.5*height)), world))
-    return terrain
+                coords = (x - round(0.5*width), y - round(0.5*height))
+                b = shapes.terrain_block_factory(blocktype, coords, world)
+                blocks.append(b)
+    return blocks
