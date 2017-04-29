@@ -99,10 +99,9 @@ class TerrainBulk(StaticGameObject):
             for y in range(ymin,ymax):
                 blocktype = self.terrain[x, y]
                 image = terrainblocks.BLOCK_IMAGES[blocktype]
-                if image is None:
-                    continue
-                # Draw image for the body
-                screen.blit(image, rect)
+                if image is not None:
+                    # Draw image for the body
+                    screen.blit(image, rect)
                 rect.move_ip(0, -PPM)
             rect_x.move_ip(PPM, 0)
         # Draw box2d collision boxes of body
