@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 import ezpygame
 from Box2D import b2World, b2PolygonShape
 
