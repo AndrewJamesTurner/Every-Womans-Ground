@@ -30,13 +30,13 @@ class DemoScene(ezpygame.Scene):
                                                       round(constants.SCREEN_HEIGHT/constants.PPM))
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
-        self.lander = lander_shapes.StationaryLander(self.world, (0, 0))
-        self.person = shapes.AstronautShape(self.world, (5, 5))
+        self.lander = lander_shapes.StationaryLander(self.world, (0, 25))
+        self.person = shapes.AstronautShape(self.world, (5, 25))
         self.person.body.fixedRotation = True
         self.person_xspeed = 0
         self.person_yspeed = 0
         self.gravity = 1
-        set_camera_position(0,10)
+        set_camera_position(0,20)
 
         # Create an object that moves in the box2d world and can be rendered to the screen
 
