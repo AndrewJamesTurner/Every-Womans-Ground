@@ -1,36 +1,34 @@
 #!/usr/bin/env python3
-import ezpygame
-import sys
-from Box2D import b2World, b2PolygonShape
-import random
+from Box2D import b2World, b2PolygonShape, b2ContactListener
 
 import lander_shapes
 import terrain_utils
 import terraingen
 import constants
-import numpy as np
-import types
-import terrain_modifiers
 
 import shapes
 from game import *
 from GameScene import GameScene
 import random
-
 import terrainblocks
+
 
 class PlanetScene(GameScene):
 
-    def __init__(self):
+    def __init__(self, seed=5):
         super(PlanetScene, self).__init__()
+
+        # Seed planet
+        r = random.Random(seed)
 
         # Called once per game, when game starts
         terrainblocks.make_blocks(1.0)
 
         # Randomly generate generate gravity
-        gravity = random.gauss(-10, 0.05)
+        # TODO Should gravity have priors for each planet, which are informed by the planets stats as passed in from SpaceScene?
+        gravity = r.gauss(-10, 0.05)
 
-        self.world = b2World()  # default gravity is (0,-10) and doSleep is True
+        self.world = b2World(gravity=(0, gravity), contactListener=EnterLanderListener())  # default gravity is (0,-10) and doSleep is True
 
         terrain_raw = terraingen.generate_planet_test(17, 500, 80)
 
@@ -88,9 +86,6 @@ class PlanetScene(GameScene):
         self.person = shapes.AstronautShape(self.world, init_pos)
         self.person.body.fixedRotation = True
         self.person.body.linearDamping = 0.9
-        self.person_xspeed = 0
-        self.person_yspeed = 0
-        self.gravity = 1
 
         width, height = self.terrain.terrain.shape
         self.backdrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width )
@@ -116,10 +111,11 @@ class PlanetScene(GameScene):
         # Called every time a pygame event is fired
 
         # Processing keyboard input here gives one event per key press
-        if event.type == pygame.KEYDOWN:
-            # Jump!
-            if event.key == pygame.K_SPACE:
-                self.person.body.ApplyLinearImpulse((0, PLAYER_JUMP_SPEED), self.person.body.position, True)
+        # if event.type == pygame.KEYDOWN:
+        #     # Jump!
+        #     if event.key == pygame.K_SPACE:
+        #         self.person.body.ApplyLinearImpulse((0, PLAYER_JUMP_SPEED), self.person.body.position, True)
+        pass
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
@@ -145,15 +141,39 @@ class PlanetScene(GameScene):
     def update(self, dt):
         keys = pygame.key.get_pressed()
 
+        if get_shared_values().fuel <= 0:
+            print("GAME OVER!")
+            # TODO Close to game over screen
+
         # Move left and right
         if keys[pygame.K_a]:
             self.person.body.ApplyForce((-constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
         if keys[pygame.K_d]:
             self.person.body.ApplyForce((constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
 
+        if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:
+            self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
+            get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
+
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         self.world.ClearForces()
+
+
+class EnterLanderListener(b2ContactListener):
+
+    def BeginContact(self, contact):
+        game_object_a = contact.fixtureA.body.userData
+        game_object_b = contact.fixtureB.body.userData
+
+        # When landing on a planet, change to the lander scene
+        if (isinstance(game_object_a, shapes.AstronautShape) and isinstance(game_object_b, lander_shapes.StationaryLander)) or \
+                (isinstance(game_object_a, lander_shapes.StationaryLander) and isinstance(game_object_b, shapes.AstronautShape)):
+
+            # TODO Get user input
+            print("Do you want to leave the planet?")
+            get_planet_scene().application.change_scene(get_lander_scene())
+
 
 
 if __name__ == '__main__':

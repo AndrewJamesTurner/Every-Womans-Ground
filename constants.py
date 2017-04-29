@@ -29,6 +29,8 @@ grey = 160, 160, 160, 0
 
 PLAYER_MOVEMENT_SPEED = 30
 PLAYER_JUMP_SPEED = 15
+JETPACK_THRUST = 0.5
+JETPACK_FUEL_USAGE = 3
 
 ASSETS_PATH = 'assets'
 BIOMES = ['desert', 'water', 'ice', 'lava', 'forest']
