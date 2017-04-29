@@ -46,7 +46,7 @@ class PlanetScene(ezpygame.Scene):
                       'root_block':5,
                       'root_depth':1,
                       'grow_block':4,
-                      'grow_height':2
+                      'grow_height':1
                       },
                     {
                     'seedrate':0.1,
