@@ -165,8 +165,9 @@ class SpaceScene(ezpygame.Scene):
     def update(self, dt):
         # Called once per frame, to update the state of the game
 
-        # print(get_shared_values())
+        shared_values = get_shared_values()
 
+        print(shared_values.fuel)
 
         global to_remove
         to_remove = []
@@ -182,6 +183,7 @@ class SpaceScene(ezpygame.Scene):
         yyy = math.cos(self.space_ship.body.angle)
 
         if keys[pygame.K_w]:
+            shared_values.fuel -= 1
             self.space_ship.body.ApplyLinearImpulse((xxx * power, yyy * power), self.space_ship.body.worldCenter, True)
 
         if keys[pygame.K_d]:
