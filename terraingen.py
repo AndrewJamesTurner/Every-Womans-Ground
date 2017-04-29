@@ -38,23 +38,48 @@ def rasterize_heightmap(terrain, heightmap, blocktype):
         for y in range(0,math.ceil(heightmap[x])):
             terrain[x,y] = blocktype
 
+def rasterize_heightmap_layers(terrain, parameters):
+    width = terrain.shape[0]
+    for x in range(0, width):
+        y = 0
+        for p in parameters:
+            heightmap,blocktype = p
+            print("y=%d, h=%d, b=%d" % (y, heightmap[x], blocktype))
+            while y < heightmap[x]:
+                terrain[x,y] = blocktype
+                y += 1
+
+def add_heightmaps(map1, map2):
+    return [ sum(e) for e in zip(map1, map2) ]
+
+def sub_heightmaps(map1, dig1):
+    return [ a-b for (a,b) in zip (map1, dig1) ]
+
 def generate_planet_test(seed, width, height):
     # Subseeding
     r = random.Random(seed)
-    seed_rockbase = r.getrandbits(32)
+    seed_groundbase = r.getrandbits(32)
     seed_dirtbase = r.getrandbits(32)
+    seed_icebase = r.getrandbits(32)
 
     # Generators
     terrain = new_terrain_array(width, height)
-    rock_heightmap = generate_fractal_heightmap(
-        seed_rockbase, width, height / 2, 0.6)
+    ground_heightmap = generate_fractal_heightmap(
+        seed_groundbase, width, height, 0.5)
 
     dirt_depthmap = generate_fractal_heightmap(
-        seed_dirtbase, width, 10, 0.6)
-    dirt_heightmap = [sum(a) for a in zip(rock_heightmap, dirt_depthmap)]
+        seed_dirtbase, width, 6, 0.6)
 
-    rasterize_heightmap(terrain, dirt_heightmap, 2)
-    rasterize_heightmap(terrain, rock_heightmap, 1)
+    ice_depthmap = generate_fractal_heightmap(
+        seed_icebase, width, 2, 0.6)
+
+    dirt_heightmap = sub_heightmaps(ground_heightmap, ice_depthmap)
+    rock_heightmap = sub_heightmaps(dirt_heightmap, dirt_depthmap)
+
+    rasterize_heightmap_layers(terrain, [
+        [ rock_heightmap,   1 ],
+        [ dirt_heightmap,   4 ],
+        [ ground_heightmap, 5] ] )
 
     return terrain
 
@@ -64,41 +89,3 @@ def print_terrain(terrain, chars):
         line = [ terrain[x, y] for x in range(0,width) ]
         list = [ chars[int(i)] for i in line ]
         print( ''.join(list) )
-
-# def create_terrain(terrain, world):
-#     """
-#     Creates an array of TerrainBlock items, which ultimately subclass GameObject and
-#     can be drawn by pygame.
-#
-#     :param biome: A string, available choices are:
-#         - 'desert'
-#         - 'forest'
-#         - 'lava'
-#         - 'water'
-#         - 'ice'
-#     :param coords: A list of (x, y) tuples.
-#     :param world: A reference to a world object (pygame object).
-#     :return: A list of TerrainBlock objects.
-#     """
-#     width, height = terrain.shape
-#     blocks = []
-#     for x in range(width):
-#         for y in range(height):
-#             blocktype = terrain[x, y]
-#             collisions = 0
-#
-#             if x==0 or x==width-1:
-#                 collisions=1
-#             elif y==0 or y==height-1:
-#                 collisions=1
-#             else:
-#                 for i in numpy.nditer(terrain[x-1:x+2,y-1:y+2]):
-#                     if i==0:
-#                         collisions=1
-#                         break
-#
-#             if blocktype > 0:
-#                 coords = (x - round(0.5*width), y - round(0.5*height))
-#                 b = shapes.TerrainBlock(world, coords, blocktype, 1)
-#                 blocks.append(b)
-#     return blocks
