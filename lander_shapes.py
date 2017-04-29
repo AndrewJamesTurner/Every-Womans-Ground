@@ -17,6 +17,18 @@ class Lander(DynamicGameObject):
                                                    density, friction, restitution)
 
         self.colour = (255,0,0,0)
+        self.body.linearDamping = 0.01
+        self.body.angularDamping = 0.05
+
+        #Bit hacky - make the sensor box the same as the lander but only the top half(ish) to avoid using the coords system above return from pygame and alter a bit
+        #Points 4 and 5 are the bottom, so move the y of these upwards
+
+        # sensorPolygon = self.body.fixtures[0].shape.vertices
+
+
+        #Add a sensor for collisions1
+        #sensor = self.body.CreatePolygonFixture(vertices=polygon)
+        #sensor.sensor = True
 
 class StationaryLander(DynamicGameObject):
 
@@ -38,8 +50,9 @@ class PlanetGround(StaticGameObject):
 
     def __init__(self, world, position, polygonPointArray):
 
+        #Vary this depending on planet status
         density = 1
-        friction = 0.3
+        friction = 0.5
         restitution = 0.4
 
         self.body = self.create(world, position)

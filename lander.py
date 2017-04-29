@@ -19,18 +19,19 @@ class LanderScene(ezpygame.Scene):
         self.world.gravity = (0, -5)
 
         #Set camera to centre
-        set_camera_position((SCREEN_WIDTH/PPM),(SCREEN_HEIGHT/PPM)/2)
-
-        # Create an object that moves in the box2d world and can be rendered to the screen
-        self.lander = landershapes.Lander(self.world, (SCREEN_WIDTH/PPM, (SCREEN_HEIGHT/PPM)/2))
+        set_camera_position((SCREEN_WIDTH/PPM)/2,(SCREEN_HEIGHT/PPM)/2)
 
         #Need to generate a seed
-        terrain = generate_fractal_heightmap(30, 50, int(SCREEN_HEIGHT/PPM)/4, 1)
+        #Need to set height and xgap based on planet info
+        numPoints = 100
+
+        terrain = generate_fractal_heightmap(30, numPoints, int(SCREEN_HEIGHT/PPM)/4, 1)
 
         #polygons can't have many edges so split into separate polygons
+        starty = -100
         pointCountDown = 10
-        startCoords = [0,0]
-        xGap = 2
+        startCoords = [0,starty]
+        xGap = 5
 
         polygonArray = []
         polygonPoints = [startCoords]
@@ -43,13 +44,20 @@ class LanderScene(ezpygame.Scene):
                 pointCountDown -= 1
             else:
                 #finish block and reset counter
+                polygonPoints.append([index * xGap, starty])
                 polygonArray.append(polygonPoints)
 
                 #Use 9 here because we initialise with two values
                 pointCountDown = 9
-                polygonPoints = [[index*xGap, 0], [index*xGap, terrainVal]]
+                polygonPoints = [[index*xGap, starty], [index*xGap, terrainVal]]
 
-        self.ground = landershapes.PlanetGround(self.world, (SCREEN_WIDTH / PPM / 2, -5), polygonArray)
+        print(polygonArray)
+
+        self.ground = landershapes.PlanetGround(self.world, (0, 0), polygonArray)
+
+        #Add the lander in the middle of the ground
+        landerStartHeight = 5
+        self.lander = landershapes.Lander(self.world, ((xGap*numPoints)/2, landerStartHeight + (SCREEN_HEIGHT/PPM)/2))
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -58,10 +66,11 @@ class LanderScene(ezpygame.Scene):
     def handle_event(self, event):
         # Called every time a pygame event is fired
 
-        # Processing keyboard input here gives one event per key press
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                self.lander.body.ApplyLinearImpulse((0, 30), self.lander.body.position, True)
+        #if event.type == pygame.KEYDOWN:
+        #    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+            # Do something
+
+        pass
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
@@ -79,8 +88,25 @@ class LanderScene(ezpygame.Scene):
         # if keys[pygame.K_SPACE]:
         #     self.lander.body.ApplyLinearImpulse((0, 30), self.lander.body.position, True)
 
-        print(self.lander.body.position)
-        # print(self.ground.body.position)
+        xxx = -math.sin(self.lander.body.angle)
+        yyy = math.cos(self.lander.body.angle)
+
+        power = 1
+
+        landerPos = self.lander.body.position
+
+        # Processing keyboard input here gives one event per key press
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            self.lander.body.angle += 0.01
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            self.lander.body.angle -= 0.01
+
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
+            self.lander.body.ApplyLinearImpulse((xxx * power, yyy * power), landerPos, True)
+
+
+        set_camera_position(self.lander.body.position[0],self.lander.body.position[1])
 
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
