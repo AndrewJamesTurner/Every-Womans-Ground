@@ -21,6 +21,9 @@ class GameObject:
     # Colour in which to render this object's box2d fixtures (mostly for debugging). Can be none, to not render fixtures
     colour = None
 
+    def create(self, world, position):
+        raise NotImplementedError
+
     def draw(self, screen):
         """
         Draw this object to the screen.
@@ -65,7 +68,8 @@ class GameObject:
         w, h = int(scale * SHAPE_UNITS_TO_METRES), int(ratio * scale * SHAPE_UNITS_TO_METRES)
         image = pygame.transform.scale(image, (w, h))
 
-        body = world.CreateDynamicBody(position=position)
+        #body = world.CreateDynamicBody(position=position)
+        body = self.create(world, position)
         body.userData = self
 
         for polygon in polygon_points:
@@ -81,3 +85,16 @@ class GameObject:
             body.CreateFixture(shape=circle, density=density, friction=friction, restitution=restitution)
 
         return body, image
+
+
+class StaticGameObject(GameObject):
+
+    def create(self, world, position):
+        return world.CreateStaticBody(position=position)
+
+
+class DynamicGameObject(GameObject):
+
+    def create(self, world, position):
+        return world.CreateDynamicBody(position=position)
+

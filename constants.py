@@ -1,3 +1,4 @@
+import os
 
 # Window size, in pixels
 SCREEN_WIDTH = 1000
@@ -23,3 +24,14 @@ SHAPE_UNITS_TO_METRES = 20
 black = 0, 0, 0, 0
 white = 255, 255, 255, 0
 red = 255, 0, 0, 0
+
+ASSETS_PATH = 'assets'
+BIOMES = ['desert', 'water', 'ice', 'lava', 'forest']
+
+# TODO Fill in other textures
+BIOME_TEXTURES = {'desert': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  'water': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  'ice': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  'lava': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  'forest': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  }
