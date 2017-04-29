@@ -16,7 +16,7 @@ class SpaceShip(DynamicGameObject):
         polygon_points = [[[0.5, 0], [1, 0.8], [1,1], [0,1], [0,0.8]]]
         circle_shapes = []
         image_path = "assets/spaceship.png"
-        scale = 3
+        scale = 3/2
 
         density = 1
         friction = 0.3
@@ -33,7 +33,7 @@ class Bullet(DynamicGameObject):
         polygon_points = [[[0,0], [1,0], [1,1], [0,1]]]
         circle_shapes = []
         image_path = None
-        scale = 0.5
+        scale = 0.5/2
 
         density = 1
         friction = 0.3
@@ -50,7 +50,7 @@ class AsteroidBeltBit(DynamicGameObject):
         polygon_points = [[[0,0], [1,0], [1,1], [0,1]]]
         circle_shapes = []
         image_path = None
-        scale = 0.5
+        scale = 0.5/2
 
         density = 1
         friction = 0.3
@@ -82,7 +82,7 @@ class Asteroid(DynamicGameObject):
 
         circle_shapes = []
         image_path = None
-        scale = scale
+        scale = scale/2
 
         density = 1
         friction = 0.3
@@ -146,7 +146,7 @@ class Planet(StaticGameObject):
             image_path = random.choice(other_images)
 
 
-        scale = scale
+        scale = scale/2
 
         density = 1
         friction = 0.3
@@ -160,7 +160,7 @@ class Planet(StaticGameObject):
 
 class Sun(StaticGameObject):
 
-    def __init__(self, world, position):
+    def __init__(self, world, position, size):
 
         polygon_points = []
         part = []
@@ -173,7 +173,7 @@ class Sun(StaticGameObject):
 
         circle_shapes = []
         image_path = "assets/sun.png"
-        scale = 10
+        scale = size/2
 
         density = 1
         friction = 0.3
