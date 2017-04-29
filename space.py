@@ -241,4 +241,4 @@ class SpaceScene(ezpygame.Scene):
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
-    app.run(SpaceScene())
+    app.run(get_space_scene())
