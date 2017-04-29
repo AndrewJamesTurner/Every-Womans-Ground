@@ -42,9 +42,6 @@ class GameObject:
             image_rect = self.image.get_rect()
             rotated_image = pygame.transform.rotate(self.image, self.body.angle * 180 / math.pi)
             rotated_image_rect = rotated_image.get_rect(center=world_to_screen_coordinates(self.body.position))
-            rotated_image_rect = rotated_image_rect.move(
-                + image_rect.width / 2 * math.cos(self.body.angle) - image_rect.height / 2 * math.sin(self.body.angle),
-                - image_rect.width / 2 * math.sin(self.body.angle) - image_rect.height / 2 * math.cos(self.body.angle))
             screen.blit(rotated_image, rotated_image_rect)
 
     def prepare_shape(self, world, position, polygon_points, circle_shapes, image_path, scale,
@@ -62,6 +59,8 @@ class GameObject:
         :param restitution: box2d physics parameter to set of each created fixture
         :return: body, image
         """
+
+        self.scale = scale
 
         if image_path:
             image = pygame.image.load(image_path).convert_alpha()
