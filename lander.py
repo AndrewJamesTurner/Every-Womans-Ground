@@ -129,9 +129,15 @@ class LanderScene(GameScene):
 
         set_camera_position(self.lander.body.position[0],self.lander.body.position[1])
 
+        angleOfImpact = self.lander.body.angle
+        angleOfImpact = abs(math.fmod(angleOfImpact, 2 * math.pi))
+
+        if angleOfImpact > math.pi:
+            angleOfImpact -= math.pi
+
         countDownLen = 3000
         #Get velocity of lander
-        if self.lander.body.linearVelocity == (0,0):
+        if self.lander.body.linearVelocity == (0,0) and angleOfImpact < 0.5:
             if self.countdown == None:
                 self.countdown = 0
             else:
@@ -157,7 +163,6 @@ class ContactListener(b2ContactListener):
         #If using sensor use this
         # if contact.fixtureA.userData == "LanderCollisionArea" or contact.fixtureB.userData == "LanderCollisionArea":
         #     print('ouch! Damage - lose some health')
-
         if isinstance(contact.fixtureA.body.userData, landershapes.Lander) or isinstance(contact.fixtureB.body.userData, landershapes.Lander):
 
             if isinstance(contact.fixtureA.body.userData, landershapes.StationarySpaceship) or isinstance(contact.fixtureB.body.userData, landershapes.StationarySpaceship):
@@ -177,10 +182,13 @@ class ContactListener(b2ContactListener):
                     angleOfImpact -= math.pi
 
                 if angleOfImpact > 0.5:
+                    get_shared_values().health -= 2.0;
                     print('angle small damage')
                 if angleOfImpact > 1.5:
+                    get_shared_values().health -= 5.0;
                     print('angle big damage')
                 if angleOfImpact > 2.0:
+                    get_shared_values().health -= 10.0;
                     print('angle huge damage')
 
                 #Check for extreme velocity
@@ -189,8 +197,10 @@ class ContactListener(b2ContactListener):
 
                 velocity = (fixtureAVelocity-fixtureBVelocity).length
                 if velocity >= 5:
+                    get_shared_values().health -= 2.0;
                     print('hit small damage')
                 if velocity >= 10:
+                    get_shared_values().health -= 5.0;
                     print('hit big damage')
 
 if __name__ == '__main__':
