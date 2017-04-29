@@ -14,14 +14,15 @@ to_remove = []
 class ContactListener(b2ContactListener):
 
     def BeginContact(self, conctact):
+        game_object_a = conctact.fixtureA.body.userData
+        game_object_b = conctact.fixtureB.body.userData
 
-        if isinstance(conctact.fixtureA.body.userData, Planet):
-            # print(conctact.fixtureA.body.userData.info)
-            pass
-
-        if isinstance(conctact.fixtureB.body.userData, Planet):
+        # When landing on a planet, change to the lander scene
+        if (isinstance(game_object_a, Planet) and isinstance(game_object_b, SpaceShip)) or \
+                (isinstance(game_object_a, SpaceShip) and isinstance(game_object_b, Planet)):
             # print(conctact.fixtureB.body.userData.info)
-            pass
+
+            get_space_scene().application.change_scene(get_lander_scene())
 
 
         if isinstance(conctact.fixtureA.body.userData, Asteroid):
@@ -33,9 +34,6 @@ class ContactListener(b2ContactListener):
         if isinstance(conctact.fixtureB.body.userData, Asteroid):
             if conctact.fixtureA not in to_remove:
                 to_remove.append(conctact.fixtureA)
-
-            # space_scene.applicatiochange_scene(lander_scene)
-
 
 
 
