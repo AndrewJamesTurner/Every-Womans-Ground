@@ -6,6 +6,8 @@ from GameObject import GameObject
 from GameScene import GameScene
 import math
 import random
+import shapes
+
 
 
 ptypes = ["rock", "earth", "desert", "gas", "other"]
@@ -64,7 +66,7 @@ class SpaceScene(GameScene):
 
         for x in range(numBelt):
 
-            radius = random.randint(20, 100)
+            radius = random.randint(10, 100)
             width = random.randint(5, 20)
             dencity = random.randint(100, 1000)
 
@@ -154,6 +156,11 @@ class SpaceScene(GameScene):
         self.arrow_imamge = pygame.transform.smoothscale(self.arrow_imamge, ( int(0.2*image_rect[2]), int(0.2*image_rect[2])))
 
 
+        width = 1000
+        self.backdrop = shapes.ParallaxBackdrop(-100, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width )
+
+
+
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
         pass
@@ -169,6 +176,10 @@ class SpaceScene(GameScene):
         # Called once per frame, to draw to thwe screen
 
         screen.fill(black)
+
+        # self.backdrop.draw(screen)
+
+
         self.space_ship.draw(screen)
         # self.asteroid.draw(screen)
 
@@ -209,8 +220,8 @@ class SpaceScene(GameScene):
 
         def angle(posA, posB):
 
-            dx = abs(posA[0] - posB[0])
-            dy = abs(posA[1] - posB[1])
+            dx = (posA[0] - posB[0])
+            dy = (posA[1] - posB[1])
 
             return math.atan2(dy, dx)
 
@@ -218,8 +229,11 @@ class SpaceScene(GameScene):
         # print(angle(ship_position, nearest_planet_position))
         # print(nearest_planet_dist)
 
+        # direction = (ship_position[0] - nearest_planet_position[0], ship_position[1] - nearest_planet_position[1])
+        # aaa = math.atan2(direction[1], direction[0])
+
         image_rect = self.arrow_imamge.get_rect()
-        rotated_image = pygame.transform.rotate(self.arrow_imamge, angle(ship_position, nearest_planet_position) * 180 / math.pi)
+        rotated_image = pygame.transform.rotate(self.arrow_imamge, angle(ship_position, nearest_planet_position)* 180 / math.pi)
         # rotated_image = pygame.transform.rotate(self.arrow_imamge, self.space_ship.body.angle * 180 / math.pi)
 
         image_rect[0] = SCREEN_WIDTH - 100
