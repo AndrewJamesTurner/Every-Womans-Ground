@@ -33,6 +33,7 @@ def screen_to_world_coordinates(screen_coords):
 menu_scene = None
 space_scene = None
 lander_scene = None
+planet_scene = None
 
 def get_menu_scene():
     global menu_scene
@@ -54,6 +55,13 @@ def get_lander_scene():
         from lander import LanderScene
         lander_scene = LanderScene()
     return lander_scene
+
+def get_planet_scene():
+    global planet_scene
+    if planet_scene is None:
+        from planetscene import PlanetScene
+        planet_scene = PlanetScene()
+    return planet_scene
 
 if __name__ == '__main__':
     from menu import MenuScene
