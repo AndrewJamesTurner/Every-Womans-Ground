@@ -49,8 +49,9 @@ class SpaceScene(ezpygame.Scene):
         planet = self.createPlanet("Earth", 4, "rock", sun, 0.0001, 20, 25, 1)
 
 
-        self.createPlanet("Mars", 5, "rock", sun, 0.0001, 30, 35, 0)
-        self.createPlanet("Andy", 10, "rock", sun, 0.0001, 50, 50, 4)
+        self.createPlanet("Mars", 5, "earth", sun, 0.0001, 30, 35, 0)
+        self.createPlanet("Andy", 10, "desert", sun, 0.0001, 50, 50, 4)
+        self.createPlanet("Andy", 10, "gas", sun, 0.0001, 60, 70, 4)
 
         self.createAsteroidBelt(sun, 60, 10)
 
@@ -58,18 +59,18 @@ class SpaceScene(ezpygame.Scene):
         self.createAsteroid(5, (22,22))
 
 
-    def createPlanet(self, name, size, type, centre, angular_vel, radius_x, radius_y, num_moons):
+    def createPlanet(self, name, size, ptype, centre, angular_vel, radius_x, radius_y, num_moons):
 
-            planet = Planet(self.world, (15, 5), size)
+            planet = Planet(self.world, (15, 5), size, ptype)
 
             info = {
                 "name": name,
                 "angular_vel": angular_vel,
-                "radius_x": radius_x,
-                "radius_y": radius_y,
-                "angle": random.random() * 2 * math.pi,
-                "type": "rock",
-                "centre": centre,
+                "orbit_radius_x": radius_x,
+                "orbit_radius_y": radius_y,
+                "orbit_angle": random.random() * 2 * math.pi,
+                "type": ptype,
+                "orbit_centre": centre,
             }
 
             planet.info = info
@@ -80,7 +81,7 @@ class SpaceScene(ezpygame.Scene):
                 radius_x = random.randint(size, 3*size);
                 radius_y = radius_x + random.randint(0,6) - 3;
 
-                moon = self.createPlanet("Moon", 1, "rock", planet, 0.0005, radius_x, radius_y, 0)
+                moon = self.createPlanet("Moon", 1, ptype, planet, 0.0005, radius_x, radius_y, 0)
 
             return planet
 
@@ -164,6 +165,9 @@ class SpaceScene(ezpygame.Scene):
     def update(self, dt):
         # Called once per frame, to update the state of the game
 
+        # print(get_shared_values())
+
+
         global to_remove
         to_remove = []
 
@@ -201,15 +205,15 @@ class SpaceScene(ezpygame.Scene):
 
         for planet in self.planets:
 
-            angle = planet.info["angle"]
-            radius_x = planet.info["radius_x"]
-            radius_y = planet.info["radius_y"]
-            centre = planet.info["centre"]
+            angle = planet.info["orbit_angle"]
+            radius_x = planet.info["orbit_radius_x"]
+            radius_y = planet.info["orbit_radius_y"]
+            centre = planet.info["orbit_centre"]
             angular_vel = planet.info["angular_vel"]
 
             angle_detla = angular_vel * dt
             angle += angle_detla
-            planet.info["angle"] = angle
+            planet.info["orbit_angle"] = angle
 
             planet_position_x = centre.body.position[0] + radius_x * math.sin(angle)
             planet_position_y = centre.body.position[1] + radius_y * math.cos(angle)
