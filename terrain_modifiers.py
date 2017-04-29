@@ -83,7 +83,19 @@ def add_craters(terrain, params):
         # Generate a random radius
         crater_radius = int(np.random.normal(params['crater_radius_mean'], scale=params['crater_radius_sd']))
 
-        # Obtain pixels that
+        if crater_radius == 0:
+            continue
+
+        # Obtain pixels that are covered by this radius
+        subset = terrain[(x - crater_radius) : (x + crater_radius), (curr_y - crater_radius) : curr_y]
+
+        # Create a distance array to every cell
+        distances = np.zeros(shape=subset.shape)
+        for i in range(distances.shape[0]):
+            for j in range(distances.shape[1]):
+                distances[i, j] = np.sqrt((i+1)**2 + (j+1)**2)
+
+        subset[distances <= crater_radius] = 0
 
     return terrain
 
