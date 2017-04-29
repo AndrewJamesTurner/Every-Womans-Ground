@@ -15,7 +15,7 @@ import random
 
 import terrainblocks
 
-class DemoScene(ezpygame.Scene):
+class PlanetScene(ezpygame.Scene):
 
     def __init__(self):
         # Called once per game, when game starts
@@ -36,7 +36,6 @@ class DemoScene(ezpygame.Scene):
         self.person_xspeed = 0
         self.person_yspeed = 0
         self.gravity = 1
-        set_camera_position(0,20)
 
         # Create an object that moves in the box2d world and can be rendered to the screen
 
@@ -60,6 +59,7 @@ class DemoScene(ezpygame.Scene):
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
+        set_camera_position(*self.person.body.position)
         screen.fill(black)
         self.terrain.draw(screen)
         self.person.draw(screen)
