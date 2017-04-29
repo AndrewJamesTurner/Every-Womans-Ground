@@ -26,12 +26,13 @@ class PlanetScene(ezpygame.Scene):
 
         self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
-        terrain_raw = terraingen.generate_planet_test(17, round(constants.SCREEN_WIDTH/constants.PPM),
-                                                      round(constants.SCREEN_HEIGHT/constants.PPM))
+        terrain_raw = terraingen.generate_planet_test(17, 500, 80)
+        init_pos = terraingen.get_initial_position(terrain_raw, 0)
+        init_lander = terraingen.get_initial_position(terrain_raw, -5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
-        self.lander = lander_shapes.StationaryLander(self.world, (0, 25))
-        self.person = shapes.AstronautShape(self.world, (5, 25))
+        self.lander = lander_shapes.StationaryLander(self.world, init_pos)
+        self.person = shapes.AstronautShape(self.world, (init_pos[0] - 5, init_pos[1]))
         self.person.body.fixedRotation = True
         self.person_xspeed = 0
         self.person_yspeed = 0

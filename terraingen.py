@@ -82,6 +82,13 @@ def generate_planet_test(seed, width, height):
 
     return terrain
 
+def get_initial_position(terrain, x):
+    width, height = terrain.shape
+    c = x+int(width/2)
+    for y in reversed(range(0,height)):
+        if terrain[c, y]:
+            return (x,y+2)
+
 def print_terrain(terrain, chars):
     width, height = terrain.shape
     for y in reversed(range(0,height)):
