@@ -2,6 +2,12 @@ from GameObject import *
 from game import *
 import math
 
+def get_point(i, n):
+            angle_deg = ((360/n) * i) + (360/n)
+            angle_rad = math.pi / 180 * angle_deg
+
+            return [ 0.5 * math.cos(angle_rad) + 0.5, 0.5 * math.sin(angle_rad) + 0.5]
+
 
 class SpaceShip(DynamicGameObject):
 
@@ -21,15 +27,9 @@ class SpaceShip(DynamicGameObject):
         self.colour = red
 
 
-class Planet(DynamicGameObject):
+class Planet(StaticGameObject):
 
     def __init__(self, world, position):
-
-        def get_point(i, n):
-            angle_deg = ((360/n) * i) + (360/n)
-            angle_rad = math.pi / 180 * angle_deg
-
-            return [ 0.5 * math.cos(angle_rad) + 0.5, 0.5 * math.sin(angle_rad) + 0.5]
 
         polygon_points = []
         part = []
@@ -40,7 +40,32 @@ class Planet(DynamicGameObject):
 
         polygon_points.append(part)
 
-        print(polygon_points)
+        circle_shapes = []
+        image_path = None
+        scale = 5
+
+        density = 1
+        friction = 0.3
+        restitution = 0.4
+
+        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+                                                   density, friction, restitution)
+        self.colour = white
+
+
+
+class Sun(StaticGameObject):
+
+    def __init__(self, world, position):
+
+        polygon_points = []
+        part = []
+        num_points = 16
+
+        for p in range(num_points):
+            part.append(get_point(p, num_points))
+
+        polygon_points.append(part)
 
         circle_shapes = []
         image_path = None
@@ -52,4 +77,4 @@ class Planet(DynamicGameObject):
 
         self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
-        self.colour = white
+        self.colour = yellow
