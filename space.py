@@ -74,6 +74,11 @@ class SpaceScene(ezpygame.Scene):
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         self.world.ClearForces()
 
+        # print(dir(self.space_ship.body))
+
+        set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
+        # print(CAMERA_POSITION)
+
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)

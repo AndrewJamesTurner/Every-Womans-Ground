@@ -11,6 +11,12 @@ pygame.init()
 
 CAMERA_POSITION = (0, 0)
 
+
+def set_camera_position(x,y):
+    global CAMERA_POSITION
+    CAMERA_POSITION = (x, y)
+
+
 def world_to_screen_coordinates(world_coords):
     window_coords = (   world_coords[0] - CAMERA_POSITION[0],
                         world_coords[1] - CAMERA_POSITION[1] )
