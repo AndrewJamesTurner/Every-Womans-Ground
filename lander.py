@@ -160,34 +160,38 @@ class ContactListener(b2ContactListener):
 
         if isinstance(contact.fixtureA.body.userData, landershapes.Lander) or isinstance(contact.fixtureB.body.userData, landershapes.Lander):
 
-            #Check for silly angle
+            if isinstance(contact.fixtureA.body.userData, landershapes.StationarySpaceship) or isinstance(contact.fixtureB.body.userData, landershapes.StationarySpaceship):
 
-            if isinstance(contact.fixtureA.body.userData, landershapes.Lander):
-                angleOfImpact = contact.fixtureA.body.userData.body.angle
-            elif isinstance(contact.fixtureB.body.userData, landershapes.Lander):
-                angleOfImpact = contact.fixtureB.body.userData.body.angle
+                get_lander_scene().application.change_scene(get_space_scene())
 
-            angleOfImpact = abs(math.fmod(angleOfImpact, 2 * math.pi))
+            else:
+                #Check for silly angle
+                if isinstance(contact.fixtureA.body.userData, landershapes.Lander):
+                    angleOfImpact = contact.fixtureA.body.userData.body.angle
+                elif isinstance(contact.fixtureB.body.userData, landershapes.Lander):
+                    angleOfImpact = contact.fixtureB.body.userData.body.angle
 
-            if angleOfImpact > math.pi:
-                angleOfImpact -= math.pi
+                angleOfImpact = abs(math.fmod(angleOfImpact, 2 * math.pi))
 
-            if angleOfImpact > 0.5:
-                print('angle small damage')
-            if angleOfImpact > 1.5:
-                print('angle big damage')
-            if angleOfImpact > 2.0:
-                print('angle huge damage')
+                if angleOfImpact > math.pi:
+                    angleOfImpact -= math.pi
 
-            #Check for extreme velocity
-            fixtureAVelocity = contact.fixtureA.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
-            fixtureBVelocity = contact.fixtureB.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
+                if angleOfImpact > 0.5:
+                    print('angle small damage')
+                if angleOfImpact > 1.5:
+                    print('angle big damage')
+                if angleOfImpact > 2.0:
+                    print('angle huge damage')
 
-            velocity = (fixtureAVelocity-fixtureBVelocity).length
-            if velocity >= 5:
-                print('hit small damage')
-            if velocity >= 10:
-                print('hit big damage')
+                #Check for extreme velocity
+                fixtureAVelocity = contact.fixtureA.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
+                fixtureBVelocity = contact.fixtureB.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
+
+                velocity = (fixtureAVelocity-fixtureBVelocity).length
+                if velocity >= 5:
+                    print('hit small damage')
+                if velocity >= 10:
+                    print('hit big damage')
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
