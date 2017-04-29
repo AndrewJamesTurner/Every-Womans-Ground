@@ -14,13 +14,16 @@ import terrain_modifiers
 
 import shapes
 from game import *
+from GameScene import GameScene
 import random
 
 import terrainblocks
 
-class PlanetScene(ezpygame.Scene):
+class PlanetScene(GameScene):
 
     def __init__(self):
+        super(PlanetScene, self).__init__()
+
         # Called once per game, when game starts
         terrainblocks.make_blocks(1.0)
 
@@ -122,6 +125,8 @@ class PlanetScene(ezpygame.Scene):
         self.terrain.draw(screen)
         self.person.draw(screen)
         self.lander.draw(screen)
+
+        self.draw_overlays(screen)
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
