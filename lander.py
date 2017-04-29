@@ -2,13 +2,13 @@
 import ezpygame
 from Box2D import b2World, b2PolygonShape
 
-import lander_shapes as shapes
+import lander_shapes as landershapes
 from game import *
 from terraingen import *
 
 from GameObject import *
 
-class DemoScene(ezpygame.Scene):
+class LanderScene(ezpygame.Scene):
 
     def __init__(self):
         # Called once per game, when game starts
@@ -22,7 +22,7 @@ class DemoScene(ezpygame.Scene):
         set_camera_position((SCREEN_WIDTH/PPM)/2,(SCREEN_HEIGHT/PPM)/2)
 
         # Create an object that moves in the box2d world and can be rendered to the screen
-        self.lander = shapes.Lander(self.world, (5, 5))
+        self.lander = landershapes.Lander(self.world, (5, 5))
 
         #Need to generate a seed
         terrain = generate_fractal_heightmap(50, int(SCREEN_WIDTH/PPM), int(SCREEN_HEIGHT/PPM), 1)
@@ -39,7 +39,7 @@ class DemoScene(ezpygame.Scene):
         #         polygonPoints.append([index*xGap, ])
         #     else:
         #         #finish block and reset counter
-        #         #block = shapes.PlanetGroundSection(self.world, (SCREEN_WIDTH / PPM / 2, -5), )
+        #         #block = landershapes.PlanetGroundSection(self.world, (SCREEN_WIDTH / PPM / 2, -5), )
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -74,4 +74,4 @@ class DemoScene(ezpygame.Scene):
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
-    app.run(DemoScene())
+    app.run(LanderScene())
