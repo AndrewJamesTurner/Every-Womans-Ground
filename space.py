@@ -23,11 +23,14 @@ class ContactListener(b2ContactListener):
 
 
         if isinstance(conctact.fixtureA.body.userData, Asteroid):
-            to_remove.append(conctact.fixtureA)
-            pass
+
+            if conctact.fixtureA not in to_remove:
+                to_remove.append(conctact.fixtureA)
+
 
         if isinstance(conctact.fixtureB.body.userData, Asteroid):
-            pass
+            if conctact.fixtureA not in to_remove:
+                to_remove.append(conctact.fixtureA)
 
             # space_scene.applicatiochange_scene(lander_scene)
 
@@ -94,6 +97,7 @@ class SpaceScene(ezpygame.Scene):
     def __init__(self):
         # Called once per game, when game starts
 
+        self.timeSinceLastFired = 0
         self.planets = []
         self.bullets = []
         self.asteroids = []
@@ -109,14 +113,14 @@ class SpaceScene(ezpygame.Scene):
 
         self.createAsteroidBelt(sun, 40, 10)
 
-        planet = self.createPlanet("Earth", 4, "rock", sun, 0.001, 20, 25)
-        moon = self.createPlanet("Moon", 1, "rock", planet, 0.005, 6, 6)
+        planet = self.createPlanet("Earth", 4, "rock", sun, 0.0001, 20, 25)
+        moon = self.createPlanet("Moon", 1, "rock", planet, 0.0005, 6, 6)
 
 
-        self.createPlanet("Mars", 5, "rock", sun, 0.001, 30, 35)
-        self.createPlanet("Andy", 10, "rock", sun, 0.001, 50, 50)
+        self.createPlanet("Mars", 5, "rock", sun, 0.0001, 30, 35)
+        self.createPlanet("Andy", 10, "rock", sun, 0.0001, 50, 50)
 
-        self.createAsteroid(3, (22,22))
+        self.createAsteroid(5, (22,22))
 
 
 
@@ -157,6 +161,8 @@ class SpaceScene(ezpygame.Scene):
         global to_remove
         to_remove = []
 
+        self.timeSinceLastFired += dt
+
         power = 1
         spin = 0.1
 
@@ -176,11 +182,15 @@ class SpaceScene(ezpygame.Scene):
 
         if keys[pygame.K_SPACE]:
 
-            bullet = Bullet(self.world, self.space_ship.body.position)
+            if self.timeSinceLastFired > 1000:
 
-            self.bullets.append(bullet)
+                self.timeSinceLastFired = 0
 
-            bullet.body.ApplyLinearImpulse((xxx * 100, yyy * 100), bullet.body.worldCenter, True)
+                bullet = Bullet(self.world, self.space_ship.body.position)
+
+                self.bullets.append(bullet)
+
+                bullet.body.ApplyLinearImpulse((xxx * 100, yyy * 100), bullet.body.worldCenter, True)
 
 
         for planet in self.planets:
@@ -213,13 +223,16 @@ class SpaceScene(ezpygame.Scene):
                 new_size = info["size"] - 1
 
                 position = remove_me.body.position
-                self.asteroids.remove(info["gameObject"])
+
+                if info["gameObject"] in self.asteroids:
+                    self.asteroids.remove(info["gameObject"])
+
                 self.world.DestroyBody(remove_me.body)
 
-                if new_size:
+                if new_size > 1:
 
-                    self.createAsteroid(new_size, (position[0]+1, position[1]+1))
-                    self.createAsteroid(new_size, (position[0]-1, position[1]-1))
+                    self.createAsteroid(new_size, (position[0]+2, position[1]+2))
+                    self.createAsteroid(new_size, (position[0]-2, position[1]-2))
 
         set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
 
