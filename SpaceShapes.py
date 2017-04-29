@@ -7,8 +7,9 @@ class SpaceShip(GameObject):
 
     def __init__(self, world, position):
         polygon_points = [[[0.5, 0], [1, 1], [0, 1]]]
+        # polygon_points = [[[0, -1], [1, 1], [-1, 1]]]
         circle_shapes = []
-        image_path = "assets/l_left_shape.png"
+        image_path = None
         scale = 3
 
         density = 1
@@ -42,7 +43,7 @@ class Planet(GameObject):
         print(polygon_points)
 
         circle_shapes = []
-        image_path = "assets/l_left_shape.png"
+        image_path = None
         scale = 10
 
         density = 1

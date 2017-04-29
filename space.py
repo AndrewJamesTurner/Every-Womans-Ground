@@ -65,6 +65,7 @@ class SpaceScene(ezpygame.Scene):
             self.space_ship.body.ApplyLinearImpulse((xxx * power, yyy * power), self.space_ship.body.worldCenter, True)
 
         if keys[pygame.K_d]:
+            # ApplyAngularImpulse
             self.space_ship.body.ApplyAngularImpulse(-spin, True)
 
         if keys[pygame.K_a]:
