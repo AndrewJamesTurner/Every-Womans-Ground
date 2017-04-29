@@ -37,7 +37,7 @@ class PlanetScene(ezpygame.Scene):
         params = {'num_tunnels': 0.05,
                   'tunnel_depth': 0.3,
                   'num_craters': 0.02,
-                  'crater_radius_mean': 5,
+                  'crater_radius_mean': 10,
                   'crater_radius_sd': 2,
                   'vegetation_seed': 7,
                   'vegetation': [
@@ -65,8 +65,8 @@ class PlanetScene(ezpygame.Scene):
         init_lander = terraingen.get_initial_position(terrain_raw, -5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
-        self.lander = lander_shapes.StationaryLander(self.world, init_pos)
-        self.person = shapes.AstronautShape(self.world, (init_pos[0] - 5, init_pos[1]))
+        self.lander = lander_shapes.StationaryLander(self.world, init_lander)
+        self.person = shapes.AstronautShape(self.world, init_pos)
         self.person.body.fixedRotation = True
         self.person_xspeed = 0
         self.person_yspeed = 0
