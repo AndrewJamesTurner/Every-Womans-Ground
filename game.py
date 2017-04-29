@@ -2,9 +2,9 @@ import ezpygame
 import pygame
 
 from constants import *
-from lander import LanderScene
-from menu import MenuScene
-from space import SpaceScene
+# from lander import LanderScene
+# from menu import MenuScene
+# from space import SpaceScene
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (50, 50)
 
@@ -13,9 +13,9 @@ pygame.init()
 CAMERA_POSITION = (0, 0)
 
 # Create all the scenes
-menu_scene = MenuScene()
-space_scene = SpaceScene()
-lander_scene = LanderScene()
+# menu_scene = MenuScene()
+# space_scene = SpaceScene()
+# lander_scene = LanderScene()
 
 
 def set_camera_position(x,y):
