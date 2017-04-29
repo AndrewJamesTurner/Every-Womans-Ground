@@ -28,13 +28,15 @@ class DemoScene(ezpygame.Scene):
 
         terrain_raw = terraingen.generate_planet_test(17, round(constants.SCREEN_WIDTH/constants.PPM),
                                                       round(constants.SCREEN_HEIGHT/constants.PPM))
-        self.terrain = terraingen.create_terrain(terrain_raw, self.world)
+
+        self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, (0, 0))
         self.person = shapes.AstronautShape(self.world, (5, 5))
         self.person.body.fixedRotation = True
         self.person_xspeed = 0
         self.person_yspeed = 0
         self.gravity = 1
+        set_camera_position(0,10)
 
         # Create an object that moves in the box2d world and can be rendered to the screen
 
@@ -59,9 +61,7 @@ class DemoScene(ezpygame.Scene):
     def draw(self, screen):
         # Called once per frame, to draw to the screen
         screen.fill(black)
-        for block in self.terrain:
-            block.draw(screen)
-
+        self.terrain.draw(screen)
         self.person.draw(screen)
         self.lander.draw(screen)
 
