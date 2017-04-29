@@ -60,7 +60,15 @@ class PlanetScene(ezpygame.Scene):
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
-        set_camera_position(*self.person.body.position)
+        cam_x, cam_y = self.person.body.position
+
+        width, height = self.terrain.terrain.shape
+        halfwidth = SCREEN_WIDTH / PPM
+        if cam_x < -width/2 + halfwidth: cam_x = -width/2 + halfwidth
+        if cam_x >  width/2 - halfwidth: cam_x =  width/2 - halfwidth
+
+        set_camera_position(cam_x, cam_y)
+    
         screen.fill(black)
         self.terrain.draw(screen)
         self.person.draw(screen)
