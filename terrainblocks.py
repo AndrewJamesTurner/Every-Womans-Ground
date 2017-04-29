@@ -4,10 +4,14 @@ from constants import *
 import pygame
 
 BLOCK_DEFS = [
-#    Asset     , RGBA Tint , Density, Friction, Restitution
+#    Asset         , RGBA Tint , Density, Friction, Restitution
     None,                                             # Air
-    ['flat.png', 0x808080ff, 1.0,     0.3,      0.4], # Rock
-    ['flat.png', 0x803000ff, 1.0,     0.3,      0.4], # Dirt
+    ['rock.png',     0x808080ff, 1.0,     0.3,      0.4], # Rock
+    ['granular.png', 0x803000ff, 1.0,     0.3,      0.4], # Dirt
+    ['leaves.png',   0x300080ff, 1.0,     0.3,      0.4], # Purple leaves
+    ['moss.png',     0x00c0ffff, 1.0,     0.3,      0.4], # Blue fungus
+    ['smooth.png',   0xc0c0ffff, 1.0,     0.3,      0.4], # Ice
+    ['flat.png',     0x00ff00ff, 1.0,     0.3,      0.4], # Flat green tile
 ]
 
 BLOCK_IMAGES = []
