@@ -92,10 +92,18 @@ class PlanetScene(GameScene):
 
         # Create an object that moves in the box2d world and can be rendered to the screen
 
+        # Level barriers
+        width, height = self.terrain.terrain.shape
+        self.world.CreateStaticBody(
+            position=(0,0),
+            shapes=b2PolygonShape(box=(width, 0.5)))
         # A box2d object that doesn't move and isn't rendered to screen
-        body_bottom_wall = self.world.CreateStaticBody(
-            position=(0, -20),
-            shapes=b2PolygonShape(box=(SCREEN_WIDTH / 2, 5)))
+        self.world.CreateStaticBody(
+            position=(-width/2, 5*height),
+            shapes=b2PolygonShape(box=(0.5, 10*height)))
+        self.world.CreateStaticBody(
+            position=(width/2, 5*height),
+            shapes=b2PolygonShape(box=(0.5, 10*height)))
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -115,9 +123,10 @@ class PlanetScene(GameScene):
         cam_x, cam_y = self.person.body.position
 
         width, height = self.terrain.terrain.shape
-        halfwidth = SCREEN_WIDTH / PPM
-        if cam_x < -width/2 + halfwidth: cam_x = -width/2 + halfwidth
-        if cam_x >  width/2 - halfwidth: cam_x =  width/2 - halfwidth
+        halfwidth = SCREEN_WIDTH / 2 / PPM
+        cam_right = width/2 - halfwidth
+        cam_left  = -cam_right
+        cam_x = min(cam_right, max(cam_left, cam_x))
 
         set_camera_position(cam_x, cam_y)
 
