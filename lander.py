@@ -14,6 +14,9 @@ class LanderScene(GameScene):
     def __init__(self):
         super(LanderScene, self).__init__()
 
+        #Set countdown for landing
+        self.countdown = None
+
         # Called once per game, when game starts
 
         self.world = b2World(contactListener=ContactListener())  # default gravity is (0,-10) and doSleep is True
@@ -115,14 +118,33 @@ class LanderScene(GameScene):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.lander.body.angle += 0.01
+            get_shared_values().fuel -= 0.25;
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.lander.body.angle -= 0.01
+            get_shared_values().fuel -= 0.25;
 
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.lander.body.ApplyLinearImpulse((xxx * power, yyy * power), landerPos, True)
-
+            get_shared_values().fuel -= 1;
 
         set_camera_position(self.lander.body.position[0],self.lander.body.position[1])
+
+        countDownLen = 3000
+        #Get velocity of lander
+        if self.lander.body.linearVelocity == (0,0):
+            if self.countdown == None:
+                self.countdown = 0
+            else:
+                self.countdown += dt
+        else:
+            self.countdown = None
+
+        if self.countdown != None:
+            if self.countdown >= countDownLen:
+                print('landed')
+
+                self.application.change_scene(get_planet_scene())
+
 
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
