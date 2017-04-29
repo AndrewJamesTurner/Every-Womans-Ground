@@ -25,13 +25,13 @@ class ContactListener(b2ContactListener):
             get_space_scene().application.change_scene(get_lander_scene())
 
 
-        if isinstance(conctact.fixtureA.body.userData, Asteroid):
+        if isinstance(conctact.fixtureA.body.userData, Asteroid) and isinstance(conctact.fixtureB.body.userData, Bullet):
 
             if conctact.fixtureA not in to_remove:
                 to_remove.append(conctact.fixtureA)
 
 
-        if isinstance(conctact.fixtureB.body.userData, Asteroid):
+        if isinstance(conctact.fixtureB.body.userData, Asteroid) and isinstance(conctact.fixtureA.body.userData, Bullet):
             if conctact.fixtureA not in to_remove:
                 to_remove.append(conctact.fixtureA)
 
@@ -220,7 +220,7 @@ class SpaceScene(ezpygame.Scene):
 
                 info = remove_me.body.userData.info
 
-                new_size = info["size"] - 1
+                new_size = round(info["size"] / 2)
 
                 position = remove_me.body.position
 
@@ -231,10 +231,10 @@ class SpaceScene(ezpygame.Scene):
 
                 if new_size >= 1:
 
-                    # for i in range(new_size)
+                    for i in range(new_size):
 
-                self.createAsteroid(new_size, (position[0]+2, position[1]+2))
-                self.createAsteroid(new_size, (position[0]-2, position[1]-2))
+                        self.createAsteroid(new_size, (position[0]+random.random()*new_size, position[1]+random.random()*new_size))
+                        self.createAsteroid(new_size, (position[0]+random.random()*new_size, position[1]+random.random()*new_size))
 
         set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
 
