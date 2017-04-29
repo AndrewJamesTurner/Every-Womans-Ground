@@ -118,6 +118,7 @@ class SpaceScene(ezpygame.Scene):
     def __init__(self):
         # Called once per game, when game starts
 
+        self.planet_info = None
         self.timeSinceLastFired = 10000
         self.planets = []
         self.bullets = []

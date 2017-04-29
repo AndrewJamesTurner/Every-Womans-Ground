@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import ezpygame
-from Box2D import b2World, b2PolygonShape, b2ContactListener
+from Box2D import b2World, b2PolygonShape
 
 import lander_shapes as landershapes
 from game import *
@@ -13,7 +13,7 @@ class LanderScene(ezpygame.Scene):
     def __init__(self):
         # Called once per game, when game starts
 
-        self.world = b2World(contactListener=ContactListener())  # default gravity is (0,-10) and doSleep is True
+        self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
         #Set gravity depending on planet type.
         self.world.gravity = (0, -5)
@@ -62,7 +62,7 @@ class LanderScene(ezpygame.Scene):
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
 
-        self.planet_info = get_space_scene().planet_info
+        # planet_info = get_space_scene().planet_info)
 
         pass
 
@@ -82,11 +82,6 @@ class LanderScene(ezpygame.Scene):
 
         self.ground.draw(screen)
         self.lander.draw(screen)
-
-        #If using sensors use this
-        # shape = self.lander.sensor.shape
-        # vertices = [world_to_screen_coordinates(self.lander.body.transform * v) for v in shape.vertices]
-        # pygame.draw.polygon(screen, (255,255,255,0), vertices)
 
     def update(self, dt):
         # Called once per frame, to update the state of the game
@@ -120,44 +115,6 @@ class LanderScene(ezpygame.Scene):
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         self.world.ClearForces()
 
-class ContactListener(b2ContactListener):
-
-    def BeginContact(self, contact):
-
-        #If using sensor use this
-        # if contact.fixtureA.userData == "LanderCollisionArea" or contact.fixtureB.userData == "LanderCollisionArea":
-        #     print('ouch! Damage - lose some health')
-
-        if isinstance(contact.fixtureA.body.userData, landershapes.Lander) or isinstance(contact.fixtureB.body.userData, landershapes.Lander):
-
-            #Check for silly angle
-
-            if isinstance(contact.fixtureA.body.userData, landershapes.Lander):
-                angleOfImpact = contact.fixtureA.body.userData.body.angle
-            elif isinstance(contact.fixtureB.body.userData, landershapes.Lander):
-                angleOfImpact = contact.fixtureB.body.userData.body.angle
-
-            angleOfImpact = abs(math.fmod(angleOfImpact, 2 * math.pi))
-
-            if angleOfImpact > math.pi:
-                angleOfImpact -= math.pi
-
-            if angleOfImpact > 0.5:
-                print('angle small damage')
-            if angleOfImpact > 1.5:
-                print('angle big damage')
-            if angleOfImpact > 2.0:
-                print('angle huge damage')
-
-            #Check for extreme velocity
-            fixtureAVelocity = contact.fixtureA.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
-            fixtureBVelocity = contact.fixtureB.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
-
-            velocity = (fixtureAVelocity-fixtureBVelocity).length
-            if velocity >= 5:
-                print('hit small damage')
-            if velocity >= 10:
-                print('hit big damage')
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
