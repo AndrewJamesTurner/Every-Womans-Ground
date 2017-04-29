@@ -89,5 +89,5 @@ def get_shared_values():
 
 if __name__ == '__main__':
     from menu import MenuScene
-    app = ezpygame.Application(title="No Woman's Sky", resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
+    app = ezpygame.Application(title="Every Woman's Ground", resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
     app.run(get_menu_scene())
