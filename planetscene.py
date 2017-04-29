@@ -87,14 +87,16 @@ class PlanetScene(GameScene):
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
         self.person.body.fixedRotation = True
+        self.person.body.linearDamping = 0.02
         self.person_xspeed = 0
         self.person_yspeed = 0
         self.gravity = 1
 
-        # Create an object that moves in the box2d world and can be rendered to the screen
+        width, height = self.terrain.terrain.shape
+        self.backdrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width )
+        self.dustdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'dust.png'), width )
 
         # Level barriers
-        width, height = self.terrain.terrain.shape
         self.world.CreateStaticBody(
             position=(0,0),
             shapes=b2PolygonShape(box=(width, 0.5)))
@@ -132,6 +134,8 @@ class PlanetScene(GameScene):
         set_camera_position(cam_x, cam_y)
 
         screen.fill(black)
+        self.backdrop.draw(screen)
+        self.dustdrop.draw(screen)
         self.terrain.draw(screen)
         self.person.draw(screen)
         self.lander.draw(screen)

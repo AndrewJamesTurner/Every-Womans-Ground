@@ -4,6 +4,7 @@ import constants
 from GameObject import *
 import terrainblocks
 import numpy
+import game
 
 class LLeftShape(DynamicGameObject):
 
@@ -111,3 +112,28 @@ class TerrainBulk(StaticGameObject):
                     shape = fixture.shape
                     vertices = [world_to_screen_coordinates(b.transform * v) for v in shape.vertices]
                     pygame.draw.polygon(screen, red, vertices)
+
+class ParallaxBackdrop(StaticGameObject):
+    def __init__(self, parallax_factor, image_path, stage_width):
+        if image_path:
+            width = stage_width * PPM / abs(parallax_factor) + SCREEN_WIDTH
+            image = pygame.image.load(image_path).convert_alpha()
+            ratio = image.get_height() / image.get_width()
+            w, h = int(width), int(ratio * width)
+            self.image = pygame.transform.scale(image, (w, h))
+
+            self.parallax_factor = parallax_factor
+
+    def draw(self, screen):
+        """
+        Draw this object to the screen.
+        :param screen:
+        """
+        # Draw image for the body
+        if self.image is not None:
+            f = self.parallax_factor
+            image_rect = self.image.get_rect(
+                center=(
+                    SCREEN_WIDTH /2 - PPM * game.CAMERA_POSITION[0]/f,
+                    SCREEN_HEIGHT/2 + PPM * game.CAMERA_POSITION[1]/f) )
+            screen.blit(self.image, image_rect)
