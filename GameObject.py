@@ -78,7 +78,7 @@ class GameObject:
         body.userData = self
 
         for polygon in polygon_points:
-            polygon = [[scale * x, ratio * scale * (1 - y)] for x, y in polygon]
+            polygon = [[scale * x - 0.5 * scale, ratio * scale * (1 - y) - 0.5 * scale] for x, y in polygon]
             body.CreatePolygonFixture(vertices=polygon, density=density, friction=friction, restitution=restitution)
 
         for circle in circle_shapes:
@@ -102,4 +102,3 @@ class DynamicGameObject(GameObject):
 
     def create(self, world, position):
         return world.CreateDynamicBody(position=position)
-
