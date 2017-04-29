@@ -71,9 +71,20 @@ class LanderScene(GameScene):
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
 
-        # self.planet_info = get_space_scene().planet_info
 
-        pass
+        #     self.planet_info = get_space_scene().planet_info
+
+        self.planet_info = {
+            "name": "Earth",
+            "size": 10,
+            "angular_vel": 0.0001,
+            "orbit_radius_x": 30,
+            "orbit_radius_y": 35,
+            "orbit_angle": 0.13,
+            "type": "rcok",
+            "orbit_centre": (0,0),
+        }
+
 
     def handle_event(self, event):
         # Called every time a pygame event is fired

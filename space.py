@@ -9,10 +9,8 @@ import random
 import shapes
 
 
-
 ptypes = ["rock", "earth", "desert", "gas", "other"]
 FIRE_TIMEOUT = 200
-
 to_remove = []
 
 
@@ -181,7 +179,7 @@ class SpaceScene(GameScene):
 
         screen.fill(black)
 
-        # self.backdrop.draw(screen)
+        self.backdrop.draw(screen)
 
 
         self.space_ship.draw(screen)
@@ -237,7 +235,7 @@ class SpaceScene(GameScene):
         # aaa = math.atan2(direction[1], direction[0])
 
         image_rect = self.arrow_imamge.get_rect()
-        rotated_image = pygame.transform.rotate(self.arrow_imamge, angle(ship_position, nearest_planet_position)* 180 / math.pi)
+        rotated_image = pygame.transform.rotate(self.arrow_imamge, angle(ship_position, nearest_planet_position)* 180 / math.pi  + 90 )
         # rotated_image = pygame.transform.rotate(self.arrow_imamge, self.space_ship.body.angle * 180 / math.pi)
 
         image_rect[0] = SCREEN_WIDTH - 100
