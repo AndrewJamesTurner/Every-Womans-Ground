@@ -36,11 +36,11 @@ class AstronautShape(DynamicGameObject):
         density = 1
         friction = 0.3
         restitution = 0.4
-        self.colour=red
 
         self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
 
+DEBUG_GRID = 0
 class TerrainBulk(StaticGameObject):
     def __init__(self, world, terrain):
         self.bodies = []
@@ -69,7 +69,7 @@ class TerrainBulk(StaticGameObject):
                     self.add_block_to_world(world, blocktype, coords)
 
     def add_block_to_world(self, world, blocktype, position):
-        polygon_points = [[[-0.5, -0.5], [-0.5, 0.5], [0.5, 0.5], [0.5, -0.5]]]
+        polygon_points = [[[0,0], [0,1], [1,1], [1,0]]]
         asset, tint, density, friction, restitution = terrainblocks.BLOCK_DEFS[blocktype]
 
         body, nothing = self.prepare_shape(
@@ -93,3 +93,10 @@ class TerrainBulk(StaticGameObject):
                 # Draw image for the body
                 image_rect = image.get_rect(center=world_to_screen_coordinates((0.5 + x - xoffset, 0.5 + y)))
                 screen.blit(image, image_rect)
+                # Draw box2d collision boxes of body
+        if DEBUG_GRID:
+            for b in self.bodies:
+                for fixture in b.fixtures:
+                    shape = fixture.shape
+                    vertices = [world_to_screen_coordinates(b.transform * v) for v in shape.vertices]
+                    pygame.draw.polygon(screen, red, vertices)
