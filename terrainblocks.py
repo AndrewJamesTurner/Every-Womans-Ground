@@ -6,12 +6,12 @@ import pygame
 BLOCK_DEFS = [
 #    Asset         , RGBA Tint , Density, Friction, Restitution
     None,                                             # Air
-    ['rock.png',     0x808080ff, 1.0,     0.3,      0.4], # 1 Rock
-    ['granular.png', 0x803000ff, 1.0,     0.3,      0.4], # 2 Dirt
-    ['leaves.png',   0x300080ff, 1.0,     0.3,      0.4], # 3 Purple leaves
-    ['moss.png',     0x00c0ffff, 1.0,     0.3,      1.4], # 4 Blue fungus
+    ['rock.png',     0x808080ff, 1.0,     0.2,      0.1], # 1 Rock
+    ['granular.png', 0x803000ff, 1.0,     0.4,      0.4], # 2 Dirt
+    ['leaves.png',   0x300080ff, 1.0,     0.3,      0.6], # 3 Purple leaves
+    ['moss.png',     0x00c0ffff, 1.0,     0.3,      1.1], # 4 Blue fungus
     ['smooth.png',   0xc0c0ffff, 1.0,    0.01,      0.1], # 5 Ice
-    ['flat.png',     0x00ff00ff, 1.0,     0.3,      0.4], # 6 Flat green tile
+    ['flat.png',     0x00ff00ff, 1.0,     0.1,      0.1], # 6 Flat green tile
 ]
 
 BLOCK_IMAGES = []
