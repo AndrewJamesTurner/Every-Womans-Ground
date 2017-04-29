@@ -1,15 +1,15 @@
 """
     terrain_modifiers
     ~~~~~~~~~~~~~~~~~
-    
+
     Contains functions for modifying terrain blocks.
-    
+
     These are functions that are parameterised as follows:
-    
+
     Args:
         terrain: A 2D numpy array of ints, detailing terrain types at each location.
         params: A dictionary containing appropriate parameters for each modifier.
-        
+
     Returns:
         The modified terrain in the same format as the argument.
 """
@@ -22,7 +22,7 @@ import constants
 def add_tunnels(terrain, params):
     """
     Creates tunnels in the terrain, one brick wide.
-    
+
     :param terrain: A 2D numpy array of ints, detailing terrain types at each location.
     :param params: Dict, Values that are used in this modifier are:
         - num_tunnels
@@ -89,6 +89,38 @@ def add_craters(terrain, params):
 
 
 def add_vegetation(terrain, params):
+    width, height = terrain.shape
+
+    vegparams = params['vegetation']
+    seed = params['vegetation_seed']
+    r = random.Random(seed)
+    for p in vegparams:
+        rr = random.Random(r.getrandbits(32))
+        seedrate   = p['seedrate']
+        root_block = p['root_block']
+        root_depth = p['root_depth']
+        grow_block = p['grow_block']
+        grow_height= p['grow_height']
+        for x in range(0,width):
+            # Do we seed or not?
+            if not rr.random() < seedrate: continue
+
+            # Search the column
+            roots_needed = round(root_depth * rr.normalvariate(1, 0.3))
+            grow_count   = round(grow_height * rr.normalvariate(1, 0.3))
+            roots_found = 0
+            for y in reversed(range(0, height)):
+                b = terrain[x,y]
+                if b == 0:
+                    continue
+                if b != root_block:
+                    break
+                roots_found += 1
+                if roots_found >= roots_needed:
+                    # Success - seed the plant!
+                    for yy in range(y + roots_needed, min(height, y + roots_needed + grow_count)):
+                        terrain[x,yy] = grow_block
+                    break
     return terrain
 
 
@@ -98,6 +130,3 @@ def add_water(terrain, params):
 
 def add_water(terrain, params):
     return terrain
-
-
-

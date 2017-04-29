@@ -70,14 +70,14 @@ def generate_planet_test(seed, width, height):
         seed_dirtbase, width, 6, 0.6)
 
     ice_depthmap = generate_fractal_heightmap(
-        seed_icebase, width, 2, 0.6)
+        seed_icebase, width, 3, 0.6)
 
     dirt_heightmap = sub_heightmaps(ground_heightmap, ice_depthmap)
     rock_heightmap = sub_heightmaps(dirt_heightmap, dirt_depthmap)
 
     rasterize_heightmap_layers(terrain, [
         [ rock_heightmap,   1 ],
-        [ dirt_heightmap,   4 ],
+        [ dirt_heightmap,   2 ],
         [ ground_heightmap, 5] ] )
 
     return terrain
