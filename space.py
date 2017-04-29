@@ -73,9 +73,6 @@ class SpaceScene(ezpygame.Scene):
             return planet
 
 
-
-
-
         space_ship = SpaceShip(self.world, (20, 20))
         self.space_ship = space_ship
 
@@ -90,6 +87,9 @@ class SpaceScene(ezpygame.Scene):
 
         createPlanet("Mars", 5, "rock", sun, 0.001, 30, 35)
         createPlanet("Andy", 10, "rock", sun, 0.001, 50, 50)
+
+        self.asteroid = Asteroid(self.world, (22, 22), 2)
+
 
 
     def on_enter(self, previous_scene):
@@ -108,6 +108,7 @@ class SpaceScene(ezpygame.Scene):
 
         screen.fill(black)
         self.space_ship.draw(screen)
+        self.asteroid.draw(screen)
 
         for planet in self.planets:
             planet.draw(screen)

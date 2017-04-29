@@ -25,6 +25,7 @@ black = 0, 0, 0, 0
 white = 255, 255, 255, 0
 red = 255, 0, 0, 0
 yellow = 255, 255, 0, 0
+grey = 160, 160, 160, 0
 
 PLAYER_MOVEMENT_SPEED = 30
 PLAYER_JUMP_SPEED = 20
