@@ -36,34 +36,10 @@ class AstronautShape(DynamicGameObject):
         density = 1
         friction = 0.3
         restitution = 0.4
+        self.colour=red
 
         self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
-
-# class TerrainBlock(StaticGameObject):
-#     def __init__(self, world, position, blocktype, make_collidable):
-#         polygon_points = [[[0, 0], [0, 1], [1, 1], [1, 0]]]
-#         circle_shapes = []
-#
-#         asset, tint, density, friction, restitution = terrainblocks.BLOCK_DEFS[blocktype]
-#
-#         if make_collidable:
-#             self.body, nothing = self.prepare_shape(
-#                 world, position, polygon_points, circle_shapes, None, 1,
-#                 density, friction, restitution )
-#
-#         self.image = terrainblocks.BLOCK_IMAGES[blocktype]
-#
-#     def draw(self, screen):
-#         """
-#         Draw this object to the screen.
-#         :param screen:
-#         """
-#         # Draw image for the body
-#         if self.image is not None:
-#             image_rect = self.image.get_rect(center=world_to_screen_coordinates(self.position)
-#             image_rect = image_rect.move(image_rect.width / 2, -image_rect.height / 2)
-#             screen.blit(self.image, image_rect)
 
 class TerrainBulk(StaticGameObject):
     def __init__(self, world, terrain):
@@ -89,11 +65,11 @@ class TerrainBulk(StaticGameObject):
                             break
 
                 if collisions:
-                    coords = (x - width/2, y)
+                    coords = (0.5 + x - width/2, 0.5 + y)
                     self.add_block_to_world(world, blocktype, coords)
 
     def add_block_to_world(self, world, blocktype, position):
-        polygon_points = [[[0, 0], [0, 1], [1, 1], [1, 0]]]
+        polygon_points = [[[-0.5, -0.5], [-0.5, 0.5], [0.5, 0.5], [0.5, -0.5]]]
         asset, tint, density, friction, restitution = terrainblocks.BLOCK_DEFS[blocktype]
 
         body, nothing = self.prepare_shape(
@@ -115,6 +91,5 @@ class TerrainBulk(StaticGameObject):
                 if image is None:
                     continue
                 # Draw image for the body
-                image_rect = image.get_rect(center=world_to_screen_coordinates((x - xoffset, y)))
-                image_rect = image_rect.move(image_rect.width / 2, -image_rect.height / 2)
+                image_rect = image.get_rect(center=world_to_screen_coordinates((0.5 + x - xoffset, 0.5 + y)))
                 screen.blit(image, image_rect)
