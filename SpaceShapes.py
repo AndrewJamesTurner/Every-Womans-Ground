@@ -95,7 +95,7 @@ class Asteroid(DynamicGameObject):
 
 class Planet(StaticGameObject):
 
-    def __init__(self, world, position, scale):
+    def __init__(self, world, position, scale, ptype):
 
         polygon_points = []
         part = []
@@ -108,22 +108,44 @@ class Planet(StaticGameObject):
 
         circle_shapes = []
 
-        possible_images = [
-            "assets/world.png",
+        rock_images = [
+            "assets/moon.png",
+        ]
+
+        desert_images = [
             "assets/mars.png",
             "assets/mars2.png",
             "assets/mars3.png",
-            "assets/moon.png",
-            "assets/oddPlanet.png",
-            "assets/planet.png",
-            "assets/uranus.png",
             "assets/venus.png",
             "assets/venus2.png",
+        ]
+
+        earth_images = [
             "assets/world.png",
         ]
 
+        other_images = [
+            "assets/oddPlanet.png",
+        ]
 
-        image_path = random.choice(possible_images)
+        gas_images = [
+            "assets/planet.png",
+            "assets/uranus.png",
+        ]
+
+
+        if ptype == "rock":
+            image_path = random.choice(rock_images)
+        elif ptype == "earth":
+            image_path = random.choice(earth_images)
+        elif ptype == "desert":
+            image_path = random.choice(desert_images)
+        elif ptype == "gas":
+            image_path = random.choice(gas_images)
+        else:
+            image_path = random.choice(other_images)
+
+
         scale = scale
 
         density = 1
