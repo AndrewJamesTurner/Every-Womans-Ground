@@ -17,6 +17,7 @@ import random
 import numpy as np
 
 import constants
+import terrain_utils
 
 
 def tunnel_modifier(terrain, params):
@@ -44,7 +45,7 @@ def tunnel_modifier(terrain, params):
         curr_x = x
 
         # Generate tunnel depth
-        tunnel_depth = int(np.random.normal(params['depth'], scale=constants.TERRAIN_TUNNEL_SD) * col_depth)
+        tunnel_depth = int(np.random.normal(params['depth_mean'], scale=params['depth_sd']) * col_depth)
 
         for _ in range(tunnel_depth):
             # Set ground to 0
@@ -52,7 +53,10 @@ def tunnel_modifier(terrain, params):
             # Obtain next move
             next_x, next_y = random.choice(digging_directions)
 
+            tunnel_radius = int(np.random.normal(params['width_mean'], scale=params['width_sd']))
+
             # Guard against digging off screen
+            terrain_utils.destroy_circle(terrain, tunnel_radius, (curr_x, curr_y))
             curr_x = curr_x + next_x if (curr_x + next_x < width) and (curr_x + next_x > 0) else curr_x
             curr_y = curr_y + next_y if (curr_y + next_y > 0) else curr_y
 
@@ -88,15 +92,16 @@ def crater_modifier(terrain, params):
             continue
 
         # Obtain pixels that are covered by this radius
-        subset = terrain[(x - crater_radius) : (x + crater_radius), (curr_y - crater_radius) : (curr_y + crater_radius)]
-
-        # Create a distance array to every cell
-        distances = np.zeros(shape=subset.shape)
-        for i in range(distances.shape[0]):
-            for j in range(distances.shape[1]):
-                distances[i, j] = np.sqrt((i-crater_radius)**2 + (j-crater_radius)**2)
-
-        subset[distances <= crater_radius] = 0
+        terrain_utils.destroy_circle(terrain, crater_radius, (x, curr_y))
+        # subset = terrain[(x - crater_radius) : (x + crater_radius), (curr_y - crater_radius) : (curr_y + crater_radius)]
+        #
+        # # Create a distance array to every cell
+        # distances = np.zeros(shape=subset.shape)
+        # for i in range(distances.shape[0]):
+        #     for j in range(distances.shape[1]):
+        #         distances[i, j] = np.sqrt((i-crater_radius)**2 + (j-crater_radius)**2)
+        #
+        # subset[distances <= crater_radius] = 0
 
     return terrain
 

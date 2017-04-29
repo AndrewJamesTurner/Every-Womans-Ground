@@ -38,12 +38,12 @@ class PlanetScene(GameScene):
         modifiers = terrain_utils.get_modifiers()
         # TODO Have these values randomly generated from an appropriate distribution (possibly related to a planet's characteristics)
 
-
-        # TODO Have params in dict for each modifier, with the name drawn from <type>_modifier the function name
-
         params = {'tunnel': {
                       'num': 0.05,
-                      'depth': 0.3,
+                      'depth_mean': 0.3,
+                      'depth_sd': 0.05,
+                      'width_mean': 2,
+                      'width_sd': 0.1
                       },
                   'crater': {
                       'num': 0.02,
