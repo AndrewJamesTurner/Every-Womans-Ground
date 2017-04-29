@@ -25,14 +25,14 @@ class LLeftShape(DynamicGameObject):
 class AstronautShape(DynamicGameObject):
 
     def __init__(self, world, position):
-        polygon_points = [[[0.235, 0.307], [0.235, 0.071], [0.76, 0.071], [0.76, 0.307]],   # Head
-                          [[0.21, 0.307], [0.785, 0.307], [0.755, 0.764], [0.235, 0.764]],  # Trunk
-                          [[0.5, 0.787], [0.45, 0.933], [0.195, 0.933], [0.35, 0.764]],     # Left leg
-                          [[0.5, 0.787], [0.53, 0.933], [0.695, 0.933], [0.645, 0.764]]]    # Right leg
+        polygon_points = [[[0.051, 0.276], [0.051, 0.004], [0.949, 0.004], [0.949, 0.276]],   # Head
+                          [[0.068, 0.802], [0.017, 0.276], [0.992, 0.276], [0.941, 0.802]],  # Trunk
+                          [[0.153, 0.996], [0.254, 0.806], [0.5, 0.823], [0.449, 0.996]],     # Left leg
+                          [[0.551, 0.996], [0.5, 0.823], [0.754, 0.806], [0.847, 0.996]]]    # Right leg
         circle_shapes = []
-        image_path = os.path.join(constants.ASSETS_PATH, "astronaut_small.png")
+        image_path = os.path.join(constants.ASSETS_PATH, "astronaut_small2.png")
 
-        scale = 2
+        scale = 1
         density = 1
         friction = 0.3
         restitution = 0.4
