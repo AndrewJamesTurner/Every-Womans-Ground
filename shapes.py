@@ -74,6 +74,8 @@ class TerrainBulk(StaticGameObject):
         for x in range(width):
             for y in range(height):
                 blocktype = terrain[x, y]
+                if not blocktype:
+                    continue
                 collisions = 0
 
                 if x==0 or x==width-1:
@@ -86,7 +88,7 @@ class TerrainBulk(StaticGameObject):
                             collisions=1
                             break
 
-                if blocktype and collisions:
+                if collisions:
                     coords = (x - width/2, y)
                     self.add_block_to_world(world, blocktype, coords)
 
