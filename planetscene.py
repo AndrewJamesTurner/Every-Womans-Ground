@@ -87,7 +87,7 @@ class PlanetScene(GameScene):
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
         self.person.body.fixedRotation = True
-        self.person.body.linearDamping = 0.02
+        self.person.body.linearDamping = 0.9
         self.person_xspeed = 0
         self.person_yspeed = 0
         self.gravity = 1
