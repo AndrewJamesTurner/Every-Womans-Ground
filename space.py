@@ -7,6 +7,7 @@ import math
 import random
 
 
+ptypes = ["rock", "earth", "desert", "gas", "other"]
 FIRE_TIMEOUT = 200
 
 to_remove = []
@@ -48,12 +49,12 @@ class SpaceScene(ezpygame.Scene):
 
         self.createAsteroidBelt(sun, 40, 10)
 
-        planet = self.createPlanet("Earth", 4, "rock", sun, 0.0001, 20, 25, 1)
+        planet = self.createPlanet("Earth", 4, random.choice(ptypes), sun, 0.0001, 20, 25, 1)
 
 
         # self.createPlanet("Mars", 5, "earth", sun, 0.0001, 30, 35, 0)
-        self.createPlanet("Andy", 10, "desert", sun, 0.0001, 50, 50, 4)
-        self.createPlanet("Andy", 10, "gas", sun, 0.0001, 60, 70, 4)
+        self.createPlanet("Andy", 10, random.choice(ptypes), sun, 0.0001, 50, 50, 4)
+        self.createPlanet("Andy", 10, random.choice(ptypes), sun, 0.0001, 60, 70, 4)
 
         self.createAsteroidBelt(sun, 60, 10)
 
@@ -170,7 +171,7 @@ class SpaceScene(ezpygame.Scene):
 
         shared_values = get_shared_values()
 
-        print(shared_values.fuel)
+        # print(shared_values.fuel)
 
         global to_remove
         to_remove = []
@@ -178,7 +179,7 @@ class SpaceScene(ezpygame.Scene):
         self.timeSinceLastFired += dt
 
         power = 1
-        spin = 0.1
+        spin = 0.3
 
         keys = pygame.key.get_pressed()
 

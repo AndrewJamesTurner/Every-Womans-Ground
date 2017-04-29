@@ -13,18 +13,18 @@ def get_point(i, n):
 class SpaceShip(DynamicGameObject):
 
     def __init__(self, world, position):
-        polygon_points = [[[0.5, 0], [0.7, 1], [0.3, 1]]]
+        polygon_points = [[[0.5, 0], [1, 0.8], [1,1], [0,1], [0,0.8]]]
         circle_shapes = []
-        image_path = None
+        image_path = "assets/spaceship.png"
         scale = 3
 
         density = 1
         friction = 0.3
         restitution = 0.4
 
-        self.body, _ = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+        self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
-        self.colour = red
+        # self.colour = red
 
 
 class Bullet(DynamicGameObject):
