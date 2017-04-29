@@ -39,14 +39,16 @@ class PlanetScene(GameScene):
         # TODO Have these values randomly generated from an appropriate distribution (possibly related to a planet's characteristics)
 
         params = {'tunnel': {
-                      'num': 0.05,
+                      'seed': 3,
+                      'frequency': 0.05,
                       'depth_mean': 0.3,
                       'depth_sd': 0.05,
                       'width_mean': 2,
                       'width_sd': 0.1
                       },
                   'crater': {
-                      'num': 0.02,
+                      'seed': 2,
+                      'frequency': 0.02,
                       'radius_mean': 10,
                       'radius_sd': 2,
                   },
@@ -69,14 +71,13 @@ class PlanetScene(GameScene):
                         }
                       ]
                     },
-            'water': {
-
+                  'water': {
+                      'seed': 12
                      }
                   }
 
         for modifier in modifiers:
             print("On {}".format(modifier.__name__))
-
             terrain_raw = modifier(terrain_raw, params[modifier.__name__.replace('_modifier', '')])
 
         init_pos = terraingen.get_initial_position(terrain_raw, 0)
