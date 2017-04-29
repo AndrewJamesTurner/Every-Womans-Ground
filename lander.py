@@ -4,6 +4,7 @@ from Box2D import b2World, b2PolygonShape
 
 import lander_shapes as shapes
 from game import *
+from terraingen import *
 
 from GameObject import *
 
@@ -23,10 +24,22 @@ class DemoScene(ezpygame.Scene):
         # Create an object that moves in the box2d world and can be rendered to the screen
         self.lander = shapes.Lander(self.world, (5, 5))
 
-        # A box2d object that doesn't move and isn't rendered to screen
-        planetSurface = self.world.CreateStaticBody(
-            position=(SCREEN_WIDTH / 2, -5),
-            shapes=b2PolygonShape(box=(SCREEN_WIDTH, 5)))
+        #Need to generate a seed
+        terrain = generate_fractal_heightmap(50, int(SCREEN_WIDTH/PPM), int(SCREEN_HEIGHT/PPM), 1)
+
+        #polygons can't have many edges so every 10 points start a new polygon
+        # pointCountDown = 10
+        # startCoords = [0,0]
+        # xGap = 10
+        # for index,terrainVal in enumerate(terrain):
+        #
+        #     polygonPoints = [startCoords];
+        #
+        #     if pointCountDown > 0:
+        #         polygonPoints.append([index*xGap, ])
+        #     else:
+        #         #finish block and reset counter
+        #         #block = shapes.PlanetGroundSection(self.world, (SCREEN_WIDTH / PPM / 2, -5), )
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
