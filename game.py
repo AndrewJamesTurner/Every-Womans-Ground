@@ -67,8 +67,11 @@ def get_planet_scene():
 shared_values = None
 
 class SharedValues:
-    health = 100
-    fuel = 5000
+    MAX_FUEL = 5000
+    MAX_HEALTH = 100
+
+    health = MAX_HEALTH
+    fuel = MAX_FUEL
 
 def get_shared_values():
     global shared_values

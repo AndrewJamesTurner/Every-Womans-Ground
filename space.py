@@ -3,6 +3,7 @@ import ezpygame
 from Box2D import *
 from game import *
 from GameObject import GameObject
+from GameScene import GameScene
 import math
 import random
 
@@ -26,8 +27,7 @@ class ContactListener(b2ContactListener):
 
             get_space_scene().planet_info = game_object_b.info
 
-            # get_space_scene().application.change_scene(get_lander_scene())
-            pass
+            get_space_scene().application.change_scene(get_lander_scene())
 
 
         if isinstance(contact.fixtureA.body.userData, Asteroid) and not isinstance(contact.fixtureB.body.userData, Asteroid):
@@ -40,7 +40,7 @@ class ContactListener(b2ContactListener):
                 to_remove.append(contact.fixtureB)
 
 
-class SpaceScene(ezpygame.Scene):
+class SpaceScene(GameScene):
 
     def createSolarSystem(self, numPlanets, numBelt, position):
 
@@ -131,6 +131,8 @@ class SpaceScene(ezpygame.Scene):
         return asteroid
 
     def __init__(self):
+        super(SpaceScene, self).__init__()
+
         # Called once per game, when game starts
 
         self.planet_info = None
@@ -182,7 +184,6 @@ class SpaceScene(ezpygame.Scene):
         for sun in self.suns:
             sun.draw(screen)
 
-
         ship_position = self.space_ship.body.position
         nearest_planet_position = None
         nearest_planet_dist = 100000
@@ -226,7 +227,7 @@ class SpaceScene(ezpygame.Scene):
         # rotated_image_rect = rotated_image.get_rect(center=world_to_screen_coordinates(self.body.position))
         screen.blit(rotated_image, image_rect)
 
-
+        self.draw_overlays(screen)
 
     def update(self, dt):
         # Called once per frame, to update the state of the game

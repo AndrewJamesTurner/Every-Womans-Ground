@@ -5,12 +5,18 @@ from Box2D import b2World, b2PolygonShape, b2ContactListener
 import lander_shapes as landershapes
 from game import *
 from terraingen import *
+from GameScene import GameScene
 
 from GameObject import *
 
-class LanderScene(ezpygame.Scene):
+class LanderScene(GameScene):
 
     def __init__(self):
+        super(LanderScene, self).__init__()
+
+        #Set countdown for landing
+        self.countdown = None
+
         # Called once per game, when game starts
 
         self.world = b2World(contactListener=ContactListener())  # default gravity is (0,-10) and doSleep is True
@@ -58,6 +64,7 @@ class LanderScene(ezpygame.Scene):
         #Add the lander in the middle of the ground
         landerStartHeight = 5
         self.lander = landershapes.Lander(self.world, ((xGap*numPoints)/2, landerStartHeight + (SCREEN_HEIGHT/PPM)/2))
+        self.ship = landershapes.StationarySpaceship(self.world, ((xGap*numPoints)/2 -(SCREEN_WIDTH/PPM)/3, landerStartHeight + (3*SCREEN_HEIGHT/PPM)/4))
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -81,12 +88,16 @@ class LanderScene(ezpygame.Scene):
         screen.fill(black)
 
         self.ground.draw(screen)
+        self.ship.draw(screen)
         self.lander.draw(screen)
+
 
         #If using sensors use this
         # shape = self.lander.sensor.shape
         # vertices = [world_to_screen_coordinates(self.lander.body.transform * v) for v in shape.vertices]
         # pygame.draw.polygon(screen, (255,255,255,0), vertices)
+
+        self.draw_overlays(screen)
 
     def update(self, dt):
         # Called once per frame, to update the state of the game
@@ -107,14 +118,33 @@ class LanderScene(ezpygame.Scene):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.lander.body.angle += 0.01
+            get_shared_values().fuel -= 0.25;
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.lander.body.angle -= 0.01
+            get_shared_values().fuel -= 0.25;
 
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.lander.body.ApplyLinearImpulse((xxx * power, yyy * power), landerPos, True)
-
+            get_shared_values().fuel -= 1;
 
         set_camera_position(self.lander.body.position[0],self.lander.body.position[1])
+
+        countDownLen = 3000
+        #Get velocity of lander
+        if self.lander.body.linearVelocity == (0,0):
+            if self.countdown == None:
+                self.countdown = 0
+            else:
+                self.countdown += dt
+        else:
+            self.countdown = None
+
+        if self.countdown != None:
+            if self.countdown >= countDownLen:
+                print('landed')
+
+                self.application.change_scene(get_planet_scene())
+
 
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
@@ -130,34 +160,38 @@ class ContactListener(b2ContactListener):
 
         if isinstance(contact.fixtureA.body.userData, landershapes.Lander) or isinstance(contact.fixtureB.body.userData, landershapes.Lander):
 
-            #Check for silly angle
+            if isinstance(contact.fixtureA.body.userData, landershapes.StationarySpaceship) or isinstance(contact.fixtureB.body.userData, landershapes.StationarySpaceship):
 
-            if isinstance(contact.fixtureA.body.userData, landershapes.Lander):
-                angleOfImpact = contact.fixtureA.body.userData.body.angle
-            elif isinstance(contact.fixtureB.body.userData, landershapes.Lander):
-                angleOfImpact = contact.fixtureB.body.userData.body.angle
+                get_lander_scene().application.change_scene(get_space_scene())
 
-            angleOfImpact = abs(math.fmod(angleOfImpact, 2 * math.pi))
+            else:
+                #Check for silly angle
+                if isinstance(contact.fixtureA.body.userData, landershapes.Lander):
+                    angleOfImpact = contact.fixtureA.body.userData.body.angle
+                elif isinstance(contact.fixtureB.body.userData, landershapes.Lander):
+                    angleOfImpact = contact.fixtureB.body.userData.body.angle
 
-            if angleOfImpact > math.pi:
-                angleOfImpact -= math.pi
+                angleOfImpact = abs(math.fmod(angleOfImpact, 2 * math.pi))
 
-            if angleOfImpact > 0.5:
-                print('angle small damage')
-            if angleOfImpact > 1.5:
-                print('angle big damage')
-            if angleOfImpact > 2.0:
-                print('angle huge damage')
+                if angleOfImpact > math.pi:
+                    angleOfImpact -= math.pi
 
-            #Check for extreme velocity
-            fixtureAVelocity = contact.fixtureA.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
-            fixtureBVelocity = contact.fixtureB.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
+                if angleOfImpact > 0.5:
+                    print('angle small damage')
+                if angleOfImpact > 1.5:
+                    print('angle big damage')
+                if angleOfImpact > 2.0:
+                    print('angle huge damage')
 
-            velocity = (fixtureAVelocity-fixtureBVelocity).length
-            if velocity >= 5:
-                print('hit small damage')
-            if velocity >= 10:
-                print('hit big damage')
+                #Check for extreme velocity
+                fixtureAVelocity = contact.fixtureA.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
+                fixtureBVelocity = contact.fixtureB.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
+
+                velocity = (fixtureAVelocity-fixtureBVelocity).length
+                if velocity >= 5:
+                    print('hit small damage')
+                if velocity >= 10:
+                    print('hit big damage')
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
