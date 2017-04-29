@@ -1,6 +1,7 @@
 import math
 import random
 import numpy
+import shapes
 
 from game import *
 
@@ -56,3 +57,28 @@ def print_terrain(terrain, chars):
         line = [ terrain[x, y] for x in range(0,width) ]
         list = [ chars[int(i)] for i in line ]
         print( ''.join(list) )
+
+def create_terrain(coords, world):
+    """
+    Creates an array of TerrainBlock items, which ultimately subclass GameObject and
+    can be drawn by pygame.
+    
+    :param biome: A string, available choices are:
+        - 'desert'
+        - 'forest'
+        - 'lava'
+        - 'water'
+        - 'ice'
+    :param coords: A list of (x, y) tuples.
+    :param world: A reference to a world object (pygame object).
+    :return: A list of TerrainBlock objects.
+    """
+    terrain = []
+    width, height = coords.shape
+    for w in range(width):
+        for h in range(height):
+            biome = coords[w, h]
+            if biome > 0:
+                terrain.append(shapes.terrain_block_factory(biome, (w - round(0.5*width), h - round(0.5*height)), world))
+    return terrain
+
