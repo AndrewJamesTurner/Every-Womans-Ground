@@ -63,6 +63,19 @@ def get_planet_scene():
         planet_scene = PlanetScene()
     return planet_scene
 
+# Values shared by every scene
+shared_values = None
+
+class SharedValues:
+    health = 100
+    fuel = 5000
+
+def get_shared_values():
+    global shared_values
+    if shared_values is None:
+        shared_values = SharedValues()
+    return shared_values
+
 if __name__ == '__main__':
     from menu import MenuScene
     app = ezpygame.Application(title="No Woman's Sky", resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
