@@ -1,3 +1,4 @@
 pygame==1.9.3
 EzPyGame==0.3.1
 box2d==2.3.2
+numpy==1.12.1
