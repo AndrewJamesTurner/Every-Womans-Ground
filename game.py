@@ -68,8 +68,9 @@ shared_values = None
 
 class SharedValues:
     MAX_FUEL = 5000
+    MAX_HEALTH = 100
 
-    health = 100
+    health = MAX_HEALTH
     fuel = MAX_FUEL
 
 def get_shared_values():

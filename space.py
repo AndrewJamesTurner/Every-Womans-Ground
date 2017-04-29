@@ -27,8 +27,7 @@ class ContactListener(b2ContactListener):
 
             get_space_scene().planet_info = game_object_b.info
 
-            # get_space_scene().application.change_scene(get_lander_scene())
-            pass
+            get_space_scene().application.change_scene(get_lander_scene())
 
 
         if isinstance(contact.fixtureA.body.userData, Asteroid) and not isinstance(contact.fixtureB.body.userData, Asteroid):
