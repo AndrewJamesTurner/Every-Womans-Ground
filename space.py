@@ -85,6 +85,7 @@ class SpaceScene(GameScene):
 
             info = {
                 "name": name,
+                "size": size,
                 "angular_vel": angular_vel,
                 "orbit_radius_x": radius_x,
                 "orbit_radius_y": radius_y,
@@ -230,7 +231,7 @@ class SpaceScene(GameScene):
 
 
         # print(angle(ship_position, nearest_planet_position))
-        # print(nearest_planet_dist)
+        print(nearest_planet_dist)
 
         # direction = (ship_position[0] - nearest_planet_position[0], ship_position[1] - nearest_planet_position[1])
         # aaa = math.atan2(direction[1], direction[0])
