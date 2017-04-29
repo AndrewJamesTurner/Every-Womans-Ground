@@ -1,15 +1,15 @@
-from GameObject import GameObject
+from GameObject import *
 from game import *
 import math
 
 
-class SpaceShip(GameObject):
+class SpaceShip(DynamicGameObject):
 
     def __init__(self, world, position):
         polygon_points = [[[0.5, 0], [1, 1], [0, 1]]]
         # polygon_points = [[[0, -1], [1, 1], [-1, 1]]]
         circle_shapes = []
-        image_path = None
+        image_path = "assets/l_left_shape.png"
         scale = 3
 
         density = 1
@@ -21,7 +21,7 @@ class SpaceShip(GameObject):
         self.colour = red
 
 
-class Planet(GameObject):
+class Planet(DynamicGameObject):
 
     def __init__(self, world, position):
 

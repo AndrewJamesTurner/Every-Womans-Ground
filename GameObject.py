@@ -73,8 +73,8 @@ class GameObject:
             image = None
 
 
-        body = world.CreateDynamicBody(position=position)
-        # body = self.create(world, position)
+        # body = world.CreateDynamicBody(position=position)
+        body = self.create(world, position)
         body.userData = self
 
         for polygon in polygon_points:
