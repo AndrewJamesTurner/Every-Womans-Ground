@@ -44,19 +44,31 @@ class SpaceScene(GameScene):
 
     def createSolarSystem(self, numPlanets, numBelt, position):
 
-        sun = Sun(self.world, position)
+        size = random.randint(20, 50)
+        sun = Sun(self.world, position, size)
         self.suns.append(sun)
 
-        self.createAsteroidBelt(sun, 40, 10)
+        x_radius = random.randint(size, size+20)
 
-        planet = self.createPlanet("Earth", 4, random.choice(ptypes), sun, 0.0001, 20, 25, 1)
+        for x in range(numPlanets):
+
+            size = random.randint(5, 15)
+            ptype = random.choice(ptypes)
+            x_radius += random.randint(5, 20)
+            angle_vel = random.randint(10, 100) * 0.01 / (x_radius * x_radius)
+            y_radius = x_radius + random.randint(0,  x_radius) - x_radius/2;
+            num_moons = random.randint(0, 4)
+
+            planet = self.createPlanet("Andy", size, ptype, sun, angle_vel, x_radius, y_radius, num_moons)
 
 
-        # self.createPlanet("Mars", 5, "earth", sun, 0.0001, 30, 35, 0)
-        self.createPlanet("Andy", 10, random.choice(ptypes), sun, 0.0001, 50, 50, 4)
-        self.createPlanet("Andy", 10, random.choice(ptypes), sun, 0.0001, 60, 70, 4)
+        for x in range(numBelt):
 
-        self.createAsteroidBelt(sun, 60, 10)
+            radius = random.randint(20, 100)
+            width = random.randint(5, 20)
+            dencity = random.randint(100, 1000)
+
+            self.createAsteroidBelt(sun, radius, width, dencity)
 
 
         self.createAsteroid(5, (22,22))
@@ -88,13 +100,13 @@ class SpaceScene(GameScene):
 
             return planet
 
-    def createAsteroidBelt(self, centre, radius, thickness):
+    def createAsteroidBelt(self, centre, radius, thickness, dencity):
 
-        maxx = 300
-        for index in range(maxx):
 
-            angle = 2 * math.pi * index / maxx
-            pos_x = centre.body.position[0] + radius * math.sin(angle)
+        for index in range(dencity):
+
+            angle = 2 * math.pi * index / dencity
+            pos_x = centre.body.position[0] + radius * math.sin(angle) + random.random() * thickness
             pos_y = centre.body.position[1] + radius * math.cos(angle) + random.random() * thickness
 
             bullet = AsteroidBeltBit(self.world, (pos_x, pos_y))
@@ -137,6 +149,10 @@ class SpaceScene(GameScene):
 
         self.createSolarSystem(9, 2, (0, 0))
 
+        self.arrow_imamge = pygame.image.load("assets/arrow.png").convert_alpha()
+        image_rect = self.arrow_imamge.get_rect()
+        self.arrow_imamge = pygame.transform.smoothscale(self.arrow_imamge, ( int(0.2*image_rect[2]), int(0.2*image_rect[2])))
+
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -168,6 +184,49 @@ class SpaceScene(GameScene):
         for sun in self.suns:
             sun.draw(screen)
 
+        ship_position = self.space_ship.body.position
+        nearest_planet_position = None
+        nearest_planet_dist = 100000
+
+
+        def distance(posA, posB):
+
+            dx = abs(posA[0] - posB[0])
+            dy = abs(posA[1] - posB[1])
+
+            return math.sqrt(dx*dx + dy*dy)
+
+
+        for planet in self.planets:
+
+            planet_position = planet.body.position
+            dist = distance(ship_position, planet_position)
+
+            if dist < nearest_planet_dist:
+                nearest_planet_dist = dist
+                nearest_planet_position = planet_position
+
+
+        def angle(posA, posB):
+
+            dx = abs(posA[0] - posB[0])
+            dy = abs(posA[1] - posB[1])
+
+            return math.atan2(dy, dx)
+
+
+        # print(angle(ship_position, nearest_planet_position))
+        # print(nearest_planet_dist)
+
+        image_rect = self.arrow_imamge.get_rect()
+        rotated_image = pygame.transform.rotate(self.arrow_imamge, angle(ship_position, nearest_planet_position) * 180 / math.pi)
+        # rotated_image = pygame.transform.rotate(self.arrow_imamge, self.space_ship.body.angle * 180 / math.pi)
+
+        image_rect[0] = SCREEN_WIDTH - 100
+        image_rect[1] = SCREEN_HEIGHT - 100
+        # rotated_image_rect = rotated_image.get_rect(center=world_to_screen_coordinates(self.body.position))
+        screen.blit(rotated_image, image_rect)
+
         self.draw_overlays(screen)
 
     def update(self, dt):
@@ -183,21 +242,21 @@ class SpaceScene(GameScene):
         self.timeSinceLastFired += dt
 
         power = 1
-        spin = 0.3
+        spin = 0.1
 
         keys = pygame.key.get_pressed()
 
         xxx = -math.sin(self.space_ship.body.angle)
         yyy = math.cos(self.space_ship.body.angle)
 
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
             shared_values.fuel -= 1
             self.space_ship.body.ApplyLinearImpulse((xxx * power, yyy * power), self.space_ship.body.worldCenter, True)
 
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.space_ship.body.ApplyAngularImpulse(-spin, True)
 
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             self.space_ship.body.ApplyAngularImpulse(spin, True)
 
         if keys[pygame.K_SPACE]:
