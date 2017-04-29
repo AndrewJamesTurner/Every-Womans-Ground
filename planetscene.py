@@ -31,35 +31,50 @@ class PlanetScene(ezpygame.Scene):
 
         terrain_raw = terraingen.generate_planet_test(17, 500, 80)
 
-        # TODO Terrain Modifiers
+        # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
         # TODO Have these values randomly generated from an appropriate distribution (possibly related to a planet's characteristics)
-        params = {'num_tunnels': 0.05,
-                  'tunnel_depth': 0.3,
-                  'num_craters': 0.02,
-                  'crater_radius_mean': 10,
-                  'crater_radius_sd': 2,
-                  'vegetation_seed': 7,
-                  'vegetation': [
-                      {
-                      'seedrate':0.8,
-                      'root_block':5,
-                      'root_depth':1,
-                      'grow_block':4,
-                      'grow_height':1
+
+
+        # TODO Have params in dict for each modifier, with the name drawn from <type>_modifier the function name
+
+        params = {'tunnel': {
+                      'num': 0.05,
+                      'depth': 0.3,
                       },
-                    {
-                    'seedrate':0.1,
-                    'root_block':4,
-                    'root_depth':2,
-                    'grow_block':3,
-                    'grow_height':5
-                    }
-                  ]}
+                  'crater': {
+                      'num': 0.02,
+                      'radius_mean': 10,
+                      'radius_sd': 2,
+                  },
+                  'vegetation': {
+                      'seed': 7,
+                      'types':  [
+                          {
+                          'seedrate':0.8,
+                          'root_block':5,
+                          'root_depth':1,
+                          'grow_block':4,
+                          'grow_height':1
+                          },
+                         {
+                        'seedrate':0.1,
+                        'root_block':4,
+                        'root_depth':2,
+                        'grow_block':3,
+                        'grow_height':5
+                        }
+                      ]
+                    },
+            'water': {
+
+                     }
+                  }
 
         for modifier in modifiers:
             print("On {}".format(modifier.__name__))
-            terrain_raw = modifier(terrain_raw, params)
+
+            terrain_raw = modifier(terrain_raw, params[modifier.__name__.replace('_modifier', '')])
 
         init_pos = terraingen.get_initial_position(terrain_raw, 0)
         init_lander = terraingen.get_initial_position(terrain_raw, -5)

@@ -19,7 +19,7 @@ import numpy as np
 import constants
 
 
-def add_tunnels(terrain, params):
+def tunnel_modifier(terrain, params):
     """
     Creates tunnels in the terrain, one brick wide.
 
@@ -33,7 +33,7 @@ def add_tunnels(terrain, params):
     width, height = terrain.shape
 
     # Find how many tunnels will have and their x values
-    num_tunnels = round(params['num_tunnels'] * width)
+    num_tunnels = round(params['num'] * width)
     tunnel_x_points = np.random.randint(0, width, num_tunnels)
 
     # Identify coordinates for starting hole, uniformally distributed across terrain
@@ -44,7 +44,7 @@ def add_tunnels(terrain, params):
         curr_x = x
 
         # Generate tunnel depth
-        tunnel_depth = int(np.random.normal(params['tunnel_depth'], scale=constants.TERRAIN_TUNNEL_SD) * col_depth)
+        tunnel_depth = int(np.random.normal(params['depth'], scale=constants.TERRAIN_TUNNEL_SD) * col_depth)
 
         for _ in range(tunnel_depth):
             # Set ground to 0
@@ -58,7 +58,8 @@ def add_tunnels(terrain, params):
 
     return terrain
 
-def add_craters(terrain, params):
+
+def crater_modifier(terrain, params):
     """
     Adds craters to the terrain.
 
@@ -72,7 +73,7 @@ def add_craters(terrain, params):
     width, height = terrain.shape
 
     # Find how many tunnels will have and their x values
-    num_craters = round(params['num_craters'] * width)
+    num_craters = round(params['num'] * width)
     crater_foci_x = np.random.randint(0, width, num_craters)
 
     # Identify coordinates for starting hole, uniformally distributed across terrain
@@ -81,7 +82,7 @@ def add_craters(terrain, params):
         curr_y = np.argmin(terrain[x, ]) - 1
 
         # Generate a random radius
-        crater_radius = int(np.random.normal(params['crater_radius_mean'], scale=params['crater_radius_sd']))
+        crater_radius = int(np.random.normal(params['radius_mean'], scale=params['radius_sd']))
 
         if crater_radius == 0:
             continue
@@ -100,13 +101,12 @@ def add_craters(terrain, params):
     return terrain
 
 
-def add_vegetation(terrain, params):
+def vegetation_modifier(terrain, params):
     width, height = terrain.shape
 
-    vegparams = params['vegetation']
-    seed = params['vegetation_seed']
+    seed = params['seed']
     r = random.Random(seed)
-    for p in vegparams:
+    for p in params['types']:
         rr = random.Random(r.getrandbits(32))
         seedrate   = p['seedrate']
         root_block = p['root_block']
@@ -136,9 +136,6 @@ def add_vegetation(terrain, params):
     return terrain
 
 
-def add_water(terrain, params):
+def water_modifier(terrain, params):
     return terrain
 
-
-def add_water(terrain, params):
-    return terrain
