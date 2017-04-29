@@ -7,6 +7,8 @@ import math
 import random
 
 
+FIRE_TIMEOUT = 500
+
 to_remove = []
 
 class ContactListener(b2ContactListener):
@@ -97,7 +99,7 @@ class SpaceScene(ezpygame.Scene):
     def __init__(self):
         # Called once per game, when game starts
 
-        self.timeSinceLastFired = 0
+        self.timeSinceLastFired = 10000
         self.planets = []
         self.bullets = []
         self.asteroids = []
@@ -182,7 +184,7 @@ class SpaceScene(ezpygame.Scene):
 
         if keys[pygame.K_SPACE]:
 
-            if self.timeSinceLastFired > 1000:
+            if self.timeSinceLastFired > FIRE_TIMEOUT:
 
                 self.timeSinceLastFired = 0
 
@@ -229,10 +231,12 @@ class SpaceScene(ezpygame.Scene):
 
                 self.world.DestroyBody(remove_me.body)
 
-                if new_size > 1:
+                if new_size >= 1:
 
-                    self.createAsteroid(new_size, (position[0]+2, position[1]+2))
-                    self.createAsteroid(new_size, (position[0]-2, position[1]-2))
+                    # for i in range(new_size)
+
+                self.createAsteroid(new_size, (position[0]+2, position[1]+2))
+                self.createAsteroid(new_size, (position[0]-2, position[1]-2))
 
         set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
 
