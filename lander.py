@@ -5,6 +5,7 @@ from Box2D import b2World, b2PolygonShape
 import lander_shapes as shapes
 from game import *
 
+from GameObject import *
 
 class DemoScene(ezpygame.Scene):
 
@@ -13,13 +14,19 @@ class DemoScene(ezpygame.Scene):
 
         self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
+        #Set gravity depending on planet type.
+        self.world.gravity = (0, -5)
+
+        #Set camera to centre
+        set_camera_position((SCREEN_WIDTH/PPM)/2,(SCREEN_HEIGHT/PPM)/2)
+
         # Create an object that moves in the box2d world and can be rendered to the screen
-        self.demo_shape = shapes.Lander(self.world, (5, 5))
+        self.lander = shapes.Lander(self.world, (5, 5))
 
         # A box2d object that doesn't move and isn't rendered to screen
-        body_bottom_wall = self.world.CreateStaticBody(
+        planetSurface = self.world.CreateStaticBody(
             position=(SCREEN_WIDTH / 2, -5),
-            shapes=b2PolygonShape(box=(SCREEN_WIDTH / 2, 5)))
+            shapes=b2PolygonShape(box=(SCREEN_WIDTH, 5)))
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -30,15 +37,14 @@ class DemoScene(ezpygame.Scene):
 
         # Processing keyboard input here gives one event per key press
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                # Kick the demo shape
-                self.demo_shape.body.ApplyLinearImpulse((0, 30), self.demo_shape.body.position, True)
+            if event.key == pygame.K_UP:
+                self.lander.body.ApplyLinearImpulse((0, 30), self.lander.body.position, True)
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
 
         screen.fill(black)
-        self.demo_shape.draw(screen)
+        self.lander.draw(screen)
 
     def update(self, dt):
         # Called once per frame, to update the state of the game
@@ -46,7 +52,7 @@ class DemoScene(ezpygame.Scene):
         # Processing keyboard events here lets you track which keys are being held down
         # keys = pygame.key.get_pressed()
         # if keys[pygame.K_SPACE]:
-        #     self.demo_shape.body.ApplyLinearImpulse((0, 30), self.demo_shape.body.position, True)
+        #     self.lander.body.ApplyLinearImpulse((0, 30), self.lander.body.position, True)
 
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)

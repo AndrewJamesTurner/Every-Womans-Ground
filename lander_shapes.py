@@ -1,8 +1,7 @@
 
-from GameObject import GameObject
+from GameObject import *
 
-
-class Lander(GameObject):
+class Lander(DynamicGameObject):
 
     def __init__(self, world, position):
         polygon_points = [[[0.39,0], [0.66,0], [1,0.3], [1,1], [0,1],[0,0.3]]]
