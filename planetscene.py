@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import ezpygame
+import sys
 from Box2D import b2World, b2PolygonShape
 import random
 
@@ -8,6 +9,8 @@ import terrain_utils
 import terraingen
 import constants
 import numpy as np
+import types
+import terrain_modifiers
 
 import shapes
 from game import *
@@ -22,13 +25,27 @@ class PlanetScene(ezpygame.Scene):
         terrainblocks.make_blocks(1.0)
 
         # Randomly generate generate gravity
-        gravity = random.gauss(-10, 0)
+        gravity = random.gauss(-10, 0.05)
 
         self.world = b2World()  # default gravity is (0,-10) and doSleep is True
 
         terrain_raw = terraingen.generate_planet_test(17, 500, 80)
         init_pos = terraingen.get_initial_position(terrain_raw, 0)
         init_lander = terraingen.get_initial_position(terrain_raw, -5)
+
+        # TODO Terrain Modifiers
+        modifiers = terrain_utils.get_modifiers()
+        # TODO Have these values randomly generated from an appropriate distribution (possibly related to a planet's characteristics)
+        params = {'num_tunnels': 0.05,
+                  'tunnel_depth': 0.3,
+                  'num_craters': 0.02,
+                  'crater_radius_mean': 5,
+                  'crater_radius_sd': 2}
+
+        for modifier in modifiers:
+            print("On {}".format(modifier.__name__))
+            terrain_raw = modifier(terrain_raw, params)
+
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, init_pos)
