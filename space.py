@@ -7,18 +7,27 @@ import math
 import random
 
 
-
-
+to_remove = []
 
 class ContactListener(b2ContactListener):
 
     def BeginContact(self, conctact):
 
         if isinstance(conctact.fixtureA.body.userData, Planet):
-            print(conctact.fixtureA.body.userData.info)
+            # print(conctact.fixtureA.body.userData.info)
+            pass
 
         if isinstance(conctact.fixtureB.body.userData, Planet):
-            print(conctact.fixtureB.body.userData.info)
+            # print(conctact.fixtureB.body.userData.info)
+            pass
+
+
+        if isinstance(conctact.fixtureA.body.userData, Asteroid):
+            to_remove.append(conctact.fixtureA)
+            pass
+
+        if isinstance(conctact.fixtureB.body.userData, Asteroid):
+            pass
 
             # space_scene.applicatiochange_scene(lander_scene)
 
@@ -28,30 +37,7 @@ class ContactListener(b2ContactListener):
 class SpaceScene(ezpygame.Scene):
 
 
-    def __init__(self):
-        # Called once per game, when game starts
-
-        planets = []
-        self.planets = []
-        self.bullets = []
-
-        self.world = b2World([0,0], contactListener=ContactListener())
-
-        def createAsteroidBelt(centre, radius, thickness):
-
-            maxx = 300
-            for index in range(maxx):
-
-                angle = 2 * math.pi * index / maxx
-                pos_x = centre.body.position[0] + radius * math.sin(angle)
-                pos_y = centre.body.position[1] + radius * math.cos(angle) + random.random() * thickness
-
-                bullet = Bullet(self.world, (pos_x, pos_y))
-
-                self.bullets.append(bullet)
-
-
-        def createPlanet(name, size, type, centre, angular_vel, radius_x, radius_y):
+    def createPlanet(self, name, size, type, centre, angular_vel, radius_x, radius_y):
 
             planet = Planet(self.world, (15, 5), size)
 
@@ -67,10 +53,52 @@ class SpaceScene(ezpygame.Scene):
 
             planet.info = info
             planet.distance_to_sum = 10
-            planets.append(planet)
             self.planets.append(planet)
 
             return planet
+
+
+    def createAsteroidBelt(self, centre, radius, thickness):
+
+        maxx = 300
+        for index in range(maxx):
+
+            angle = 2 * math.pi * index / maxx
+            pos_x = centre.body.position[0] + radius * math.sin(angle)
+            pos_y = centre.body.position[1] + radius * math.cos(angle) + random.random() * thickness
+
+            bullet = Bullet(self.world, (pos_x, pos_y))
+
+            self.bullets.append(bullet)
+
+        return bullet
+
+
+    def createAsteroid(self, size, position):
+
+        asteroid = Asteroid(self.world, position, size)
+
+        info = {
+            "size": size,
+            "gameObject": asteroid
+        }
+
+        asteroid.info = info
+
+        self.asteroids.append(asteroid)
+
+        return asteroid
+
+
+
+    def __init__(self):
+        # Called once per game, when game starts
+
+        self.planets = []
+        self.bullets = []
+        self.asteroids = []
+
+        self.world = b2World([0,0], contactListener=ContactListener())
 
 
         space_ship = SpaceShip(self.world, (20, 20))
@@ -79,16 +107,16 @@ class SpaceScene(ezpygame.Scene):
         sun = Sun(self.world, (0, 0))
         self.sun = sun
 
-        createAsteroidBelt(sun, 40, 10)
+        self.createAsteroidBelt(sun, 40, 10)
 
-        planet = createPlanet("Earth", 4, "rock", sun, 0.001, 20, 25)
-        moon = createPlanet("Moon", 1, "rock", planet, 0.005, 6, 6)
+        planet = self.createPlanet("Earth", 4, "rock", sun, 0.001, 20, 25)
+        moon = self.createPlanet("Moon", 1, "rock", planet, 0.005, 6, 6)
 
 
-        createPlanet("Mars", 5, "rock", sun, 0.001, 30, 35)
-        createPlanet("Andy", 10, "rock", sun, 0.001, 50, 50)
+        self.createPlanet("Mars", 5, "rock", sun, 0.001, 30, 35)
+        self.createPlanet("Andy", 10, "rock", sun, 0.001, 50, 50)
 
-        self.asteroid = Asteroid(self.world, (22, 22), 2)
+        self.createAsteroid(3, (22,22))
 
 
 
@@ -108,7 +136,7 @@ class SpaceScene(ezpygame.Scene):
 
         screen.fill(black)
         self.space_ship.draw(screen)
-        self.asteroid.draw(screen)
+        # self.asteroid.draw(screen)
 
         for planet in self.planets:
             planet.draw(screen)
@@ -116,12 +144,18 @@ class SpaceScene(ezpygame.Scene):
         for bullet in self.bullets:
             bullet.draw(screen)
 
+        for asteroid in self.asteroids:
+            asteroid.draw(screen)
+
         self.sun.draw(screen)
 
 
 
     def update(self, dt):
         # Called once per frame, to update the state of the game
+
+        global to_remove
+        to_remove = []
 
         power = 1
         spin = 0.1
@@ -170,6 +204,22 @@ class SpaceScene(ezpygame.Scene):
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         self.world.ClearForces()
+
+        for remove_me in to_remove:
+            if isinstance(remove_me.body.userData, Asteroid):
+
+                info = remove_me.body.userData.info
+
+                new_size = info["size"] - 1
+
+                position = remove_me.body.position
+                self.asteroids.remove(info["gameObject"])
+                self.world.DestroyBody(remove_me.body)
+
+                if new_size:
+
+                    self.createAsteroid(new_size, (position[0]+1, position[1]+1))
+                    self.createAsteroid(new_size, (position[0]-1, position[1]-1))
 
         set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
 
