@@ -29,9 +29,9 @@ ASSETS_PATH = 'assets'
 BIOMES = ['desert', 'water', 'ice', 'lava', 'forest']
 
 # TODO Fill in other textures
-BIOME_TEXTURES = {'desert': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  'water': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  'ice': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  'lava': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  'forest': os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+BIOME_TEXTURES = {0: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  1: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  2: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  3: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
+                  4: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
                   }

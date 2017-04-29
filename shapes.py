@@ -39,21 +39,3 @@ class TerrainBlock(StaticGameObject):
 def terrain_block_factory(biome, position, world):
     return TerrainBlock(world, position, constants.BIOME_TEXTURES[biome])
 
-
-def create_terrain(biome, coords, world):
-    """
-    Creates an array of TerrainBlock items, which ultimately subclass GameObject and
-    can be drawn by pygame.
-    
-    :param biome: A string, available choices are:
-        - 'desert'
-        - 'forest'
-        - 'lava'
-        - 'water'
-        - 'ice'
-    :param coords: A list of (x, y) tuples.
-    :param world: A reference to a world object (pygame object).
-    :return: A list of TerrainBlock objects.
-    """
-
-    return [terrain_block_factory(biome, (x, y), world) for x, y in coords]
