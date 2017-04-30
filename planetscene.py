@@ -19,6 +19,15 @@ to_remove = []
 
 class DataBox:
 
+    min_oxygen = 0.15
+    max_oxygen = 0.25
+
+    min_gravity = 8
+    max_gravity = 12
+
+    min_temp = 280
+    max_temp = 310
+
     def __init__(self):
 
         self.oxygen = None
@@ -40,40 +49,69 @@ class DataBox:
         screenImage = pygame.transform.smoothscale(screenImage, (width,height))
         screen.blit(screenImage, (SCREEN_WIDTH-width*1.05 - offset, SCREEN_HEIGHT-height*1.05 - offset))
 
+
+
+        if self.oxygen is None:
+            text_col = black
+        elif self.oxygen < DataBox.min_oxygen or self.oxygen > DataBox.max_oxygen:
+            text_col = red
+        else:
+            text_col = green
+
         text = "Oxygen: " + ("???" if self.oxygen is None else "{:.1f}".format(self.oxygen*100) + "%")
-        text_surface = self.font.render(text, True, black)
+        text_surface = self.font.render(text, True, text_col)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07))
 
+
+
+        if self.gravity is None:
+            text_col = black
+        elif self.gravity < DataBox.min_gravity or self.gravity > DataBox.max_gravity:
+            text_col = red
+        else:
+            text_col = green
+
         text = "Gravity: " + ("???" if self.gravity is None else  "{:.1f}".format(self.gravity) + " m/s/s")
-        text_surface = self.font.render(text, True, black)
+        text_surface = self.font.render(text, True, text_col)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+line_height))
 
+
+        if self.water is None:
+            text_col = black
+        elif self.water:
+            text_col = green
+        else:
+            text_col = red
+
+
         text = "Water: " + ("???" if self.water is None else ("Yes" if self.water else "No"))
-        text_surface = self.font.render(text, True, black)
+        text_surface = self.font.render(text, True, text_col)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+2*line_height))
 
-        text = "Tempurature: " + ("???" if self.tempurature is None else "{:.0f}".format(self.tempurature) + " K")
-        text_surface = self.font.render(text, True, black)
+
+
+        if self.tempurature is None:
+            text_col = black
+        elif self.tempurature < DataBox.min_temp or self.tempurature > DataBox.max_temp:
+            text_col = red
+        else:
+            text_col = green
+
+        text = "Temperature: " + ("???" if self.tempurature is None else "{:.0f}".format(self.tempurature) + " K")
+        text_surface = self.font.render(text, True, text_col)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+3*line_height))
 
     def is_new_home(self):
 
-        min_oxygen = 0.15
-        max_oxygen = 0.25
 
-        min_gravity = 8
-        max_gravity = 12
 
-        min_temp = 280
-        max_temp = 310
-
-        if self.oxygen is None or self.oxygen < min_oxygen or self.oxygen > max_oxygen:
+        if self.oxygen is None or self.oxygen < DataBox.min_oxygen or self.oxygen > DataBox.max_oxygen:
             return False
         elif not self.water:
             return False
-        elif self.gravity is None or self.gravity < min_gravity or self.gravity > max_gravity:
+        elif self.gravity is None or self.gravity < DataBox.min_gravity or self.gravity > DataBox.max_gravity:
             return False
-        elif self.tempurature is None or self.tempurature < min_temp or self.tempurature > max_temp:
+        elif self.tempurature is None or self.tempurature < DataBox.min_temp or self.tempurature > DataBox.max_temp:
             return False
         else:
             return True
@@ -277,19 +315,19 @@ class PlanetScene(GameScene):
 
         for t in range(dt):
 
-            if self.update_rng.random() < 0.0001 and not self.data_box.oxygen:
+            if self.update_rng.random() < 0.00007 and not self.data_box.oxygen:
                 self.data_box.oxygen = self.params["oxygen"]
                 pass
 
-            if self.update_rng.random() < 0.0001 and not self.data_box.water:
+            if self.update_rng.random() < 0.00007 and not self.data_box.water:
                 self.data_box.water = self.params["water"]
                 pass
 
-            if self.update_rng.random() < 0.0001 and not self.data_box.tempurature:
+            if self.update_rng.random() < 0.00007 and not self.data_box.tempurature:
                 self.data_box.tempurature = self.params["temp"]
                 pass
 
-            if self.update_rng.random() < 0.0001 and not self.data_box.gravity:
+            if self.update_rng.random() < 0.00007 and not self.data_box.gravity:
                 self.data_box.gravity = self.params["gravity"]
 
         if self.data_box.is_new_home():
