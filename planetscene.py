@@ -230,7 +230,13 @@ class PlanetScene(GameScene):
 
     def handle_event(self, event):
         # Called every time a pygame event is fired
-        pass
+
+        # Processing keyboard input here gives one event per key press
+        if event.type == pygame.KEYDOWN:
+            # Only jump if on ground!
+            if self.on_ground():
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    self.person.body.ApplyLinearImpulse((0, constants.PLAYER_JUMP_THRUST), self.person.body.position, True)
 
     def draw(self, screen):
         # Called once per frame, to draw to the screen
@@ -291,10 +297,7 @@ class PlanetScene(GameScene):
             if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                 self.person.body.ApplyForce((constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
 
-            if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:
-                self.person.body.ApplyLinearImpulse((0, constants.PLAYER_JUMP_THRUST), self.person.body.position, True)
-
-        # Jetpack
+        # Jetpack side to side in air
         else:
             if keys[pygame.K_a] or keys[pygame.K_LEFT]:
                 self.person.body.ApplyLinearImpulse((-constants.JETPACK_THRUST, 0), self.person.body.position, True)
@@ -303,9 +306,10 @@ class PlanetScene(GameScene):
                 self.person.body.ApplyLinearImpulse((constants.JETPACK_THRUST, 0), self.person.body.position, True)
                 get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
 
-            if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:
-                self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
-                get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
+        # Can also jetpack from ground
+        if keys[pygame.K_SPACE]:
+            self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
+            get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
 
         if keys[pygame.K_ESCAPE]:
             exit()
