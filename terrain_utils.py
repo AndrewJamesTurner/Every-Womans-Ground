@@ -98,7 +98,7 @@ terrain_params = {
         'ratio': 0.7,
         'base': 1,          # Rock
         'layers': [
-            [ 10, 0.3, 8 ],  # Dust
+            [ 5, 0.3, 8 ],  # Dust
             [ 16, 0.6, 7 ],  # Cobble
         ]
     },

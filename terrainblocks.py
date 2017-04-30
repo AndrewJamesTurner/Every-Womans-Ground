@@ -13,7 +13,7 @@ BLOCK_DEFS = [
     ['smooth.png',   0xc0c0ffff, 1.0,    0.01,      0.1], # 5  Ice
     ['flat.png',     0x00ff00ff, 1.0,     0.1,      0.1], # 6  Flat green tile
     ['granular.png', 0xc0c0c0ff, 1.0,     0.3,      0.2], # 7  Cobble
-    ['smooth.png',   0xe0e0e0ff, 1.0,     0.4,      0.0], # 8  Dust
+    ['smooth.png',   0xc0c0c0ff, 1.0,     0.4,      0.0], # 8  Dust
     ['leaves.png',   0x80ff00ff, 1.0,     0.3,      0.4], # 9  Grass
     ['rock.png',     0xc00000ff, 1.0,     0.2,      0.3], # 10 Mars
     ['granular.png', 0xff8000ff, 1.0,     0.4,      0.1], # 11 Orange Sand
