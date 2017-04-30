@@ -20,7 +20,7 @@ import constants
 import terrain_utils
 
 
-def tunnel_modifier(terrain, params):
+def tunnel_modifier(terrain, params, seed):
     """
     Creates tunnels in the terrain, one brick wide.
 
@@ -31,7 +31,7 @@ def tunnel_modifier(terrain, params):
     :return: The modified terran as a 2D numpy array of ints.
     """
     width, height = terrain.shape
-    r = random.Random(params['seed'])
+    r = random.Random(seed)
     digging_directions = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0)]  # Possible (x,y) pairs where can dig next square
 
     # Find how many tunnels will have and their x values
@@ -63,7 +63,7 @@ def tunnel_modifier(terrain, params):
     return terrain
 
 
-def crater_modifier(terrain, params):
+def crater_modifier(terrain, params, seed):
     """
     Adds craters to the terrain.
 
@@ -75,7 +75,7 @@ def crater_modifier(terrain, params):
     :return: The modified terran as a 2D numpy array of ints.
 """
     width, height = terrain.shape
-    r = random.Random(params['seed'])
+    r = random.Random(seed)
 
     # Find how many tunnels will have and their x values
     num_craters = round(params['frequency'] * width)
@@ -98,10 +98,9 @@ def crater_modifier(terrain, params):
     return terrain
 
 
-def vegetation_modifier(terrain, params):
+def vegetation_modifier(terrain, params, seed):
     width, height = terrain.shape
 
-    seed = params['seed']
     r = random.Random(seed)
     for p in params['types']:
         rr = random.Random(r.getrandbits(32))
@@ -133,6 +132,8 @@ def vegetation_modifier(terrain, params):
     return terrain
 
 
-def water_modifier(terrain, params):
+def water_modifier(terrain, params, seed):
+    width, height = terrain.shape
+    r = random.Random(seed)
     return terrain
 
