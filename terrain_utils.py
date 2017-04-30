@@ -29,7 +29,7 @@ def destroy_circle(terrain, radius, origin):
         for j in range(distances.shape[1]):
             distances[i, j] = np.sqrt((i-radius)**2 + (j-radius)**2)
 
-    subset[distances <= radius] = 0
+    subset[distances <= radius] |= -128
 
 default_values = {
     'gravity_mean': 10,
