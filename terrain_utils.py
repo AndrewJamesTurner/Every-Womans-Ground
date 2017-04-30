@@ -53,7 +53,7 @@ default_values = {
                 {   # Blue fungus
                     'grow_block':4,
                     'seedrate':0.8, #TODO: Scale with environment
-                    'root_block':5,
+                    'root_block':14,
                     'root_depth':1,
                     'grow_height':1,
                 },

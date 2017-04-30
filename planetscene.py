@@ -49,7 +49,7 @@ class DataBox:
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=5):
+    def __init__(self, seed=3):
         super(PlanetScene, self).__init__()
 
         self.seed = seed
@@ -116,8 +116,8 @@ class PlanetScene(GameScene):
                                    # Get modifier specific params
                                    modifier_seed)
 
-        init_pos = terraingen.get_initial_position(terrain_raw, 0)
-        init_lander = terraingen.get_initial_position(terrain_raw, -10)
+        init_pos = terraingen.get_initial_position(terrain_raw, 0, 2)
+        init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
@@ -130,9 +130,9 @@ class PlanetScene(GameScene):
         for x in range(0, numFuels):
 
             xPos = r.randint(-250, 250)
-            yPos = terraingen.get_initial_position(terrain_raw, xPos)[1] + 5
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
 
-            fuel = shapes.FuelShape(self.world, (xPos, yPos))
+            fuel = shapes.FuelShape(self.world, pos)
             fuel.info = {"gameObject": fuel}
             self.fuels.append(fuel)
 
@@ -142,9 +142,9 @@ class PlanetScene(GameScene):
         for x in range(0, numFuels):
 
             xPos = r.randint(-250, 250)
-            yPos = terraingen.get_initial_position(terrain_raw, xPos)[1] + 5
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
 
-            health = shapes.HealthShape(self.world, (xPos, yPos))
+            health = shapes.HealthShape(self.world, pos)
             health.info = {"gameObject": health}
             self.healths.append(health)
 
@@ -153,8 +153,8 @@ class PlanetScene(GameScene):
         self.person.body.linearDamping = 0.3
 
         width, height = self.terrain.terrain.shape
-        self.backdrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
-        self.dustdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'dust.png'), width)
+        self.backdrop = shapes.ParallaxBackdrop(10, os.path.join(ASSETS_PATH, 'planets', archetype + '.png'), width)
+        self.skydrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
 
         # TODO Debugging
         self.person_init = init_pos
@@ -194,8 +194,8 @@ class PlanetScene(GameScene):
         set_camera_position(cam_x, cam_y)
 
         screen.fill(black)
+        self.skydrop.draw(screen)
         self.backdrop.draw(screen)
-        self.dustdrop.draw(screen)
         self.terrain.draw(screen)
         self.person.draw(screen)
         self.lander.draw(screen)
