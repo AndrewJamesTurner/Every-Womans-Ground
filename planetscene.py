@@ -14,6 +14,9 @@ import terrainblocks
 
 change_to_lander_scene = False
 
+to_remove = []
+
+
 class PlanetScene(GameScene):
 
     def __init__(self, seed=5):
@@ -41,7 +44,7 @@ class PlanetScene(GameScene):
         terrainblocks.make_blocks(1.0)
 
         gravity = r.gauss(params['gravity_mean'], params['gravity_sd'])
-        self.world = b2World(gravity=(0, gravity), contactListener=EnterLanderListener())
+        self.world = b2World(gravity=(0, gravity), contactListener=ContactListener())
 
         terrain_raw = terraingen.generate_planet_test(r.random(), 500, 80)
 
@@ -59,6 +62,12 @@ class PlanetScene(GameScene):
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
+
+        self.fuels = []
+        fuel = shapes.FuelShape(self.world, (init_pos[0] + 5, init_pos[1] + 5))
+        fuel.info = {"gameObject": fuel}
+        self.fuels.append(fuel)
+
         self.person.body.fixedRotation = True
         self.person.body.linearDamping = 0.3
 
@@ -110,9 +119,16 @@ class PlanetScene(GameScene):
         self.person.draw(screen)
         self.lander.draw(screen)
 
+        for fuel in self.fuels:
+            fuel.draw(screen)
+
         self.draw_overlays(screen)
 
     def update(self, dt):
+
+        global to_remove
+        to_remove = []
+
         # Box2d physics step
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         self.world.ClearForces()
@@ -137,15 +153,29 @@ class PlanetScene(GameScene):
             self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
             get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
 
+
+        for remove_me in to_remove:
+
+            info = remove_me.body.userData.info
+
+            if info["gameObject"] in self.fuels:
+                    self.fuels.remove(info["gameObject"])
+
+            self.world.DestroyBody(remove_me.body)
+
+
         self.check_game_over()
 
 
 
-class EnterLanderListener(b2ContactListener):
+class ContactListener(b2ContactListener):
 
     def BeginContact(self, contact):
         game_object_a = contact.fixtureA.body.userData
         game_object_b = contact.fixtureB.body.userData
+
+        game_fixture_a = contact.fixtureA
+        game_fixture_b = contact.fixtureB
 
         # When landing on a planet, change to the lander scene
         if (isinstance(game_object_a, shapes.AstronautShape) and isinstance(game_object_b, lander_shapes.StationaryLander)) or \
@@ -154,6 +184,24 @@ class EnterLanderListener(b2ContactListener):
             global change_to_lander_scene
             change_to_lander_scene = True
 
+
+
+        if isinstance(game_object_a, shapes.FuelShape) and isinstance(game_object_b, shapes.AstronautShape):
+
+            global to_remove
+
+            if game_fixture_a not in to_remove:
+                to_remove.append(game_fixture_a)
+                get_shared_values().fuel += 1000
+
+
+        if isinstance(game_object_b, shapes.FuelShape) and isinstance(game_object_a, shapes.AstronautShape):
+
+            global to_remove
+
+            if game_fixture_b not in to_remove:
+                to_remove.append(game_fixture_b)
+                get_shared_values().fuel += 1000
 
 
 if __name__ == '__main__':

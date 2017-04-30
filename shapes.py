@@ -41,6 +41,23 @@ class AstronautShape(DynamicGameObject):
         self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
 
+
+class FuelShape(DynamicGameObject):
+
+    def __init__(self, world, position):
+        polygon_points = [[[0,0], [0,1], [1,1], [0,1]]]
+        circle_shapes = []
+        image_path = os.path.join(constants.ASSETS_PATH, "nuclear.png")
+
+        scale = 1
+        density = 1
+        friction = 0.3
+        restitution = 0.4
+
+        self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
+                                                   density, friction, restitution)
+
+
 DEBUG_GRID = 0
 class TerrainBulk(StaticGameObject):
     def __init__(self, world, terrain):

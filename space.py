@@ -83,7 +83,7 @@ class SpaceScene(GameScene):
             size = self.r.randint(5, 15)
             ptype = self.r.choice(ptypes)
             x_radius += self.r.randint(5, 20)
-            angle_vel = self.r.randint(10, 100) * 0.01 / (x_radius * x_radius)
+            angle_vel = self.r.randint(10, 50) * 0.01 / (x_radius * x_radius)
             y_radius = x_radius + self.r.randint(0,  x_radius) - x_radius/2;
             num_moons = self.r.randint(0, 4)
 
@@ -287,7 +287,7 @@ class SpaceScene(GameScene):
         self.timeSinceLastFired += dt
 
         power = 1
-        spin = 0.1
+        spin = 0.2
 
         keys = pygame.key.get_pressed()
 
