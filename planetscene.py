@@ -32,28 +32,28 @@ class DataBox:
     def draw(self, screen):
 
         width = 200
-        health = 120
+        height = 120
         line_height = 30
 
-        pygame.draw.rect(screen, (255,0,0,0), (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05, width, health), 0)
+        pygame.draw.rect(screen, (255,0,0,0), (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.05, width, height), 0)
 
         text = "Oxygen: " + ("???" if self.oxygen is None else str(self.oxygen) + "%")
         text_surface = self.font.render(text, True, black)
-        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07))
+        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07))
 
         text = "Gravity: " + ("???" if self.gravity is None else str(self.gravity) + "m/s/s")
         text_surface = self.font.render(text, True, black)
-        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07+line_height))
+        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+line_height))
 
         text = "Water: " + ("???" if self.water is None else ("Yes" if self.water else "No"))
 
         text_surface = self.font.render(text, True, black)
-        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07+2*line_height))
+        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+2*line_height))
 
         text = "Tempurature: " + ("???" if self.tempurature is None else str(self.tempurature) + "K")
 
         text_surface = self.font.render(text, True, black)
-        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07+3*line_height))
+        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+3*line_height))
 
     def is_new_home(self):
 
