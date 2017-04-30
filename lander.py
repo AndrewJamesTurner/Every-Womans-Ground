@@ -6,6 +6,7 @@ import lander_shapes as landershapes
 from game import *
 from terraingen import *
 from GameScene import GameScene
+import terrain_utils
 
 from GameObject import *
 
@@ -24,20 +25,7 @@ class LanderScene(GameScene):
         change_to_space_scene = False
 
         self.planet_info = get_space_scene().planet_info
-
-        # print(self.planet_info)
-
-        # self.planet_info = {
-        #     "name": "Earth",
-        #     "size": 10,
-        #     "angular_vel": 0.0001,
-        #     "orbit_radius_x": 30,
-        #     "orbit_radius_y": 35,
-        #     "orbit_angle": 0.13,
-        #     "type": "other",
-        #     "orbit_centre": (0, 0),
-        #     "seed": 6
-        # }
+        params = terrain_utils.get_planet_params( self.planet_info["type"], self.planet_info)
 
         # Set countdown for landing
         self.countdown = None
@@ -47,7 +35,7 @@ class LanderScene(GameScene):
         self.world = b2World(contactListener=ContactListener())  # default gravity is (0,-10) and doSleep is True
 
         # Set gravity depending on planet type.
-        self.world.gravity = (0, -5)
+        self.world.gravity = (0, -params["gravity"])
 
         # Set camera to centre
         set_camera_position((SCREEN_WIDTH / PPM) / 2, (SCREEN_HEIGHT / PPM) / 2)
