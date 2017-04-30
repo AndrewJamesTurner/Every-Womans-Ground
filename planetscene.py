@@ -19,7 +19,7 @@ to_remove = []
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=1):
+    def __init__(self, seed=5):
         super(PlanetScene, self).__init__()
 
         self.seed = seed
@@ -121,8 +121,8 @@ class PlanetScene(GameScene):
         self.person.body.linearDamping = 0.3
 
         width, height = self.terrain.terrain.shape
-        self.backdrop = shapes.ParallaxBackdrop(10, os.path.join(ASSETS_PATH, archetype + '.jpg'), width)
-        #self.dustdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'dust.png'), width)
+        self.backdrop = shapes.ParallaxBackdrop(10, os.path.join(ASSETS_PATH, 'planets', archetype + '.png'), width)
+        self.skydrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
 
         # TODO Debugging
         self.person_init = init_pos
@@ -162,8 +162,8 @@ class PlanetScene(GameScene):
         set_camera_position(cam_x, cam_y)
 
         screen.fill(black)
+        self.skydrop.draw(screen)
         self.backdrop.draw(screen)
-        #self.dustdrop.draw(screen)
         self.terrain.draw(screen)
         self.person.draw(screen)
         self.lander.draw(screen)
