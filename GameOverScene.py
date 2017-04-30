@@ -21,7 +21,7 @@ class GameOverScene(MenuScene):
         elif get_shared_values().oxygen <= 0:
             death_reason = 'You ran out of oxygen!'
 
-        death_reason_font = pygame.font.Font("assets/TitilliumWeb-Regular.ttf", 72)
+        death_reason_font = pygame.font.Font("assets/TitilliumWeb-Regular.ttf", 60)
         self.death_reason_image = death_reason_font.render(death_reason, True, (255, 255, 255))
 
         def new_game():
@@ -43,7 +43,7 @@ class GameOverScene(MenuScene):
         screen.blit(self.scull_crossbones, (50, 50))
         screen.blit(self.scull_crossbones, (SCREEN_WIDTH - 50 - self.scull_crossbones.get_rect().width, 50))
 
-        screen.blit(self.death_reason_image, (SCREEN_WIDTH / 2 - self.death_reason_image.get_rect().width / 2, 220))
+        screen.blit(self.death_reason_image, (SCREEN_WIDTH / 2 - self.death_reason_image.get_rect().width / 2, 230))
 
         self.draw_menu_options(screen)
 
