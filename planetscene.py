@@ -69,6 +69,11 @@ class PlanetScene(GameScene):
         fuel.info = {"gameObject": fuel}
         self.fuels.append(fuel)
 
+        self.healths = []
+        health = shapes.HealthShape(self.world, (init_pos[0] - 5, init_pos[1] + 5))
+        health.info = {"gameObject": health}
+        self.healths.append(health)
+
         self.person.body.fixedRotation = True
         self.person.body.linearDamping = 0.3
 
@@ -123,6 +128,9 @@ class PlanetScene(GameScene):
         for fuel in self.fuels:
             fuel.draw(screen)
 
+        for health in self.healths:
+            health.draw(screen)
+
         self.draw_overlays(screen)
 
     def update(self, dt):
@@ -162,6 +170,9 @@ class PlanetScene(GameScene):
             if info["gameObject"] in self.fuels:
                     self.fuels.remove(info["gameObject"])
 
+            if info["gameObject"] in self.healths:
+                    self.healths.remove(info["gameObject"])
+
             self.world.DestroyBody(remove_me.body)
 
 
@@ -172,6 +183,9 @@ class PlanetScene(GameScene):
 class ContactListener(b2ContactListener):
 
     def BeginContact(self, contact):
+
+        global to_remove
+
         game_object_a = contact.fixtureA.body.userData
         game_object_b = contact.fixtureB.body.userData
 
@@ -186,23 +200,28 @@ class ContactListener(b2ContactListener):
             change_to_lander_scene = True
 
 
-
         if isinstance(game_object_a, shapes.FuelShape) and isinstance(game_object_b, shapes.AstronautShape):
-
-            global to_remove
-
             if game_fixture_a not in to_remove:
                 to_remove.append(game_fixture_a)
                 get_shared_values().fuel += 1000
 
 
         if isinstance(game_object_b, shapes.FuelShape) and isinstance(game_object_a, shapes.AstronautShape):
-
-            global to_remove
-
             if game_fixture_b not in to_remove:
                 to_remove.append(game_fixture_b)
                 get_shared_values().fuel += 1000
+
+
+        if isinstance(game_object_a, shapes.HealthShape) and isinstance(game_object_b, shapes.AstronautShape):
+            if game_fixture_a not in to_remove:
+                to_remove.append(game_fixture_a)
+                get_shared_values().health += 100
+
+
+        if isinstance(game_object_b, shapes.HealthShape) and isinstance(game_object_a, shapes.AstronautShape):
+            if game_fixture_b not in to_remove:
+                to_remove.append(game_fixture_b)
+                get_shared_values().health += 100
 
 
 if __name__ == '__main__':
