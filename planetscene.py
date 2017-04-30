@@ -19,7 +19,7 @@ to_remove = []
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=5):
+    def __init__(self, seed=3):
         super(PlanetScene, self).__init__()
 
         self.seed = seed
@@ -84,8 +84,8 @@ class PlanetScene(GameScene):
                                    # Get modifier specific params
                                    modifier_seed)
 
-        init_pos = terraingen.get_initial_position(terrain_raw, 0)
-        init_lander = terraingen.get_initial_position(terrain_raw, -10)
+        init_pos = terraingen.get_initial_position(terrain_raw, 0, 2)
+        init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
@@ -98,9 +98,9 @@ class PlanetScene(GameScene):
         for x in range(0, numFuels):
 
             xPos = r.randint(-250, 250)
-            yPos = terraingen.get_initial_position(terrain_raw, xPos)[1] + 5
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
 
-            fuel = shapes.FuelShape(self.world, (xPos, yPos))
+            fuel = shapes.FuelShape(self.world, pos)
             fuel.info = {"gameObject": fuel}
             self.fuels.append(fuel)
 
@@ -110,9 +110,9 @@ class PlanetScene(GameScene):
         for x in range(0, numFuels):
 
             xPos = r.randint(-250, 250)
-            yPos = terraingen.get_initial_position(terrain_raw, xPos)[1] + 5
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
 
-            health = shapes.HealthShape(self.world, (xPos, yPos))
+            health = shapes.HealthShape(self.world, pos)
             health.info = {"gameObject": health}
             self.healths.append(health)
 
