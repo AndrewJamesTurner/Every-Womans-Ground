@@ -184,7 +184,7 @@ class PlanetScene(GameScene):
         for x in range(0, numFuels):
 
             xPos = r.randint(-width/2, width/2 - 1)
-            pos = terraingen.get_initial_position(terrain_raw, xPos, 3)
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 4)
 
             fuel = shapes.FuelShape(self.world, pos)
             fuel.info = {"gameObject": fuel}
@@ -196,7 +196,7 @@ class PlanetScene(GameScene):
         for x in range(0, numHealths):
 
             xPos = r.randint(-width/2, width/2 - 1)
-            pos = terraingen.get_initial_position(terrain_raw, xPos, 3)
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 4)
 
             health = shapes.HealthShape(self.world, pos)
             health.info = {"gameObject": health}
