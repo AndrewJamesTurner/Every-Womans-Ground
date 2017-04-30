@@ -6,12 +6,22 @@ import pygame
 BLOCK_DEFS = [
 #    Asset         , RGBA Tint , Density, Friction, Restitution
     None,                                             # Air
-    ['rock.png',     0x808080ff, 1.0,     0.2,      0.1], # 1 Rock
-    ['granular.png', 0x803000ff, 1.0,     0.4,      0.4], # 2 Dirt
-    ['leaves.png',   0x300080ff, 1.0,     0.3,      0.6], # 3 Purple leaves
-    ['moss.png',     0x00c0ffff, 1.0,     0.3,      1.1], # 4 Blue fungus
-    ['smooth.png',   0xc0c0ffff, 1.0,    0.01,      0.1], # 5 Ice
-    ['flat.png',     0x00ff00ff, 1.0,     0.1,      0.1], # 6 Flat green tile
+    ['rock.png',     0x808080ff, 1.0,     0.2,      0.1], # 1  Rock
+    ['granular.png', 0x803000ff, 1.0,     0.4,      0.4], # 2  Dirt
+    ['leaves.png',   0x8000c0ff, 1.0,     0.3,      0.6], # 3  Purple leaves
+    ['moss.png',     0x00c0ffff, 1.0,     0.3,      1.1], # 4  Blue fungus
+    ['smooth.png',   0xc0c0ffff, 1.0,    0.01,      0.1], # 5  Ice
+    ['flat.png',     0x00ff00ff, 1.0,     0.1,      0.1], # 6  Flat green tile
+    ['granular.png', 0xc0c0c0ff, 1.0,     0.3,      0.2], # 7  Cobble
+    ['smooth.png',   0xe0e0e0ff, 1.0,     0.4,      0.0], # 8  Dust
+    ['leaves.png',   0x80ff00ff, 1.0,     0.3,      0.4], # 9  Grass
+    ['rock.png',     0xc00000ff, 1.0,     0.2,      0.3], # 10 Mars
+    ['granular.png', 0xff8000ff, 1.0,     0.4,      0.1], # 11 Orange Sand
+    ['granular.png', 0xffe030ff, 1.0,     0.3,      0.2], # 12 Sand
+    ['rock.png',     0xff8000ff, 1.0,     0.2,      0.3], # 13 Orange Rock
+    ['moss.png',     0xff30c0ff, 1.0,     0.3,      1.1], # 14 Pink sponge
+    ['granular.png', 0xc0d0ffff, 1.0,     0.2,      0.1], # 15 Permafrost
+    ['smooth.png',   0xffffffff, 1.0,     0.5,      0.0], # 16 Snow
 ]
 
 BLOCK_IMAGES = []

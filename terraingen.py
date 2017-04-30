@@ -4,6 +4,8 @@ import numpy
 import shapes
 
 from game import *
+import terrainblocks
+import terrain_utils
 
 def generate_fractal_heightmap(seed, length, max_height, ratio):
     elements = 2 ** math.ceil( math.log( length - 1, 2) ) + 1
@@ -54,6 +56,32 @@ def add_heightmaps(map1, map2):
 def sub_heightmaps(map1, dig1):
     return [ a-b for (a,b) in zip (map1, dig1) ]
 
+def generate_planet_terrain(seed, archetype, width, height):
+    # Get generator parameters
+    params = terrain_utils.terrain_params[archetype]
+
+    # Subseeding
+    r = random.Random(seed)
+    seed_groundbase = r.getrandbits(32)
+    dig_seeds = [ r.getrandbits(32) for l in params['layers'] ]
+
+    # Generators
+    terrain = new_terrain_array(width, height)
+    maplayers = []
+    heightmap = generate_fractal_heightmap(
+        seed_groundbase, width, params['depth'], params['ratio'])
+
+    for i, l in enumerate( params['layers'] ):
+        depth, ratio, blocktype = l
+        digdepth = generate_fractal_heightmap(dig_seeds[i], width, depth, ratio)
+        maplayers.append([ heightmap, blocktype ])
+        heightmap = sub_heightmaps(heightmap, digdepth)
+    maplayers.append([heightmap, params['base']])
+    maplayers.reverse()
+
+    rasterize_heightmap_layers(terrain, maplayers )
+    return terrain
+
 def generate_planet_test(seed, width, height):
     # Subseeding
     r = random.Random(seed)
@@ -79,6 +107,14 @@ def generate_planet_test(seed, width, height):
         [ rock_heightmap,   1 ],
         [ dirt_heightmap,   2 ],
         [ ground_heightmap, 5] ] )
+
+    return terrain
+
+def generate_terrain_test(width, height):
+    # Generate a stripe test of the terrain
+    terrain = new_terrain_array(width, height)
+    layers = [ [[b] * width,b] for b in range(0,len(terrainblocks.BLOCK_DEFS)) ]
+    rasterize_heightmap_layers(terrain, layers )
 
     return terrain
 
