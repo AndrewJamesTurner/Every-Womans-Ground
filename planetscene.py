@@ -38,6 +38,8 @@ class DataBox:
 
         font_size = 24
         self.font = pygame.font.Font("assets/TitilliumWeb-Regular.ttf", font_size)
+        screenImage = pygame.image.load("assets/display.png")
+        self.screenImage = pygame.transform.smoothscale(screenImage, (width,height))
 
     def draw(self, screen):
 
@@ -45,10 +47,7 @@ class DataBox:
         height = 160
         line_height = 30
         offset = 18
-
-        screenImage = pygame.image.load("assets/display.png")
-        screenImage = pygame.transform.smoothscale(screenImage, (width,height))
-        screen.blit(screenImage, (SCREEN_WIDTH-width*1.05 - offset, SCREEN_HEIGHT-height*1.05 - offset))
+        screen.blit(self.screenImage, (SCREEN_WIDTH-width*1.05 - offset, SCREEN_HEIGHT-height*1.05 - offset))
 
 
 
