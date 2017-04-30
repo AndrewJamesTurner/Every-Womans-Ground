@@ -176,7 +176,7 @@ class PlanetScene(GameScene):
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
 
-        numFuels = r.randint(0, 10)
+        numFuels = r.randint(1, 10)
         self.fuels = []
 
         for x in range(0, numFuels):
@@ -188,10 +188,10 @@ class PlanetScene(GameScene):
             fuel.info = {"gameObject": fuel}
             self.fuels.append(fuel)
 
-        numHealths = r.randint(0, 10)
+        numHealths = r.randint(1, 10)
         self.healths = []
 
-        for x in range(0, numFuels):
+        for x in range(0, numHealths):
 
             xPos = r.randint(-width/2, width/2 - 1)
             pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
