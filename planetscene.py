@@ -130,7 +130,7 @@ class PlanetScene(GameScene):
                                    # Get modifier specific params
                                    modifier_seed)
 
-        init_pos = terraingen.get_initial_position(terrain_raw, 0, 2)
+        init_pos = terraingen.get_initial_position(terrain_raw, 10, 2)
         init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
