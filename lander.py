@@ -190,7 +190,7 @@ class LanderScene(GameScene):
         xxx = -math.sin(self.lander.body.angle)
         yyy = math.cos(self.lander.body.angle)
 
-        power = 1.5
+        power = 3.5
 
         landerPos = self.lander.body.position
 
