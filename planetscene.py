@@ -81,7 +81,7 @@ class DataBox:
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=3):
+    def __init__(self, seed=15):
         super(PlanetScene, self).__init__()
 
         self.seed = seed

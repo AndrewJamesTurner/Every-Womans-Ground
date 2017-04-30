@@ -24,7 +24,8 @@ BLOCK_DEFS = [
     ['smooth.png',   0xffffffff, 1.0,     0.5,      0.0], # 16 Snow
     ['smooth.png',   0xc0d0ffff, 1.0,     0.1,      0.2], # 17 Metal
     ['leaves.png',   0xffc0d0ff, 1.0,     0.1,      0.2], # 18 Crystal
-    ['smooth.png',   0xffc0807f, 1.0,     0.5,      0.0], # 19 Fog
+    ['fog.png',      0xffe0c080, 1.0,     0.5,      0.0], # 19 Fog
+    ['smooth.png',   0xc0e0ffff, 1.0,     0.5,      0.0], # 20 Cloud
 ]
 
 BLOCK_IMAGES = []
