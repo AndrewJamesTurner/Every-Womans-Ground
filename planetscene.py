@@ -46,12 +46,10 @@ class DataBox:
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+line_height))
 
         text = "Water: " + ("???" if self.water is None else ("Yes" if self.water else "No"))
-
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+2*line_height))
 
         text = "Tempurature: " + ("???" if self.tempurature is None else str(self.tempurature) + "K")
-
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+3*line_height))
 
