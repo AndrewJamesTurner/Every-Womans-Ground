@@ -78,6 +78,7 @@ def generate_planet_terrain(seed, archetype, width):
         heightmap = sub_heightmaps(heightmap, digdepth)
     maplayers.append([heightmap, params['base']])
     maplayers.reverse()
+    maplayers[0] = [ max(1.5, h) for h in maplayers[0] ]
 
     terrain = new_terrain_array(width, max_height)
     rasterize_heightmap_layers(terrain, maplayers )

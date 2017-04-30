@@ -80,13 +80,13 @@ class LanderScene(GameScene):
             height_multi = 0.25
 
 
-        print("-----------------")
-        print(terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
-        print("-----------------")
+        #print("-----------------")
+        #print(terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
+        #print("-----------------")
 
         terrain = generate_fractal_heightmap(self.planet_info['seed'] + 117, numPoints, int(SCREEN_HEIGHT / PPM) * height_multi, 2*terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
 
-        print(terrain)
+        #print(terrain)
 
         # polygons can't have many edges so split into separate polygons
         starty = -100
@@ -236,7 +236,7 @@ class LanderScene(GameScene):
 
         if self.countdown != None:
             if self.countdown >= self.countDownLen:
-                print('landed')
+                #print('landed')
 
                 self.savedLanderPos = (self.lander.body.position[0], self.lander.body.position[1])
 
@@ -275,13 +275,13 @@ class ContactListener(b2ContactListener):
 
                 if angleOfImpact > 0.5:
                     get_shared_values().health -= 2.0;
-                    print('angle small damage')
+                    #print('angle small damage')
                 if angleOfImpact > 1.5:
                     get_shared_values().health -= 5.0;
-                    print('angle big damage')
+                    #print('angle big damage')
                 if angleOfImpact > 2.0:
                     get_shared_values().health -= 10.0;
-                    print('angle huge damage')
+                    #print('angle huge damage')
 
                 #Check for extreme velocity
                 fixtureAVelocity = contact.fixtureA.body.GetLinearVelocityFromWorldPoint(contact.worldManifold.points[0])
@@ -290,10 +290,10 @@ class ContactListener(b2ContactListener):
                 velocity = (fixtureAVelocity-fixtureBVelocity).length
                 if velocity >= 5:
                     get_shared_values().health -= 2.0;
-                    print('hit small damage')
+                    #print('hit small damage')
                 if velocity >= 10:
                     get_shared_values().health -= 5.0;
-                    print('hit big damage')
+                    #print('hit big damage')
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)

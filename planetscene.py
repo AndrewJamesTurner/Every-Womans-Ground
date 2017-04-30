@@ -137,7 +137,7 @@ class PlanetScene(GameScene):
             r = random.Random(planet_info['seed'])
             archetype = planet_info['type']
         else: ### DEBUGGING ONLY
-            print(self.seed)
+            #print(self.seed)
             r = random.Random(self.seed)
             archetypes = list( terrain_utils.terrain_params.keys() )
             archetypes.sort()
@@ -153,8 +153,8 @@ class PlanetScene(GameScene):
         # Load planet specific params
         self.params = terrain_utils.get_planet_params(archetype, planet_info)
 
-        print(terrain_seed,modifier_seed)
-        print("%s: g=%f, a=%f" % (archetype, self.params['gravity'], self.params['atmosphere']))
+        #print(terrain_seed,modifier_seed)
+        #print("%s: g=%f, a=%f" % (archetype, self.params['gravity'], self.params['atmosphere']))
 
         self.world = b2World(gravity=(0, -self.params['gravity']), contactListener=ContactListener())
 
@@ -172,28 +172,29 @@ class PlanetScene(GameScene):
         init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
+        width, height = self.terrain.terrain.shape
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
 
-        numFuels = r.randint(0, 10)
+        numFuels = r.randint(1, 10)
         self.fuels = []
 
         for x in range(0, numFuels):
 
-            xPos = r.randint(-250, 250)
-            pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
+            xPos = r.randint(-width/2, width/2 - 1)
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 3)
 
             fuel = shapes.FuelShape(self.world, pos)
             fuel.info = {"gameObject": fuel}
             self.fuels.append(fuel)
 
-        numHealths = r.randint(0, 10)
+        numHealths = r.randint(1, 10)
         self.healths = []
 
-        for x in range(0, numFuels):
+        for x in range(0, numHealths):
 
-            xPos = r.randint(-250, 250)
-            pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
+            xPos = r.randint(-width/2, width/2 - 1)
+            pos = terraingen.get_initial_position(terrain_raw, xPos, 3)
 
             health = shapes.HealthShape(self.world, pos)
             health.info = {"gameObject": health}
@@ -203,7 +204,6 @@ class PlanetScene(GameScene):
         self.person.body.fixedRotation = True
         self.person.body.linearDamping = 0.3
 
-        width, height = self.terrain.terrain.shape
         self.backdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'planets', archetype + '.png'), width)
         self.skydrop = shapes.ParallaxBackdrop(-15, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
 
@@ -279,10 +279,6 @@ class PlanetScene(GameScene):
             get_planet_scene().application.change_scene(get_lander_scene())
 
         keys = pygame.key.get_pressed()
-
-        if get_shared_values().fuel <= 0:
-            print("GAME OVER!")
-            # TODO Close to game over screen
 
         # Move left and right
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
