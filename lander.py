@@ -142,7 +142,7 @@ class LanderScene(GameScene):
 
         self.ship = landershapes.StationarySpaceship(self.world, ( -(SCREEN_WIDTH / PPM) / 3, landerStartHeight + (3 * SCREEN_HEIGHT / PPM) / 4))
 
-        self.skydrop = shapes.ParallaxBackdrop(10, os.path.join(ASSETS_PATH, 'backdrop3.jpg'), numPoints * xGap)
+        self.skydrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'backdrop3.jpg'), numPoints * xGap)
 
 
     def handle_event(self, event):
