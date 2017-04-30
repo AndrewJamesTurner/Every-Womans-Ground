@@ -197,8 +197,8 @@ class SpaceScene(GameScene):
         self.arrow_imamge = pygame.transform.smoothscale(self.arrow_imamge,
                                                          (int(0.2 * image_rect[2]), int(0.2 * image_rect[2])))
 
-        width = 1000
-        self.backdrop = shapes.ParallaxBackdrop(-100, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
+        width = 10000
+        self.backdrop = shapes.ParallaxBackdrop(100, os.path.join(ASSETS_PATH, 'sky.png'), width)
 
 
 
@@ -212,7 +212,7 @@ class SpaceScene(GameScene):
 
         screen.fill(black)
 
-        # self.backdrop.draw(screen)
+        self.backdrop.draw(screen)
 
 
         self.space_ship.draw(screen)
@@ -297,8 +297,8 @@ class SpaceScene(GameScene):
 
         self.timeSinceLastFired += dt
 
-        power = 1
-        spin = 0.2
+        power = 2
+        spin = 0.3
 
         keys = pygame.key.get_pressed()
 
@@ -314,6 +314,9 @@ class SpaceScene(GameScene):
 
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             self.space_ship.body.ApplyAngularImpulse(spin, True)
+
+        if keys[pygame.K_ESCAPE]:
+            exit()
 
         if keys[pygame.K_SPACE]:
 

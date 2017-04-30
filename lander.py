@@ -168,6 +168,9 @@ class LanderScene(GameScene):
             self.lander.body.ApplyLinearImpulse((xxx * power, yyy * power), landerPos, True)
             get_shared_values().fuel -= 1;
 
+        if keys[pygame.K_ESCAPE]:
+            exit()
+
         set_camera_position(self.lander.body.position[0],self.lander.body.position[1])
 
         angleOfImpact = self.lander.body.angle

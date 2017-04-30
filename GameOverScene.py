@@ -20,7 +20,12 @@ class GameOverScene(ezpygame.Scene):
         screen.blit(self.message_image, (SCREEN_WIDTH / 2 - self.message_image.get_rect().width / 2, 200))
 
     def update(self, dt):
-        pass
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_ESCAPE]:
+            exit()
+
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
