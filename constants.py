@@ -17,6 +17,10 @@ DT_SCALE = 0.001
 VELOCITY_ITERATIONS = 10
 POSITION_ITERATIONS = 10
 
+
+MAX_FUEL = 5000
+MAX_HEALTH = 100
+
 # Number of box2d metres for every unit in our shape definition units
 SHAPE_UNITS_TO_METRES = 20
 

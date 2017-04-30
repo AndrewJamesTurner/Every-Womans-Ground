@@ -76,11 +76,11 @@ def get_game_over_scene():
 shared_values = None
 
 class SharedValues:
-    MAX_FUEL = 5000
-    MAX_HEALTH = 100
 
-    health = MAX_HEALTH
-    fuel = MAX_FUEL
+    import constants
+
+    health = constants.MAX_HEALTH
+    fuel = constants.MAX_FUEL
 
 def get_shared_values():
     global shared_values

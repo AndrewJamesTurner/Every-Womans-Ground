@@ -64,15 +64,31 @@ class PlanetScene(GameScene):
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
 
-        self.fuels = []
-        fuel = shapes.FuelShape(self.world, (init_pos[0] + 5, init_pos[1] + 5))
-        fuel.info = {"gameObject": fuel}
-        self.fuels.append(fuel)
 
+        numFuels = r.randint(0, 10)
+        self.fuels = []
+
+        for x in range(0, numFuels):
+
+            xPos = r.randint(-250, 250)
+            yPos = terraingen.get_initial_position(terrain_raw, xPos)[1] + 5
+
+            fuel = shapes.FuelShape(self.world, (xPos, yPos))
+            fuel.info = {"gameObject": fuel}
+            self.fuels.append(fuel)
+
+        numHealths = r.randint(0, 10)
         self.healths = []
-        health = shapes.HealthShape(self.world, (init_pos[0] - 5, init_pos[1] + 5))
-        health.info = {"gameObject": health}
-        self.healths.append(health)
+
+        for x in range(0, numFuels):
+
+            xPos = r.randint(-250, 250)
+            yPos = terraingen.get_initial_position(terrain_raw, xPos)[1] + 5
+
+            health = shapes.HealthShape(self.world, (xPos, yPos))
+            health.info = {"gameObject": health}
+            self.healths.append(health)
+
 
         self.person.body.fixedRotation = True
         self.person.body.linearDamping = 0.3
@@ -177,6 +193,7 @@ class PlanetScene(GameScene):
 
 
         self.check_game_over()
+        self.check_shared_values()
 
 
 

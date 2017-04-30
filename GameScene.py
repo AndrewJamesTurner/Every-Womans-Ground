@@ -3,6 +3,8 @@ import pygame
 import ezpygame
 
 from game import *
+import constants
+
 
 
 class FillBar:
@@ -49,17 +51,27 @@ class GameScene(ezpygame.Scene):
             self.application.change_scene(get_game_over_scene())
 
 
+    def check_shared_values(self):
+
+        shared_values = get_shared_values()
+
+        if shared_values.health > MAX_HEALTH:
+            shared_values.health = MAX_HEALTH
+
+        if shared_values.fuel > MAX_FUEL:
+            shared_values.fuel = MAX_FUEL
+
 
     def draw_overlays(self, screen):
         self.fuel_bar.draw(screen, text_left=20, text_top=10, text_bar_padding=10,
                            bar_width=20, bar_length=100, bar_border_width=3,
                            bar_background_colour=(50, 50, 50), bar_foreground_colour=(50, 150, 150),
                            bar_border_colour=(200, 200, 200),
-                           bar_value=get_shared_values().fuel, bar_max_value=get_shared_values().MAX_FUEL)
+                           bar_value=get_shared_values().fuel, bar_max_value=constants.MAX_FUEL)
 
         self.health_bar.draw(screen, text_left=220, text_top=10, text_bar_padding=10,
                              bar_width=20, bar_length=100, bar_border_width=3,
                              bar_background_colour=(50, 50, 50), bar_foreground_colour=(150, 50, 50),
                              bar_border_colour=(200, 200, 200),
-                             bar_value=get_shared_values().health, bar_max_value=get_shared_values().MAX_HEALTH)
+                             bar_value=get_shared_values().health, bar_max_value=constants.MAX_HEALTH)
 
