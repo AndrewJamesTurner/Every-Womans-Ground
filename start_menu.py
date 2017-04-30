@@ -13,7 +13,7 @@ class StartMenuScene(MenuScene):
         super(StartMenuScene, self).on_enter(previous_scene)
 
         def new_game():
-            self.application.change_scene(get_space_scene())
+            self.application.change_scene(get_message_scene())
 
         self.add_option("New Game", new_game, 48)
         self.add_option("Quit", sys.exit, 48)

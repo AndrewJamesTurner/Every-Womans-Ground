@@ -32,6 +32,7 @@ def screen_to_world_coordinates(screen_coords):
 
 # Scenes
 menu_scene = None
+message_scene = None
 space_scene = None
 lander_scene = None
 planet_scene = None
@@ -44,6 +45,13 @@ def get_menu_scene():
         from start_menu import StartMenuScene
         menu_scene = StartMenuScene()
     return menu_scene
+
+def get_message_scene():
+    global message_scene
+    if message_scene is None:
+        from message_screen import MessageScene
+        message_scene = MessageScene()
+    return message_scene
 
 def get_space_scene():
     global space_scene
