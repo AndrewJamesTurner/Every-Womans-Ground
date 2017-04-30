@@ -178,6 +178,10 @@ class PlanetScene(GameScene):
 
     def update(self, dt):
 
+
+        print(dt)
+        get_shared_values().oxygen -= (dt / 100)
+
         global to_remove
         to_remove = []
 

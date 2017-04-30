@@ -200,6 +200,7 @@ class SpaceScene(GameScene):
         width = 10000
         self.backdrop = shapes.ParallaxBackdrop(100, os.path.join(ASSETS_PATH, 'sky.png'), width)
 
+        get_shared_values().oxygen = MAX_OXYGEN
 
 
     def handle_event(self, event):

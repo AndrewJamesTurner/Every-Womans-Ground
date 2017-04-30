@@ -38,16 +38,18 @@ class GameScene(ezpygame.Scene):
 
     def __init__(self):
         self.fuel_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=30,
-                                text="Fuel", colour=(50, 150, 150))
+                                text="Fuel", colour=(200, 200, 0))
         self.health_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=30,
                                   text="Health", colour=(150, 50, 50))
+        self.oxygen_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=30,
+                                  text="Oxygen", colour=(50, 150, 150))
 
 
     def check_game_over(self):
 
         shared_values = get_shared_values()
 
-        if shared_values.fuel <= 0 or shared_values.health <= 0:
+        if shared_values.fuel <= 0 or shared_values.health <= 0 or shared_values.oxygen <= 0:
             self.application.change_scene(get_game_over_scene())
 
 
@@ -63,9 +65,10 @@ class GameScene(ezpygame.Scene):
 
 
     def draw_overlays(self, screen):
+
         self.fuel_bar.draw(screen, text_left=20, text_top=10, text_bar_padding=10,
                            bar_width=20, bar_length=100, bar_border_width=3,
-                           bar_background_colour=(50, 50, 50), bar_foreground_colour=(50, 150, 150),
+                           bar_background_colour=(50, 50, 50), bar_foreground_colour=(200, 200, 0),
                            bar_border_colour=(200, 200, 200),
                            bar_value=get_shared_values().fuel, bar_max_value=constants.MAX_FUEL)
 
@@ -74,4 +77,10 @@ class GameScene(ezpygame.Scene):
                              bar_background_colour=(50, 50, 50), bar_foreground_colour=(150, 50, 50),
                              bar_border_colour=(200, 200, 200),
                              bar_value=get_shared_values().health, bar_max_value=constants.MAX_HEALTH)
+
+        self.oxygen_bar.draw(screen, text_left=420, text_top=10, text_bar_padding=10,
+                             bar_width=20, bar_length=100, bar_border_width=3,
+                             bar_background_colour=(50, 50, 50), bar_foreground_colour=(50, 150, 150),
+                             bar_border_colour=(200, 200, 200),
+                             bar_value=get_shared_values().oxygen, bar_max_value=constants.MAX_OXYGEN)
 

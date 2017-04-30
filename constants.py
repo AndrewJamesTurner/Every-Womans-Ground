@@ -20,6 +20,7 @@ POSITION_ITERATIONS = 10
 
 MAX_FUEL = 5000
 MAX_HEALTH = 100
+MAX_OXYGEN = 1000
 
 # Number of box2d metres for every unit in our shape definition units
 SHAPE_UNITS_TO_METRES = 20

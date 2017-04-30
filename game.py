@@ -81,6 +81,7 @@ class SharedValues:
 
     health = constants.MAX_HEALTH
     fuel = constants.MAX_FUEL
+    oxygen = constants.MAX_OXYGEN
 
 def get_shared_values():
     global shared_values
