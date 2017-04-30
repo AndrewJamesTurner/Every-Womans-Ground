@@ -172,6 +172,7 @@ class PlanetScene(GameScene):
         init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
+        width, height = self.terrain.terrain.shape
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
 
@@ -180,7 +181,7 @@ class PlanetScene(GameScene):
 
         for x in range(0, numFuels):
 
-            xPos = r.randint(-250, 250)
+            xPos = r.randint(-width/2, width/2 - 1)
             pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
 
             fuel = shapes.FuelShape(self.world, pos)
@@ -192,7 +193,7 @@ class PlanetScene(GameScene):
 
         for x in range(0, numFuels):
 
-            xPos = r.randint(-250, 250)
+            xPos = r.randint(-width/2, width/2 - 1)
             pos = terraingen.get_initial_position(terrain_raw, xPos, 5)
 
             health = shapes.HealthShape(self.world, pos)
@@ -203,7 +204,6 @@ class PlanetScene(GameScene):
         self.person.body.fixedRotation = True
         self.person.body.linearDamping = 0.3
 
-        width, height = self.terrain.terrain.shape
         self.backdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'planets', archetype + '.png'), width)
         self.skydrop = shapes.ParallaxBackdrop(-15, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
 
