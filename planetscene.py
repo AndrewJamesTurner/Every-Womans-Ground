@@ -93,52 +93,33 @@ class PlanetScene(GameScene):
         self.data_box = DataBox()
         self.time_on_planet = 0
 
-        # Planet defaults
-        defs = terrain_utils.default_values
-
-        params = defs
-
         if hasattr( get_space_scene(), 'planet_info' ):
             planet_info = get_space_scene().planet_info
-            # TODO Derive planet specific parameters from the higher level values provided!
-            # This will include calculations of things like tunnel frequency from number of asteroids in vicinity
             r = random.Random(planet_info['seed'])
-            params['gravity_mean'] = planet_info['size']
             archetype = planet_info['type']
-            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.1, 0.5 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
-        else:
+        else: ### DEBUGGING ONLY
             print(self.seed)
             r = random.Random(self.seed)
             archetypes = list( terrain_utils.terrain_params.keys() )
             archetypes.sort()
             archetype = random.Random(self.seed + 1).choice(archetypes)
+            planet_info = None
 
         # Called once per game, when game starts
         terrainblocks.make_blocks(1.0)
 
-        tparams = terrain_utils.terrain_params[archetype]
-
         terrain_seed = r.getrandbits(32)
         modifier_seed = r.getrandbits(32)
-        gravity_seed = r.getrandbits(32)
-        atmosphere_seed = r.getrandbits(32)
-        r_grav  = random.Random(gravity_seed)
-        r_atmos = random.Random(atmosphere_seed)
 
-        print(terrain_seed,modifier_seed,gravity_seed,atmosphere_seed)
+        # Load planet specific params
+        params = terrain_utils.get_planet_params(archetype, planet_info)
 
-        gravity = max(0.1, r_grav.gauss(params['gravity_mean'], params['gravity_sd']))
-        atmosphere = r_atmos.uniform( *tparams['atmos'] )
-        print("%s: g=%f, a=%f" % (archetype, gravity, atmosphere))
-        self.world = b2World(gravity=(0, -gravity), contactListener=ContactListener())
+        print(terrain_seed,modifier_seed)
+        print("%s: g=%f, a=%f" % (archetype, params['gravity'], params['atmosphere']))
 
-        params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
-        params['modifier_params']['crater']['radius_mean'] = max(6.0, 2.0 / max(0.2, atmosphere))
-        params['modifier_params']['tunnel']['width_mean'] = 2.0 * tparams['softness']
-        params['modifier_params']['tunnel']['width_sd']   = 0.1 * tparams['softness']
+        self.world = b2World(gravity=(0, -params['gravity']), contactListener=ContactListener())
 
         terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
-        #terrain_raw = terraingen.generate_terrain_test(200, 80)
 
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
@@ -154,7 +135,6 @@ class PlanetScene(GameScene):
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
-
 
         numFuels = r.randint(0, 10)
         self.fuels = []

@@ -2,6 +2,10 @@ import types
 import terrain_modifiers
 import numpy as np
 
+import terrainblocks
+from game import *
+import random
+
 
 def get_modifiers():
     """
@@ -30,6 +34,49 @@ def destroy_circle(terrain, radius, origin):
             distances[i, j] = np.sqrt((i-radius)**2 + (j-radius)**2)
 
     subset[distances <= radius] |= -128
+
+
+def get_planet_params(archetype, planet_info):
+    """
+    Retrieves a dictionary containing planetry information.
+    
+    :param archetype: A string.
+    :param info: Various planetary factors.
+    :return: 
+    """
+    # Load defaults and gradually overwrite
+    params = default_values
+
+    # DEBUGGING ONLY
+    if planet_info is not None:
+        params['gravity_mean'] = planet_info['size']
+        params['modifier_params']['crater']['frequency'] = 0.01 + min(0.1, 0.5 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
+        planet_seed = planet_info['seed']
+    else:
+        planet_seed = 17
+
+    r = random.Random(planet_seed)
+    seed = r.getrandbits(32)
+    r_params  = random.Random(seed)
+
+    tparams = terrain_params[archetype]
+    gravity = max(0.1, r_params.gauss(params['gravity_mean'], params['gravity_sd']))
+    atmosphere = r_params.uniform( *tparams['atmos'] )
+    params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
+    params['modifier_params']['crater']['radius_mean'] = max(6.0, 2.0 / max(0.2, atmosphere))
+    params['modifier_params']['tunnel']['width_mean'] = 2.0 * tparams['softness']
+    params['modifier_params']['tunnel']['width_sd']   = 0.1 * tparams['softness']
+    params['gravity'] = gravity
+    params['atmosphere'] = atmosphere
+
+    # TODO Temp
+
+    # TODO Oxygen
+
+    # TODO Water
+
+    return params
+
 
 default_values = {
     'gravity_mean': 10,
