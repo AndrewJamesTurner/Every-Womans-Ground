@@ -196,8 +196,7 @@ class SpaceScene(GameScene):
         self.arrow_imamge = pygame.transform.smoothscale(self.arrow_imamge,
                                                          (int(0.2 * image_rect[2]), int(0.2 * image_rect[2])))
 
-        width = 10000
-        self.backdrop = shapes.ParallaxBackdrop(100, os.path.join(ASSETS_PATH, 'sky.png'), width)
+#        self.backdrop = shapes.ParallaxBackdrop(100, os.path.join(ASSETS_PATH, 'sky.png'), width)
 
         get_shared_values().oxygen = MAX_OXYGEN
 
@@ -210,9 +209,9 @@ class SpaceScene(GameScene):
     def draw(self, screen):
         # Called once per frame, to draw to thwe screen
 
-        screen.fill(black)
+        screen.fill((0x30,0x00,0x60,0xff))
 
-        self.backdrop.draw(screen)
+#        self.backdrop.draw(screen)
 
 
         self.space_ship.draw(screen)
