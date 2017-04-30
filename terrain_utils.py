@@ -69,7 +69,7 @@ def get_planet_params(archetype, planet_info):
 
     gravity = max(0.1, r_params.gauss(params['gravity_mean'], params['gravity_sd']))
     atmosphere = r_params.uniform( *tparams['atmos'] )
-    water_prob = r_params.gauss(tparams['mean_water'], tparams['sd_water'])
+    water_prob = max(0, r_params.gauss(tparams['mean_water'], tparams['sd_water']))
 
     params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
     params['modifier_params']['crater']['radius_mean'] = max(6.0, 2.0 / max(0.2, atmosphere))
@@ -84,7 +84,7 @@ def get_planet_params(archetype, planet_info):
     params['water_prob'] = min(0, max(1, r_params.gauss(tparams['mean_water'], tparams['sd_water'])))
     params['water'] = r_params.uniform(0, 1) < water_prob
 
-    print("Temp: {}\tOxygen: {}\tWater: {}".format(params['temp'], params['oxygen'], params['water_prob']))
+    #print("Temp: {}\tOxygen: {}\tWater prob: {}\tWater: {}".format(params['temp'], params['oxygen'], water_prob, params['water']))
 
     return params
 

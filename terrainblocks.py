@@ -54,4 +54,4 @@ def make_blocks(block_scale):
         wimage = image.copy()
         wimage.fill((96,96,96,255), special_flags=pygame.BLEND_RGBA_MULT)
         WALL_IMAGES.append(wimage)
-    print("Loaded %d block images" % len(BLOCK_IMAGES))
+    #print("Loaded %d block images" % len(BLOCK_IMAGES))
