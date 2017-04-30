@@ -100,9 +100,9 @@ class SpaceScene(GameScene):
 
 
 
-    def createPlanet(self, name, size, ptype, centre, angular_vel, radius_x, radius_y, num_moons, dist_to_asteroid_belt):
+    def createPlanet(self, name, size, ptype, orbit_centre, angular_vel, radius_x, radius_y, num_moons, dist_to_asteroid_belt):
 
-            planet = Planet(self.world, (15, 5), size, ptype)
+            planet = Planet(self.world, size, ptype)
 
             info = {
                 "name": name,
@@ -112,13 +112,12 @@ class SpaceScene(GameScene):
                 "orbit_radius_y": radius_y,
                 "orbit_angle": self.r.random() * 2 * math.pi,
                 "type": ptype,
-                "orbit_centre": centre,
+                "orbit_centre": orbit_centre,
                 "seed": self.r.getrandbits(32),
                 "dist_to_asteroid_belt": dist_to_asteroid_belt,
             }
 
             planet.info = info
-            planet.distance_to_sum = 10
             self.planets.append(planet)
 
             for i in range(num_moons):

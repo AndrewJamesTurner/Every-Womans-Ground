@@ -97,8 +97,10 @@ class Asteroid(DynamicGameObject):
 
 class Planet(StaticGameObject):
 
-    def __init__(self, world, position, scale, ptype):
+    def __init__(self, world, scale, ptype):
 
+
+        position = (0,0)
         polygon_points = []
         part = []
         num_points = 16

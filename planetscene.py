@@ -44,27 +44,25 @@ class DataBox:
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07))
 
-        text = "Gravity: " + ("???" if self.gravity is None else str(self.gravity) + "m/s/s")
+        text = "Gravity: " + ("???" if self.gravity is None else  "{:.1f}".format(self.gravity) + " m/s/s")
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+line_height))
 
         text = "Water: " + ("???" if self.water is None else ("Yes" if self.water else "No"))
-
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+2*line_height))
 
         text = "Tempurature: " + ("???" if self.tempurature is None else str(self.tempurature) + "K")
-
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07+3*line_height))
 
     def is_new_home(self):
 
-        min_oxygen = 10
-        max_oxygen = 20
+        min_oxygen = 15
+        max_oxygen = 25
 
-        min_gravity = 10
-        max_gravity = 20
+        min_gravity = 8
+        max_gravity = 12
 
         min_temp = 280
         max_temp = 310
@@ -115,12 +113,12 @@ class PlanetScene(GameScene):
         modifier_seed = r.getrandbits(32)
 
         # Load planet specific params
-        params = terrain_utils.get_planet_params(archetype, planet_info)
+        self.params = terrain_utils.get_planet_params(archetype, planet_info)
 
         print(terrain_seed,modifier_seed)
-        print("%s: g=%f, a=%f" % (archetype, params['gravity'], params['atmosphere']))
+        print("%s: g=%f, a=%f" % (archetype, self.params['gravity'], self.params['atmosphere']))
 
-        self.world = b2World(gravity=(0, -params['gravity']), contactListener=ContactListener())
+        self.world = b2World(gravity=(0, -self.params['gravity']), contactListener=ContactListener())
 
         terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
 
@@ -128,7 +126,7 @@ class PlanetScene(GameScene):
         modifiers = terrain_utils.get_modifiers()
         for modifier in modifiers:
             terrain_raw = modifier(terrain_raw,
-                                   params['modifier_params'][modifier.__name__.replace('_modifier', '')],
+                                   self.params['modifier_params'][modifier.__name__.replace('_modifier', '')],
                                    # Get modifier specific params
                                    modifier_seed)
 
@@ -280,18 +278,21 @@ class PlanetScene(GameScene):
         for t in range(dt):
 
             if self.update_rng.random() < 0.0001 and not self.data_box.oxygen:
-                self.data_box.oxygen = 20
+                # self.data_box.oxygen = self.params["oxygen"]
+                pass
 
             if self.update_rng.random() < 0.0001 and not self.data_box.water:
-                self.data_box.water = True
+                # self.data_box.water = self.params["water"]
+                pass
 
             if self.update_rng.random() < 0.0001 and not self.data_box.tempurature:
-                self.data_box.tempurature = 3
+                # self.data_box.tempurature = self.params["temp"]
+                pass
 
             if self.update_rng.random() < 0.0001 and not self.data_box.gravity:
-                self.data_box.gravity = 2
+                self.data_box.gravity = self.params["gravity"]
 
-        if self.data_box.is_new_home:
+        if self.data_box.is_new_home():
             pass
             # self.application.change_scene(get_lander_scene())
 
