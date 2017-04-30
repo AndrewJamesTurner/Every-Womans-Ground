@@ -286,6 +286,27 @@ class SpaceScene(GameScene):
         self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         self.world.ClearForces()
 
+        for remove_me in to_remove:
+            if isinstance(remove_me.body.userData, Asteroid):
+
+                info = remove_me.body.userData.info
+
+                new_size = round(info["size"] / 2)
+
+                position = remove_me.body.position
+
+                if info["gameObject"] in self.asteroids:
+                    self.asteroids.remove(info["gameObject"])
+
+                self.world.DestroyBody(remove_me.body)
+
+                if new_size >= 1:
+
+                    for i in range(new_size):
+
+                        self.createAsteroid(new_size, (position[0]+self.r.random()*new_size, position[1]+self.r.random()*new_size))
+                        self.createAsteroid(new_size, (position[0]+self.r.random()*new_size, position[1]+self.r.random()*new_size))
+
         global change_to_lander_scene
         if change_to_lander_scene:
             self.application.change_scene(get_lander_scene())
@@ -350,28 +371,6 @@ class SpaceScene(GameScene):
             planet_position_y = centre.body.position[1] + radius_y * math.cos(angle)
 
             planet.body.position = (planet_position_x, planet_position_y)
-
-
-        for remove_me in to_remove:
-            if isinstance(remove_me.body.userData, Asteroid):
-
-                info = remove_me.body.userData.info
-
-                new_size = round(info["size"] / 2)
-
-                position = remove_me.body.position
-
-                if info["gameObject"] in self.asteroids:
-                    self.asteroids.remove(info["gameObject"])
-
-                self.world.DestroyBody(remove_me.body)
-
-                if new_size >= 1:
-
-                    for i in range(new_size):
-
-                        self.createAsteroid(new_size, (position[0]+self.r.random()*new_size, position[1]+self.r.random()*new_size))
-                        self.createAsteroid(new_size, (position[0]+self.r.random()*new_size, position[1]+self.r.random()*new_size))
 
         set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
 
