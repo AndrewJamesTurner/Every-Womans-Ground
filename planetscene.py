@@ -51,7 +51,7 @@ class PlanetScene(GameScene):
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
         self.person = shapes.AstronautShape(self.world, init_pos)
         self.person.body.fixedRotation = True
-        self.person.body.linearDamping = 0.9
+        self.person.body.linearDamping = 0.3
 
         width, height = self.terrain.terrain.shape
         self.backdrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width )
@@ -89,7 +89,9 @@ class PlanetScene(GameScene):
         halfwidth = SCREEN_WIDTH / 2 / PPM
         cam_right = width/2 - halfwidth
         cam_left  = -cam_right
+        cam_base  = SCREEN_HEIGHT / 2 / PPM
         cam_x = min(cam_right, max(cam_left, cam_x))
+        cam_y = max(cam_base, cam_y)
 
         set_camera_position(cam_x, cam_y)
 

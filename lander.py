@@ -16,6 +16,18 @@ class LanderScene(GameScene):
     def __init__(self):
         super(LanderScene, self).__init__()
 
+        self.planet_info = {
+            "name": "Earth",
+            "size": 10,
+            "angular_vel": 0.0001,
+            "orbit_radius_x": 30,
+            "orbit_radius_y": 35,
+            "orbit_angle": 0.13,
+            "type": "other",
+            "orbit_centre": (0,0),
+            "seed": 6
+        }
+
         #Set countdown for landing
         self.countdown = None
 
@@ -33,7 +45,7 @@ class LanderScene(GameScene):
         #Need to set height and xgap based on planet info
         numPoints = 100
 
-        terrain = generate_fractal_heightmap(30, numPoints, int(SCREEN_HEIGHT/PPM)/4, 1)
+        terrain = generate_fractal_heightmap(self.planet_info['seed'] +117, numPoints, int(SCREEN_HEIGHT/PPM)/4, 1)
 
         #polygons can't have many edges so split into separate polygons
         starty = -100
@@ -62,7 +74,20 @@ class LanderScene(GameScene):
         print(polygonArray)
 
         self.ground = landershapes.PlanetGround(self.world, (0, 0), polygonArray)
-
+        if self.planet_info['type'] == "rock":
+            self.ground.colour = (146, 149, 153, 0)
+        elif self.planet_info['type'] == "earth":
+            self.ground.colour = (43, 109, 49, 0)
+        elif self.planet_info['type'] == "desert":
+            self.ground.colour = (198, 87, 65, 0)
+        elif self.planet_info['type'] == "gas":
+            self.ground.colour = (105, 181, 188, 0)
+        elif self.planet_info['type'] == "ice":
+            self.ground.colour = (142, 239, 249, 0)
+        elif self.planet_info['type'] == "other":
+            self.ground.colour = (224, 167, 130, 0)
+        else:
+            self.ground.colour = (43, 109, 49, 0)
         #Add the lander in the middle of the ground
         landerStartHeight = 5
         self.lander = landershapes.Lander(self.world, ((xGap*numPoints)/2, landerStartHeight + (SCREEN_HEIGHT/PPM)/2))
@@ -71,20 +96,8 @@ class LanderScene(GameScene):
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
 
-
         #     self.planet_info = get_space_scene().planet_info
-
-        self.planet_info = {
-            "name": "Earth",
-            "size": 10,
-            "angular_vel": 0.0001,
-            "orbit_radius_x": 30,
-            "orbit_radius_y": 35,
-            "orbit_angle": 0.13,
-            "type": "rcok",
-            "orbit_centre": (0,0),
-        }
-
+        pass
 
     def handle_event(self, event):
         # Called every time a pygame event is fired
