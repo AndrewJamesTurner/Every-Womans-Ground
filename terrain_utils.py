@@ -30,3 +30,43 @@ def destroy_circle(terrain, radius, origin):
             distances[i, j] = np.sqrt((i-radius)**2 + (j-radius)**2)
 
     subset[distances <= radius] = 0
+
+default_values = {
+    'gravity_mean': -10,
+    'gravity_sd': 0.05,
+    'modifier_params':
+        {'tunnel': {
+            'frequency': 0.05,
+            'depth_mean': 0.3,
+            'depth_sd': 0.05,
+            'width_mean': 2,
+            'width_sd': 0.1
+        },
+        'crater': {
+            'frequency': 0.02,
+            'radius_mean': 10,
+            'radius_sd': 2,
+        },
+        'vegetation': {
+            'types':  [
+                {
+                    'seedrate':0.8,
+                    'root_block':5,
+                    'root_depth':1,
+                    'grow_block':4,
+                    'grow_height':1
+                },
+                {
+                    'seedrate':0.1,
+                    'root_block':4,
+                    'root_depth':2,
+                    'grow_block':3,
+                    'grow_height':5
+                }
+            ]
+        },
+        'water': {
+            # ...
+        }
+    }
+}

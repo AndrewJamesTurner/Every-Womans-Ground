@@ -19,68 +19,33 @@ class PlanetScene(GameScene):
     def __init__(self, seed=5):
         super(PlanetScene, self).__init__()
 
-        # Seed planet
+        # Planet defaults
+        defs = terrain_utils.default_values
+
         r = random.Random(seed)
+        planet_info = get_space_scene().planet_info
+
+        # TODO Derive planet specific parameters from the higher level values provided!
+        # This will include calculations of things like tunnel frequency from number of asteroids in vicinity
+        params = defs if planet_info is None else defs
 
         # Called once per game, when game starts
         terrainblocks.make_blocks(1.0)
 
-        # Randomly generate generate gravity
-        # TODO Should gravity have priors for each planet, which are informed by the planets stats as passed in from SpaceScene?
-        gravity = r.gauss(-10, 0.05)
+        gravity = r.gauss(params['gravity_mean'], params['gravity_sd'])
+        self.world = b2World(gravity=(0, gravity), contactListener=EnterLanderListener())
 
-        self.world = b2World(gravity=(0, gravity), contactListener=EnterLanderListener())  # default gravity is (0,-10) and doSleep is True
-
-        terrain_raw = terraingen.generate_planet_test(17, 500, 80)
+        terrain_raw = terraingen.generate_planet_test(r.random(), 500, 80)
 
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
-        # TODO Have these values randomly generated from an appropriate distribution (possibly related to a planet's characteristics)
-
-        params = {'tunnel': {
-                      'seed': 3,
-                      'frequency': 0.05,
-                      'depth_mean': 0.3,
-                      'depth_sd': 0.05,
-                      'width_mean': 2,
-                      'width_sd': 0.1
-                      },
-                  'crater': {
-                      'seed': 2,
-                      'frequency': 0.02,
-                      'radius_mean': 10,
-                      'radius_sd': 2,
-                  },
-                  'vegetation': {
-                      'seed': 7,
-                      'types':  [
-                          {
-                          'seedrate':0.8,
-                          'root_block':5,
-                          'root_depth':1,
-                          'grow_block':4,
-                          'grow_height':1
-                          },
-                         {
-                        'seedrate':0.1,
-                        'root_block':4,
-                        'root_depth':2,
-                        'grow_block':3,
-                        'grow_height':5
-                        }
-                      ]
-                    },
-                  'water': {
-                      'seed': 12
-                     }
-                  }
-
         for modifier in modifiers:
-            print("On {}".format(modifier.__name__))
-            terrain_raw = modifier(terrain_raw, params[modifier.__name__.replace('_modifier', '')])
+            terrain_raw = modifier(terrain_raw,
+                                   params['modifier_params'][modifier.__name__.replace('_modifier', '')],  # Get modifier specific params
+                                   r.random())
 
         init_pos = terraingen.get_initial_position(terrain_raw, 0)
-        init_lander = terraingen.get_initial_position(terrain_raw, -5)
+        init_lander = terraingen.get_initial_position(terrain_raw, -10)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         self.lander = lander_shapes.StationaryLander(self.world, init_lander)
@@ -91,6 +56,10 @@ class PlanetScene(GameScene):
         width, height = self.terrain.terrain.shape
         self.backdrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width )
         self.dustdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'dust.png'), width )
+
+        # TODO Debugging
+        self.person_init = init_pos
+        self.lander_init = init_lander
 
         # Level barriers
         self.world.CreateStaticBody(
@@ -105,17 +74,11 @@ class PlanetScene(GameScene):
             shapes=b2PolygonShape(box=(0.5, 10*height)))
 
     def on_enter(self, previous_scene):
-        # Called every time the game switches to this scene
-        pass
+        self.lander.body.position = self.lander_init
+        self.person.body.position = self.person_init
 
     def handle_event(self, event):
         # Called every time a pygame event is fired
-
-        # Processing keyboard input here gives one event per key press
-        # if event.type == pygame.KEYDOWN:
-        #     # Jump!
-        #     if event.key == pygame.K_SPACE:
-        #         self.person.body.ApplyLinearImpulse((0, PLAYER_JUMP_SPEED), self.person.body.position, True)
         pass
 
     def draw(self, screen):
@@ -146,8 +109,6 @@ class PlanetScene(GameScene):
 
         global change_to_lander_scene
         if change_to_lander_scene:
-            # TODO Get user input
-            print("Do you want to leave the planet?")
             get_planet_scene().application.change_scene(get_lander_scene())
 
         keys = pygame.key.get_pressed()
