@@ -19,10 +19,18 @@ class PlanetScene(GameScene):
     def __init__(self, seed=5):
         super(PlanetScene, self).__init__()
 
+        self.seed = seed
+
+
+    def on_enter(self, previous_scene):
+
+        global change_to_lander_scene
+        change_to_lander_scene = False
+
         # Planet defaults
         defs = terrain_utils.default_values
 
-        r = random.Random(seed)
+        r = random.Random(self.seed)
         planet_info = get_space_scene().planet_info
 
         # TODO Derive planet specific parameters from the higher level values provided!
@@ -41,7 +49,8 @@ class PlanetScene(GameScene):
         modifiers = terrain_utils.get_modifiers()
         for modifier in modifiers:
             terrain_raw = modifier(terrain_raw,
-                                   params['modifier_params'][modifier.__name__.replace('_modifier', '')],  # Get modifier specific params
+                                   params['modifier_params'][modifier.__name__.replace('_modifier', '')],
+                                   # Get modifier specific params
                                    r.random())
 
         init_pos = terraingen.get_initial_position(terrain_raw, 0)
@@ -54,8 +63,8 @@ class PlanetScene(GameScene):
         self.person.body.linearDamping = 0.9
 
         width, height = self.terrain.terrain.shape
-        self.backdrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width )
-        self.dustdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'dust.png'), width )
+        self.backdrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
+        self.dustdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'dust.png'), width)
 
         # TODO Debugging
         self.person_init = init_pos
@@ -63,17 +72,16 @@ class PlanetScene(GameScene):
 
         # Level barriers
         self.world.CreateStaticBody(
-            position=(0,0),
+            position=(0, 0),
             shapes=b2PolygonShape(box=(width, 0.5)))
         # A box2d object that doesn't move and isn't rendered to screen
         self.world.CreateStaticBody(
-            position=(-width/2, 5*height),
-            shapes=b2PolygonShape(box=(0.5, 10*height)))
+            position=(-width / 2, 5 * height),
+            shapes=b2PolygonShape(box=(0.5, 10 * height)))
         self.world.CreateStaticBody(
-            position=(width/2, 5*height),
-            shapes=b2PolygonShape(box=(0.5, 10*height)))
+            position=(width / 2, 5 * height),
+            shapes=b2PolygonShape(box=(0.5, 10 * height)))
 
-    def on_enter(self, previous_scene):
         self.lander.body.position = self.lander_init
         self.person.body.position = self.person_init
 
