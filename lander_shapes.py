@@ -16,7 +16,7 @@ class Lander(DynamicGameObject):
         self.body, self.image = self.prepare_shape(world, position, polygon_points, circle_shapes, image_path, scale,
                                                    density, friction, restitution)
 
-        self.colour = (255,0,0,0)
+        # self.colour = (255,0,0,0)
         self.body.linearDamping = 0.01
         self.body.angularDamping = 0.05
 

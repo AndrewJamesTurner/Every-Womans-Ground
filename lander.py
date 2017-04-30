@@ -23,17 +23,21 @@ class LanderScene(GameScene):
         global change_to_space_scene
         change_to_space_scene = False
 
-        self.planet_info = {
-            "name": "Earth",
-            "size": 10,
-            "angular_vel": 0.0001,
-            "orbit_radius_x": 30,
-            "orbit_radius_y": 35,
-            "orbit_angle": 0.13,
-            "type": "other",
-            "orbit_centre": (0, 0),
-            "seed": 6
-        }
+        self.planet_info = get_space_scene().planet_info
+
+        print(self.planet_info)
+
+        # self.planet_info = {
+        #     "name": "Earth",
+        #     "size": 10,
+        #     "angular_vel": 0.0001,
+        #     "orbit_radius_x": 30,
+        #     "orbit_radius_y": 35,
+        #     "orbit_angle": 0.13,
+        #     "type": "other",
+        #     "orbit_centre": (0, 0),
+        #     "seed": 6
+        # }
 
         # Set countdown for landing
         self.countdown = None

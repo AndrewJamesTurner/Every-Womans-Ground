@@ -70,6 +70,8 @@ class SpaceScene(GameScene):
 
         x_radius = self.r.randint(size, size+20)
 
+        asteroidBeltRadiuseseses = []
+
         for x in range(numBelt):
 
             radius = self.r.randint(20, 100)
@@ -77,6 +79,7 @@ class SpaceScene(GameScene):
             dencity = self.r.randint(100, 500)
 
             self.createAsteroidBelt(sun, radius, width, dencity)
+            asteroidBeltRadiuseseses.append(radius)
 
         for x in range(numPlanets):
 
@@ -87,10 +90,17 @@ class SpaceScene(GameScene):
             y_radius = x_radius + self.r.randint(0,  x_radius) - x_radius/2;
             num_moons = self.r.randint(0, 4)
 
-            planet = self.createPlanet("Andy", size, ptype, sun, angle_vel, x_radius, y_radius, num_moons)
+            dist_to_asteroid_belt = 1000000
+            for a in asteroidBeltRadiuseseses:
+
+                if abs(x_radius - a) < dist_to_asteroid_belt:
+                    dist_to_asteroid_belt = abs(x_radius - a)
+
+            planet = self.createPlanet("Andy", size, ptype, sun, angle_vel, x_radius, y_radius, num_moons, dist_to_asteroid_belt)
 
 
-    def createPlanet(self, name, size, ptype, centre, angular_vel, radius_x, radius_y, num_moons):
+
+    def createPlanet(self, name, size, ptype, centre, angular_vel, radius_x, radius_y, num_moons, dist_to_asteroid_belt):
 
             planet = Planet(self.world, (15, 5), size, ptype)
 
@@ -104,6 +114,7 @@ class SpaceScene(GameScene):
                 "type": ptype,
                 "orbit_centre": centre,
                 "seed": self.r.getrandbits(32),
+                "dist_to_asteroid_belt": dist_to_asteroid_belt,
             }
 
             planet.info = info
@@ -115,7 +126,7 @@ class SpaceScene(GameScene):
                 radius_y = radius_x + self.r.randint(0,6) - 3;
                 size = self.r.randint(2, size);
 
-                self.createPlanet("Moon", size, ptype, planet, 0.0005, radius_x, radius_y, 0)
+                self.createPlanet("Moon", size, ptype, planet, 0.0005, radius_x, radius_y, 0, dist_to_asteroid_belt)
 
             return planet
 
