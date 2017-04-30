@@ -73,7 +73,7 @@ class PlanetScene(GameScene):
             r = random.Random(planet_info['seed'])
             params['gravity_mean'] = planet_info['size']
             archetype = planet_info['type']
-            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.2, 1.0 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
+            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.1, 0.5 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
         else:
             print(self.seed)
             r = random.Random(self.seed)
@@ -101,7 +101,7 @@ class PlanetScene(GameScene):
         self.world = b2World(gravity=(0, -gravity), contactListener=ContactListener())
 
         params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
-        params['modifier_params']['crater']['radius_mean'] = max(6.0, 3.0 / max(0.2, atmosphere))
+        params['modifier_params']['crater']['radius_mean'] = max(6.0, 2.0 / max(0.2, atmosphere))
         params['modifier_params']['tunnel']['width_mean'] = 2.0 * tparams['softness']
         params['modifier_params']['tunnel']['width_sd']   = 0.1 * tparams['softness']
 
