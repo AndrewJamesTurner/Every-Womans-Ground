@@ -31,11 +31,14 @@ class DataBox:
 
     def draw(self, screen):
 
-        width = 200
-        height = 120
+        width = 240
+        height = 160
         line_height = 30
+        offset = 18
 
-        pygame.draw.rect(screen, (255,0,0,0), (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.05, width, height), 0)
+        screenImage = pygame.image.load("assets/display.png")
+        screenImage = pygame.transform.smoothscale(screenImage, (width,height))
+        screen.blit(screenImage, (SCREEN_WIDTH-width*1.05 - offset, SCREEN_HEIGHT-height*1.05 - offset))
 
         text = "Oxygen: " + ("???" if self.oxygen is None else str(self.oxygen) + "%")
         text_surface = self.font.render(text, True, black)
@@ -78,7 +81,7 @@ class DataBox:
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=3):
+    def __init__(self, seed=15):
         super(PlanetScene, self).__init__()
 
         self.seed = seed
@@ -117,7 +120,7 @@ class PlanetScene(GameScene):
 
         self.world = b2World(gravity=(0, -self.params['gravity']), contactListener=ContactListener())
 
-        terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
+        terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500)
 
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
@@ -127,7 +130,7 @@ class PlanetScene(GameScene):
                                    # Get modifier specific params
                                    modifier_seed)
 
-        init_pos = terraingen.get_initial_position(terrain_raw, 0, 2)
+        init_pos = terraingen.get_initial_position(terrain_raw, 10, 2)
         init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)

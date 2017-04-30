@@ -56,7 +56,7 @@ def add_heightmaps(map1, map2):
 def sub_heightmaps(map1, dig1):
     return [ a-b for (a,b) in zip (map1, dig1) ]
 
-def generate_planet_terrain(seed, archetype, width, height):
+def generate_planet_terrain(seed, archetype, width):
     # Get generator parameters
     params = terrain_utils.terrain_params[archetype]
 
@@ -66,10 +66,10 @@ def generate_planet_terrain(seed, archetype, width, height):
     dig_seeds = [ r.getrandbits(32) for l in params['layers'] ]
 
     # Generators
-    terrain = new_terrain_array(width, height)
     maplayers = []
     heightmap = generate_fractal_heightmap(
         seed_groundbase, width, params['depth'], params['ratio'])
+    max_height = math.ceil(max(heightmap))
 
     for i, l in enumerate( params['layers'] ):
         depth, ratio, blocktype = l
@@ -79,6 +79,7 @@ def generate_planet_terrain(seed, archetype, width, height):
     maplayers.append([heightmap, params['base']])
     maplayers.reverse()
 
+    terrain = new_terrain_array(width, max_height)
     rasterize_heightmap_layers(terrain, maplayers )
     return terrain
 
