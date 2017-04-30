@@ -120,7 +120,7 @@ class PlanetScene(GameScene):
 
         self.world = b2World(gravity=(0, -self.params['gravity']), contactListener=ContactListener())
 
-        terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
+        terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500)
 
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()

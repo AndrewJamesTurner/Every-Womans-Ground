@@ -189,11 +189,11 @@ terrain_params = {
     'gas': {
         'atmos': (0.8, 1.0),
         'softness': 0.5,
-        'depth': 80,
+        'depth': 150,
         'ratio': 0.2,
         'base': 17,          # Crystal
         'layers': [
-            [ 30, 0.5, -128|19 ], # Fog (WALL)
+            [ 10, 0.5, -128|19 ], # Fog (WALL)
             [ 10, 0.2, 18  ],     # Crystal
         ]
     },
