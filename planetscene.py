@@ -19,7 +19,7 @@ to_remove = []
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=7):
+    def __init__(self, seed=5):
         super(PlanetScene, self).__init__()
         self.seed = seed
 
@@ -31,6 +31,7 @@ class PlanetScene(GameScene):
 
         # Planet defaults
         defs = terrain_utils.default_values
+        params = defs
 
         if hasattr( get_space_scene(), 'planet_info' ):
             planet_info = get_space_scene().planet_info
@@ -40,7 +41,6 @@ class PlanetScene(GameScene):
             params['gravity_mean'] = math.pow(  planet_info['size'], 1.5 )
             archetype = params['type']
         else:
-            params = defs
             print(self.seed)
             r = random.Random(self.seed)
             archetypes = list( terrain_utils.terrain_params.keys() )
@@ -65,6 +65,8 @@ class PlanetScene(GameScene):
         atmosphere = r_atmos.uniform( *tparams['atmos'] )
         print("%s: g=%f, a=%f" % (archetype, gravity, atmosphere))
         self.world = b2World(gravity=(0, -gravity), contactListener=ContactListener())
+
+        params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
 
         terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
         #terrain_raw = terraingen.generate_terrain_test(200, 80)

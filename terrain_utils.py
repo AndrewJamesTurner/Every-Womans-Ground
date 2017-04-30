@@ -48,6 +48,7 @@ default_values = {
             'radius_sd': 2,
         },
         'vegetation': {
+            'seed_mod': 1.0,
             'types':  [
                 {   # Blue fungus
                     'grow_block':4,
