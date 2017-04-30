@@ -25,7 +25,7 @@ class LanderScene(GameScene):
 
         self.planet_info = get_space_scene().planet_info
 
-        print(self.planet_info)
+        # print(self.planet_info)
 
         # self.planet_info = {
         #     "name": "Earth",
@@ -82,7 +82,7 @@ class LanderScene(GameScene):
                 pointCountDown = 9
                 polygonPoints = [[index * xGap, starty], [index * xGap, terrainVal]]
 
-        print(polygonArray)
+        # print(polygonArray)
 
         self.ground = landershapes.PlanetGround(self.world, (0, 0), polygonArray)
         if self.planet_info['type'] == "rock":

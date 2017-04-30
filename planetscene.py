@@ -17,6 +17,36 @@ change_to_lander_scene = False
 to_remove = []
 
 
+class DataBox:
+
+    def __init__(self):
+
+        font_size = 24
+        self.font = pygame.font.Font("assets/TitilliumWeb-Regular.ttf", font_size)
+
+    def draw(self, screen):
+
+
+        width = 200
+        health = 100
+        line_height = 30
+
+        pygame.draw.rect(screen, (255,0,0,0), (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05, width, health), 0)
+
+        text = "Oxygen: 17%"
+        text_surface = self.font.render(text, True, black)
+        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05))
+
+        text = "graverty: 9.9 m/s/s"
+        text_surface = self.font.render(text, True, black)
+        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05+line_height))
+
+        text = "distace from sun: 4"
+        text_surface = self.font.render(text, True, black)
+        screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05+2*line_height))
+
+
+
 class PlanetScene(GameScene):
 
     def __init__(self, seed=5):
@@ -28,6 +58,8 @@ class PlanetScene(GameScene):
 
         global change_to_lander_scene
         change_to_lander_scene = False
+
+        self.data_box = DataBox()
 
         # Planet defaults
         defs = terrain_utils.default_values
@@ -173,6 +205,8 @@ class PlanetScene(GameScene):
 
         for health in self.healths:
             health.draw(screen)
+
+        self.data_box.draw(screen)
 
         self.draw_overlays(screen)
 
