@@ -38,6 +38,8 @@ class DataBox:
 
         font_size = 24
         self.font = pygame.font.Font("assets/TitilliumWeb-Regular.ttf", font_size)
+        width = 240
+        height = 160
         screenImage = pygame.image.load("assets/display.png")
         self.screenImage = pygame.transform.smoothscale(screenImage, (width,height))
 
@@ -49,8 +51,6 @@ class DataBox:
         offset = 18
         screen.blit(self.screenImage, (SCREEN_WIDTH-width*1.05 - offset, SCREEN_HEIGHT-height*1.05 - offset))
 
-
-
         if self.oxygen is None:
             text_col = black
         elif self.oxygen < DataBox.min_oxygen or self.oxygen > DataBox.max_oxygen:
@@ -61,7 +61,6 @@ class DataBox:
         text = "Oxygen: " + ("???" if self.oxygen is None else "{:.1f}".format(self.oxygen*100) + "%")
         text_surface = self.font.render(text, True, text_col)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-height*1.07))
-
 
 
         if self.gravity is None:
