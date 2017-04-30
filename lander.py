@@ -141,11 +141,16 @@ class LanderScene(GameScene):
 
         if previous_scene == get_planet_scene():
             self.lander = landershapes.Lander(self.world, self.savedLanderPos)
+            self.countDownLen = 10000
         else:
             self.lander = landershapes.Lander(self.world,
                                           ((xGap * numPoints) / 2, landerStartHeight + (SCREEN_HEIGHT / PPM) / 2))
+            self.countDownLen = 2000
+
+
         self.ship = landershapes.StationarySpaceship(self.world, (
         (xGap * numPoints) / 2 - (SCREEN_WIDTH / PPM) / 3, landerStartHeight + (3 * SCREEN_HEIGHT / PPM) / 4))
+
 
     def handle_event(self, event):
         # Called every time a pygame event is fired
@@ -220,7 +225,6 @@ class LanderScene(GameScene):
         if angleOfImpact > math.pi:
             angleOfImpact -= math.pi
 
-        countDownLen = 3000
         #Get velocity of lander
         if self.lander.body.linearVelocity == (0,0) and angleOfImpact < 0.5:
             if self.countdown == None:
@@ -231,7 +235,7 @@ class LanderScene(GameScene):
             self.countdown = None
 
         if self.countdown != None:
-            if self.countdown >= countDownLen:
+            if self.countdown >= self.countDownLen:
                 print('landed')
 
                 self.savedLanderPos = (self.lander.body.position[0], self.lander.body.position[1])
