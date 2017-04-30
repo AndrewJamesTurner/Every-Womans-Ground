@@ -87,16 +87,22 @@ class LanderScene(GameScene):
         self.ground = landershapes.PlanetGround(self.world, (0, 0), polygonArray)
         if self.planet_info['type'] == "rock":
             self.ground.colour = (146, 149, 153, 0)
+            self.ground.friction = 0.4
         elif self.planet_info['type'] == "earth":
             self.ground.colour = (43, 109, 49, 0)
+            self.ground.friction = 0.3
         elif self.planet_info['type'] == "desert":
             self.ground.colour = (198, 87, 65, 0)
+            self.ground.friction = 0.25
         elif self.planet_info['type'] == "gas":
             self.ground.colour = (105, 181, 188, 0)
+            self.ground.friction = 0.2
         elif self.planet_info['type'] == "ice":
             self.ground.colour = (142, 239, 249, 0)
+            self.ground.friction = 0.1
         elif self.planet_info['type'] == "other":
             self.ground.colour = (224, 167, 130, 0)
+            self.ground.friction = 0.15
         else:
             self.ground.colour = (43, 109, 49, 0)
         # Add the lander in the middle of the ground
