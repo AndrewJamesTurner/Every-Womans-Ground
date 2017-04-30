@@ -91,6 +91,12 @@ class SharedValues:
     fuel = constants.MAX_FUEL
     oxygen = constants.MAX_OXYGEN
 
+    def reset(self):
+        import constants
+        self.health = constants.MAX_HEALTH
+        self.fuel = constants.MAX_FUEL
+        self.oxygen = constants.MAX_OXYGEN
+
 def get_shared_values():
     global shared_values
     if shared_values is None:
