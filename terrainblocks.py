@@ -17,6 +17,11 @@ BLOCK_DEFS = [
 BLOCK_IMAGES = []
 
 def make_blocks(block_scale):
+    block_mask = pygame.image.load(os.path.join(ASSETS_PATH, 'blockmask.png')).convert_alpha()
+    ratio = block_mask.get_height() / block_mask.get_width()
+    w = int(1.6 * block_scale * SHAPE_UNITS_TO_METRES)
+    h = int(1.6 * block_scale * SHAPE_UNITS_TO_METRES * ratio)
+
     for b in BLOCK_DEFS:
         if not b:
             BLOCK_IMAGES.append(None)
@@ -26,9 +31,7 @@ def make_blocks(block_scale):
         rgba = [ (tint>>offset) & 0xff for offset in [24, 16, 8, 0] ]
 
         image = pygame.image.load(os.path.join(ASSETS_PATH, asset)).convert_alpha()
-        ratio = image.get_height() / image.get_width()
-        w = int(block_scale * SHAPE_UNITS_TO_METRES)
-        h = int(block_scale * SHAPE_UNITS_TO_METRES * ratio)
+        image.blit(block_mask, image.get_rect(), special_flags=pygame.BLEND_RGBA_MULT)
         image = pygame.transform.scale(image, (w, h))
         image.fill(rgba, special_flags=pygame.BLEND_RGBA_MULT)
         BLOCK_IMAGES.append(image)
