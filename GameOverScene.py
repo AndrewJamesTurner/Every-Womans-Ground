@@ -13,10 +13,22 @@ class GameOverScene(MenuScene):
         message_font = pygame.font.Font("assets/Courgette-Regular.ttf", 72)
         self.title_image = message_font.render("Game Over", True, (255, 255, 255))
 
+        death_reason = 'You died!'
+        if get_shared_values().health <= 0:
+            death_reason = 'You ran out of health!'
+        elif get_shared_values().fuel <= 0:
+            death_reason = 'You ran out of fuel!'
+        elif get_shared_values().oxygen <= 0:
+            death_reason = 'You ran out of oxygen!'
+
+        death_reason_font = pygame.font.Font("assets/TitilliumWeb-Regular.ttf", 72)
+        self.death_reason_image = death_reason_font.render(death_reason, True, (255, 255, 255))
+
         def new_game():
             get_shared_values().reset()
             self.application.change_scene(get_space_scene())
 
+        self.next_y += 130
         self.add_option("Restart Game", new_game, 48)
         self.add_option("Quit", sys.exit, 48)
 
@@ -30,6 +42,8 @@ class GameOverScene(MenuScene):
 
         screen.blit(self.scull_crossbones, (50, 50))
         screen.blit(self.scull_crossbones, (SCREEN_WIDTH - 50 - self.scull_crossbones.get_rect().width, 50))
+
+        screen.blit(self.death_reason_image, (SCREEN_WIDTH / 2 - self.death_reason_image.get_rect().width / 2, 220))
 
         self.draw_menu_options(screen)
 
