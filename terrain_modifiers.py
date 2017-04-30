@@ -36,7 +36,7 @@ def tunnel_modifier(terrain, params, seed):
 
     # Find how many tunnels will have and their x values
     num_tunnels = round(params['frequency'] * width)
-    tunnel_x_points = [r.randint(0, width) for _ in range(num_tunnels)]
+    tunnel_x_points = [r.randint(0, width-1) for _ in range(num_tunnels)]
 
     # Identify coordinates for starting hole, uniformally distributed across terrain
     for x in tunnel_x_points:

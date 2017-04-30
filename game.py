@@ -36,6 +36,7 @@ space_scene = None
 lander_scene = None
 planet_scene = None
 game_over_scene = None
+win_scene = None
 
 def get_menu_scene():
     global menu_scene
@@ -71,6 +72,13 @@ def get_game_over_scene():
         from GameOverScene import GameOverScene
         game_over_scene = GameOverScene()
     return game_over_scene
+
+def get_win_scene():
+    global win_scene
+    if win_scene is None:
+        from WinScene import WinScene
+        win_scene = WinScene()
+    return win_scene
 
 # Values shared by every scene
 shared_values = None

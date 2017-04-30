@@ -186,4 +186,16 @@ terrain_params = {
             [ 16, 0.8, 15 ], # Permafrost
         ]
     },
+    'gas': {
+        'atmos': (0.8, 1.0),
+        'softness': 0.6,
+        'depth': 500,
+        'ratio': 0.3,
+        'base': 17,          # Crystal
+        'layers': [
+            [ 10,  0.6, -128|20 ], # Cloud (WALL)
+            [ 80,  0.5, -128|19 ], # Fog (WALL)
+            [ 10,  0.2, 18  ],     # Crystal
+        ]
+    },
 }

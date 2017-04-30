@@ -81,7 +81,7 @@ class DataBox:
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=3):
+    def __init__(self, seed=15):
         super(PlanetScene, self).__init__()
 
         self.seed = seed
@@ -120,7 +120,7 @@ class PlanetScene(GameScene):
 
         self.world = b2World(gravity=(0, -self.params['gravity']), contactListener=ContactListener())
 
-        terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
+        terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500)
 
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
@@ -130,7 +130,7 @@ class PlanetScene(GameScene):
                                    # Get modifier specific params
                                    modifier_seed)
 
-        init_pos = terraingen.get_initial_position(terrain_raw, 0, 2)
+        init_pos = terraingen.get_initial_position(terrain_raw, 10, 2)
         init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
