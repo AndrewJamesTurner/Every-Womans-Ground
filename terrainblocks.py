@@ -25,6 +25,7 @@ BLOCK_DEFS = [
 ]
 
 BLOCK_IMAGES = []
+WALL_IMAGES = []
 
 def make_blocks(block_scale):
     block_mask = pygame.image.load(os.path.join(ASSETS_PATH, 'blockmask.png')).convert_alpha()
@@ -35,6 +36,7 @@ def make_blocks(block_scale):
     for b in BLOCK_DEFS:
         if not b:
             BLOCK_IMAGES.append(None)
+            WALL_IMAGES.append(None)
             continue
         asset, tint, density, friction, restitution = b
 
@@ -45,4 +47,7 @@ def make_blocks(block_scale):
         image = pygame.transform.scale(image, (w, h))
         image.fill(rgba, special_flags=pygame.BLEND_RGBA_MULT)
         BLOCK_IMAGES.append(image)
+        wimage = image.copy()
+        wimage.fill((96,96,96,255), special_flags=pygame.BLEND_RGBA_MULT)
+        WALL_IMAGES.append(wimage)
     print("Loaded %d block images" % len(BLOCK_IMAGES))

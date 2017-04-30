@@ -84,7 +84,7 @@ class TerrainBulk(StaticGameObject):
         for x in range(width):
             for y in range(height):
                 blocktype = terrain[x, y]
-                if not blocktype:
+                if blocktype <= 0:
                     continue
                 collisions = 0
 
@@ -94,7 +94,7 @@ class TerrainBulk(StaticGameObject):
                     collisions=1
                 else:
                     for i in numpy.nditer(terrain[x-1:x+2,y-1:y+2]):
-                        if i==0:
+                        if i<=0:
                             collisions=1
                             break
 
@@ -127,24 +127,29 @@ class TerrainBulk(StaticGameObject):
         xmax = min( width,  1 + math.ceil(xmax + 1) )
         ymax = min( height, 1 + math.ceil(ymax + 1) )
         ox,oy = world_to_screen_coordinates((0.5 + xmin - xoffset, 0.5 + ymin))
-        rect_x = terrainblocks.BLOCK_IMAGES[1].get_rect(center=(ox,oy))
-        for x in range(xmin,xmax):
-            rect = rect_x.copy()
-            for y in range(ymin,ymax):
-                blocktype = self.terrain[x, y]
-                image = terrainblocks.BLOCK_IMAGES[blocktype]
-                if image is not None:
-                    # Draw image for the body
-                    screen.blit(image, rect)
-                rect.move_ip(0, -PPM)
-            rect_x.move_ip(PPM, 0)
-        # Draw box2d collision boxes of body
-        if DEBUG_GRID:
-            for b in self.bodies:
-                for fixture in b.fixtures:
-                    shape = fixture.shape
-                    vertices = [world_to_screen_coordinates(b.transform * v) for v in shape.vertices]
-                    pygame.draw.polygon(screen, red, vertices)
+
+        for mask, tiles in [(-128, terrainblocks.WALL_IMAGES), (0, terrainblocks.BLOCK_IMAGES)]:
+            rect_x = tiles[1].get_rect(center=(ox,oy))
+            for x in range(xmin,xmax):
+                rect = rect_x.copy()
+                for y in range(ymin,ymax):
+                    blocktype = self.terrain[x, y] ^ mask
+                    if blocktype > 0:
+                        image = tiles[blocktype]
+                    else:
+                        image = None
+                    if image is not None:
+                        # Draw image for the body
+                        screen.blit(image, rect)
+                    rect.move_ip(0, -PPM)
+                rect_x.move_ip(PPM, 0)
+            # Draw box2d collision boxes of body
+            if DEBUG_GRID:
+                for b in self.bodies:
+                    for fixture in b.fixtures:
+                        shape = fixture.shape
+                        vertices = [world_to_screen_coordinates(b.transform * v) for v in shape.vertices]
+                        pygame.draw.polygon(screen, red, vertices)
 
 class ParallaxBackdrop(StaticGameObject):
     def __init__(self, parallax_factor, image_path, stage_width):

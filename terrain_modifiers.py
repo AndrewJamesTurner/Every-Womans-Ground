@@ -79,7 +79,7 @@ def crater_modifier(terrain, params, seed):
 
     # Find how many tunnels will have and their x values
     num_craters = round(params['frequency'] * width)
-    crater_foci_x = [r.randint(0, width) for _ in range(num_craters)]
+    crater_foci_x = [r.randint(0, width-1) for _ in range(num_craters)]
 
     # Identify coordinates for starting hole, uniformally distributed across terrain
     for x in crater_foci_x:
@@ -105,6 +105,7 @@ def vegetation_modifier(terrain, params, seed):
     for p in params['types']:
         rr = random.Random(r.getrandbits(32))
         seedrate   = p['seedrate']
+        seedrate  *= params['seed_mod']
         root_block = p['root_block']
         root_depth = p['root_depth']
         grow_block = p['grow_block']
@@ -119,7 +120,7 @@ def vegetation_modifier(terrain, params, seed):
             roots_found = 0
             for y in reversed(range(0, height)):
                 b = terrain[x,y]
-                if b == 0:
+                if b <= 0:
                     continue
                 if b != root_block:
                     break
@@ -136,4 +137,3 @@ def water_modifier(terrain, params, seed):
     width, height = terrain.shape
     r = random.Random(seed)
     return terrain
-
