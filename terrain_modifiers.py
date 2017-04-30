@@ -79,7 +79,7 @@ def crater_modifier(terrain, params, seed):
 
     # Find how many tunnels will have and their x values
     num_craters = round(params['frequency'] * width)
-    crater_foci_x = [r.randint(0, width) for _ in range(num_craters)]
+    crater_foci_x = [r.randint(0, width-1) for _ in range(num_craters)]
 
     # Identify coordinates for starting hole, uniformally distributed across terrain
     for x in crater_foci_x:

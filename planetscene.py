@@ -73,7 +73,7 @@ class PlanetScene(GameScene):
             r = random.Random(planet_info['seed'])
             params['gravity_mean'] = planet_info['size']
             archetype = planet_info['type']
-            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.2, 2.0 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
+            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.2, 1.0 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
         else:
             print(self.seed)
             r = random.Random(self.seed)

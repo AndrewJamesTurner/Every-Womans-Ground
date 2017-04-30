@@ -122,7 +122,7 @@ def get_initial_position(terrain, x, yoffset):
     width, height = terrain.shape
     c = x+int(width/2)
     for y in reversed(range(0,height)):
-        if terrain[c, y]:
+        if terrain[c, y] > 0:
             return (x,y+yoffset)
 
 def print_terrain(terrain, chars):
