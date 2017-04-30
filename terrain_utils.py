@@ -85,6 +85,7 @@ terrain_params = {
     # Type: [ [ depth, ratio, blocktype ] ... ]
     'earth': {
         'atmos': (0.3, 0.5),
+        'softness': 1.5,
         'depth': 80,
         'ratio': 0.5,
         'base': 1,          # Rock
@@ -94,6 +95,7 @@ terrain_params = {
     },
     'rock': {
         'atmos': (0.1, 0.5),
+        'softness': 0.7,
         'depth': 80,
         'ratio': 0.7,
         'base': 1,          # Rock
@@ -104,6 +106,7 @@ terrain_params = {
     },
     'desert': {
         'atmos': (0.3, 0.9),
+        'softness': 2.5,
         'depth': 80,
         'ratio': 0.2,
         'base': 10,          # Mars
@@ -114,6 +117,7 @@ terrain_params = {
     },
     'other': {
         'atmos': (0.5, 0.9),
+        'softness': 1.8,
         'depth': 80,
         'ratio': 0.7,
         'base': 13,          # Orange Rock
@@ -123,6 +127,7 @@ terrain_params = {
     },
     'ice': {
         'atmos': (0.1, 0.5),
+        'softness': 1.2,
         'depth': 80,
         'ratio': 0.5,
         'base': 1,           # Rock

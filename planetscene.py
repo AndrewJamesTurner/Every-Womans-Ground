@@ -69,6 +69,8 @@ class PlanetScene(GameScene):
 
         params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
         params['modifier_params']['crater']['radius_mean'] = max(6.0, 3.0 / max(0.2, atmosphere))
+        params['modifier_params']['tunnel']['width_mean'] = 2.0 * tparams['softness']
+        params['modifier_params']['tunnel']['width_sd']   = 0.1 * tparams['softness']
 
         terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
         #terrain_raw = terraingen.generate_terrain_test(200, 80)
