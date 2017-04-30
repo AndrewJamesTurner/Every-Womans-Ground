@@ -3,6 +3,7 @@ import ezpygame
 from Box2D import b2World, b2PolygonShape, b2ContactListener
 
 import lander_shapes as landershapes
+import shapes
 from game import *
 from terraingen import *
 from GameScene import GameScene
@@ -51,7 +52,7 @@ class LanderScene(GameScene):
         self.world.gravity = (0, -params["gravity"])
 
         # Set camera to centre
-        set_camera_position((SCREEN_WIDTH / PPM) / 2, (SCREEN_HEIGHT / PPM) / 2)
+        set_camera_position(0, (SCREEN_HEIGHT / PPM) / 2)
 
         # Need to generate a seed
         # Need to set height and xgap based on planet info
@@ -95,8 +96,8 @@ class LanderScene(GameScene):
         polygonArray = []
 
         for index, terrainVal in enumerate(terrain):
-            x = index * xGap
-            y = terrainVal - height/2
+            x = (index - numPoints / 2) * xGap
+            y = terrainVal - height  /2
             if index > 0:
                 polygonPoints=[ [x-xGap,bottom],[x-xGap, lasty],
                                 [ x    , y ],[ x       , bottom ] ]
@@ -135,12 +136,13 @@ class LanderScene(GameScene):
             self.countDownLen = 10000
         else:
             self.lander = landershapes.Lander(self.world,
-                                          ((xGap * numPoints) / 2, landerStartHeight + (SCREEN_HEIGHT / PPM) / 2))
+                                          (0, landerStartHeight + (SCREEN_HEIGHT / PPM) / 2))
             self.countDownLen = 2000
 
 
-        self.ship = landershapes.StationarySpaceship(self.world, (
-        (xGap * numPoints) / 2 - (SCREEN_WIDTH / PPM) / 3, landerStartHeight + (3 * SCREEN_HEIGHT / PPM) / 4))
+        self.ship = landershapes.StationarySpaceship(self.world, ( -(SCREEN_WIDTH / PPM) / 3, landerStartHeight + (3 * SCREEN_HEIGHT / PPM) / 4))
+
+        self.skydrop = shapes.ParallaxBackdrop(10, os.path.join(ASSETS_PATH, 'backdrop2.jpg'), numPoints * xGap)
 
 
     def handle_event(self, event):
@@ -156,7 +158,7 @@ class LanderScene(GameScene):
         # Called once per frame, to draw to the screen
 
         screen.fill(black)
-
+        self.skydrop.draw(screen)
         self.ground.draw(screen)
         self.ship.draw(screen)
         self.lander.draw(screen)
