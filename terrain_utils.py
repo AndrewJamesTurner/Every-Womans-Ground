@@ -32,8 +32,8 @@ def destroy_circle(terrain, radius, origin):
     subset[distances <= radius] = 0
 
 default_values = {
-    'gravity_mean': -10,
-    'gravity_sd': 0.05,
+    'gravity_mean': 10,
+    'gravity_sd': 0.3,
     'modifier_params':
         {'tunnel': {
             'frequency': 0.05,
@@ -48,24 +48,25 @@ default_values = {
             'radius_sd': 2,
         },
         'vegetation': {
+            'seed_mod': 1.0,
             'types':  [
                 {   # Blue fungus
                     'grow_block':4,
-                    'seedrate':0.8,
+                    'seedrate':0.8, #TODO: Scale with environment
                     'root_block':5,
                     'root_depth':1,
                     'grow_height':1,
                 },
                 {   # Purple leaves
                     'grow_block':3,
-                    'seedrate':0.1,
+                    'seedrate':0.1, #TODO: Scale with environment
                     'root_block':4,
                     'root_depth':2,
                     'grow_height':5,
                 },
                 {   # Grass
                     'grow_block':9,
-                    'seedrate':0.9,
+                    'seedrate':0.9, #TODO: Scale with environment
                     'root_block':2,
                     'root_depth':1,
                     'grow_height':1,
@@ -83,6 +84,8 @@ default_values = {
 terrain_params = {
     # Type: [ [ depth, ratio, blocktype ] ... ]
     'earth': {
+        'atmos': (0.3, 0.5),
+        'softness': 1.5,
         'depth': 80,
         'ratio': 0.5,
         'base': 1,          # Rock
@@ -91,15 +94,19 @@ terrain_params = {
         ]
     },
     'rock': {
+        'atmos': (0.1, 0.5),
+        'softness': 0.7,
         'depth': 80,
         'ratio': 0.7,
         'base': 1,          # Rock
         'layers': [
-            [ 10, 0.3, 8 ],  # Dust
+            [ 5, 0.3, 8 ],  # Dust
             [ 16, 0.6, 7 ],  # Cobble
         ]
     },
     'desert': {
+        'atmos': (0.3, 0.9),
+        'softness': 2.5,
         'depth': 80,
         'ratio': 0.2,
         'base': 10,          # Mars
@@ -109,6 +116,8 @@ terrain_params = {
         ]
     },
     'other': {
+        'atmos': (0.5, 0.9),
+        'softness': 1.8,
         'depth': 80,
         'ratio': 0.7,
         'base': 13,          # Orange Rock
@@ -117,6 +126,8 @@ terrain_params = {
         ]
     },
     'ice': {
+        'atmos': (0.1, 0.5),
+        'softness': 1.2,
         'depth': 80,
         'ratio': 0.5,
         'base': 1,           # Rock

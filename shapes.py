@@ -122,10 +122,10 @@ class TerrainBulk(StaticGameObject):
         xmax,ymin = screen_to_world_coordinates((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         xmin += xoffset # Fix up for array
         xmax += xoffset # Fix up for array
-        xmin = max(0, math.floor(xmin))
-        ymin = max(0, math.floor(ymin))
-        xmax = min( width,  1 + math.ceil(xmax) )
-        ymax = min( height, 1 + math.ceil(ymax) )
+        xmin = max(0, math.floor(xmin - 1))
+        ymin = max(0, math.floor(ymin - 1))
+        xmax = min( width,  1 + math.ceil(xmax + 1) )
+        ymax = min( height, 1 + math.ceil(ymax + 1) )
         ox,oy = world_to_screen_coordinates((0.5 + xmin - xoffset, 0.5 + ymin))
         rect_x = terrainblocks.BLOCK_IMAGES[1].get_rect(center=(ox,oy))
         for x in range(xmin,xmax):
