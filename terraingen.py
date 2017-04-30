@@ -82,6 +82,14 @@ def generate_planet_test(seed, width, height):
 
     return terrain
 
+def generate_terrain_test(width, height):
+    # Generate a stripe test of the terrain
+    terrain = new_terrain_array(width, height)
+    layers = [ [[b],b] * width for b in length(BLOCK_DEFS) ]
+    rasterize_heightmap_layers(terrain, layers )
+
+    return terrain
+
 def get_initial_position(terrain, x):
     width, height = terrain.shape
     c = x+int(width/2)
