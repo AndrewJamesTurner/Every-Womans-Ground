@@ -19,7 +19,7 @@ to_remove = []
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=5):
+    def __init__(self, seed=2):
         super(PlanetScene, self).__init__()
         self.seed = seed
 
@@ -40,6 +40,7 @@ class PlanetScene(GameScene):
             r = random.Random(planet_info['seed'])
             params['gravity_mean'] = math.pow(  planet_info['size'], 1.5 )
             archetype = params['type']
+            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.2, 2.0 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
         else:
             print(self.seed)
             r = random.Random(self.seed)
@@ -67,6 +68,7 @@ class PlanetScene(GameScene):
         self.world = b2World(gravity=(0, -gravity), contactListener=ContactListener())
 
         params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
+        params['modifier_params']['crater']['radius_mean'] = max(6.0, 3.0 / max(0.2, atmosphere))
 
         terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500, 80)
         #terrain_raw = terraingen.generate_terrain_test(200, 80)
