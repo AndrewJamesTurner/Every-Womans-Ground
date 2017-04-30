@@ -55,27 +55,27 @@ class LanderScene(GameScene):
 
         # Need to generate a seed
         # Need to set height and xgap based on planet info
-        numPoints = 1000
+        numPoints = 100
 
 
         if self.planet_info['type'] == "rock":
             height_multi = 0.4
-            xGap = 3
+            xGap = 2
         elif self.planet_info['type'] == "earth":
-            height_multi = 0.3
-            xGap = 4
+            height_multi = 0.33
+            xGap = 2.5
         elif self.planet_info['type'] == "desert":
-            height_multi = 0.2
-            xGap = 6
+            height_multi = 0.3
+            xGap = 3
         elif self.planet_info['type'] == "gas":
-            height_multi = 0.1
-            xGap = 5
-        elif self.planet_info['type'] == "ice":
-            height_multi = 0.15
-            xGap = 6
-        elif self.planet_info['type'] == "other":
             height_multi = 0.25
-            xGap = 5
+            xGap = 4
+        elif self.planet_info['type'] == "ice":
+            height_multi = 0.4
+            xGap = 3
+        elif self.planet_info['type'] == "other":
+            height_multi = 0.33
+            xGap = 2.5
         else:
             height_multi = 0.25
 
@@ -83,34 +83,25 @@ class LanderScene(GameScene):
         #print("-----------------")
         #print(terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
         #print("-----------------")
+        terrain_seed = self.planet_info['seed'] + 117
+        height =  (SCREEN_HEIGHT / PPM) * height_multi
+        ratio  = terrain_utils.terrain_params[self.planet_info['type']]["ratio"]
 
-        terrain = generate_fractal_heightmap(self.planet_info['seed'] + 117, numPoints, int(SCREEN_HEIGHT / PPM) * height_multi, 2*terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
-
-        #print(terrain)
+        terrain = generate_fractal_heightmap(terrain_seed, numPoints, height, ratio)
 
         # polygons can't have many edges so split into separate polygons
-        starty = -100
-        pointCountDown = 10
-        startCoords = [0, starty]
-
+        bottom = -100
 
         polygonArray = []
-        polygonPoints = [startCoords]
 
         for index, terrainVal in enumerate(terrain):
-
-            polygonPoints.append([index * xGap, terrainVal])
-
-            if pointCountDown > 0:
-                pointCountDown -= 1
-            else:
-                # finish block and reset counter
-                polygonPoints.append([index * xGap, starty])
+            x = index * xGap
+            y = terrainVal - height/2
+            if index > 0:
+                polygonPoints=[ [x-xGap,bottom],[x-xGap, lasty],
+                                [ x    , y ],[ x       , bottom ] ]
                 polygonArray.append(polygonPoints)
-
-                # Use 9 here because we initialise with two values
-                pointCountDown = 9
-                polygonPoints = [[index * xGap, starty], [index * xGap, terrainVal]]
+            lasty = y
 
         # print(polygonArray)
 
