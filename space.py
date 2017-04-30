@@ -25,7 +25,6 @@ class ContactListener(b2ContactListener):
         # When landing on a planet, change to the lander scene
         if (isinstance(game_object_a, Planet) and isinstance(game_object_b, SpaceShip)) or \
                 (isinstance(game_object_a, SpaceShip) and isinstance(game_object_b, Planet)):
-            # print(conctact.fixtureB.body.userData.info)a
 
             get_space_scene().planet_info = game_object_b.info
 
@@ -34,13 +33,29 @@ class ContactListener(b2ContactListener):
 
 
         if isinstance(contact.fixtureA.body.userData, Asteroid) and not isinstance(contact.fixtureB.body.userData, Asteroid):
-
             if contact.fixtureA not in to_remove:
                 to_remove.append(contact.fixtureA)
 
         if isinstance(contact.fixtureB.body.userData, Asteroid) and not isinstance(contact.fixtureA.body.userData, Asteroid):
             if contact.fixtureB not in to_remove:
                 to_remove.append(contact.fixtureB)
+
+
+        if (isinstance(contact.fixtureB.body.userData, Sun) and isinstance(contact.fixtureA.body.userData, SpaceShip)) or (isinstance(contact.fixtureA.body.userData, Sun) and isinstance(contact.fixtureB.body.userData, SpaceShip)):
+            get_shared_values().health = 0
+
+        if (isinstance(contact.fixtureB.body.userData, SpaceShip) and not isinstance(contact.fixtureA.body.userData, Planet)) or (isinstance(contact.fixtureA.body.userData, SpaceShip) and not isinstance(contact.fixtureB.body.userData, Planet)):
+
+            velocity1 = contact.fixtureA.body.linearVelocity
+            velocity2 = contact.fixtureA.body.linearVelocity
+
+            speed1 = math.sqrt(pow(velocity1[0], 2) + pow(velocity1[0], 2))
+            speed2 = math.sqrt(pow(velocity2[0], 2) + pow(velocity2[0], 2))
+
+            speed = max(speed1, speed2)
+
+            get_shared_values().health -= speed/10
+
 
 
 class SpaceScene(GameScene):
@@ -55,6 +70,14 @@ class SpaceScene(GameScene):
 
         x_radius = self.r.randint(size, size+20)
 
+        for x in range(numBelt):
+
+            radius = self.r.randint(20, 100)
+            width = self.r.randint(5, 20)
+            dencity = self.r.randint(100, 500)
+
+            self.createAsteroidBelt(sun, radius, width, dencity)
+
         for x in range(numPlanets):
 
             size = self.r.randint(5, 15)
@@ -65,23 +88,6 @@ class SpaceScene(GameScene):
             num_moons = self.r.randint(0, 4)
 
             planet = self.createPlanet("Andy", size, ptype, sun, angle_vel, x_radius, y_radius, num_moons)
-
-
-        for x in range(numBelt):
-
-            radius = self.r.randint(20, 100)
-            width = self.r.randint(5, 20)
-            dencity = self.r.randint(100, 1000)
-
-            self.createAsteroidBelt(sun, radius, width, dencity)
-
-
-        for x in range(numAsteroids):
-            xPos = self.r.randint(10, 100)
-            yPos = self.r.randint(10, 100)
-            size = self.r.randint(1, 5)
-
-            self.createAsteroid(size, (xPos,yPos))
 
 
     def createPlanet(self, name, size, ptype, centre, angular_vel, radius_x, radius_y, num_moons):
@@ -105,10 +111,11 @@ class SpaceScene(GameScene):
             self.planets.append(planet)
 
             for i in range(num_moons):
-                radius_x = self.r.randint(size, 3*size);
+                radius_x = self.r.randint(size, 3 * size);
                 radius_y = radius_x + self.r.randint(0,6) - 3;
+                size = self.r.randint(2, size);
 
-                moon = self.createPlanet("Moon", 1, ptype, planet, 0.0005, radius_x, radius_y, 0)
+                self.createPlanet("Moon", size, ptype, planet, 0.0005, radius_x, radius_y, 0)
 
             return planet
 
@@ -121,9 +128,12 @@ class SpaceScene(GameScene):
             pos_x = centre.body.position[0] + radius * math.sin(angle) + self.r.random() * thickness
             pos_y = centre.body.position[1] + radius * math.cos(angle) + self.r.random() * thickness
 
-            bullet = AsteroidBeltBit(self.world, (pos_x, pos_y))
-
-            self.bullets.append(bullet)
+            if self.r.random() < 0.05:
+                size = self.r.randint(1, 5)
+                self.createAsteroid(size, (pos_x,pos_y))
+            else:
+                bullet = AsteroidBeltBit(self.world, (pos_x, pos_y))
+                self.bullets.append(bullet)
 
         return bullet
 
@@ -169,6 +179,7 @@ class SpaceScene(GameScene):
         self.space_ship = space_ship
 
         self.createSolarSystem(9, 2, 50, (0, 0))
+        # self.createSolarSystem(12, 3, 50, (100, 100))
 
         self.arrow_imamge = pygame.image.load("assets/arrow.png").convert_alpha()
         image_rect = self.arrow_imamge.get_rect()
@@ -346,6 +357,8 @@ class SpaceScene(GameScene):
                         self.createAsteroid(new_size, (position[0]+self.r.random()*new_size, position[1]+self.r.random()*new_size))
 
         set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
+
+        self.check_game_over()
 
 
 if __name__ == '__main__':

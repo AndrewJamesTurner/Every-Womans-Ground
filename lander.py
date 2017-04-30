@@ -188,6 +188,9 @@ class LanderScene(GameScene):
 
                 self.application.change_scene(get_planet_scene())
 
+        self.check_game_over()
+
+
 
 class ContactListener(b2ContactListener):
 

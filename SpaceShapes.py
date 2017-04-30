@@ -16,7 +16,7 @@ class SpaceShip(DynamicGameObject):
         polygon_points = [[[0.5, 0], [1, 0.8], [1,1], [0,1], [0,0.8]]]
         circle_shapes = []
         image_path = "assets/spaceship.png"
-        scale = 3/2
+        scale = 5/2
 
         density = 1
         friction = 0.3

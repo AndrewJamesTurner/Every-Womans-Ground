@@ -40,6 +40,16 @@ class GameScene(ezpygame.Scene):
         self.health_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=30,
                                   text="Health", colour=(150, 50, 50))
 
+
+    def check_game_over(self):
+
+        shared_values = get_shared_values()
+
+        if shared_values.fuel <= 0 or shared_values.health <= 0:
+            self.application.change_scene(get_game_over_scene())
+
+
+
     def draw_overlays(self, screen):
         self.fuel_bar.draw(screen, text_left=20, text_top=10, text_bar_padding=10,
                            bar_width=20, bar_length=100, bar_border_width=3,

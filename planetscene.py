@@ -137,6 +137,8 @@ class PlanetScene(GameScene):
             self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
             get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
 
+        self.check_game_over()
+
 
 
 class EnterLanderListener(b2ContactListener):
