@@ -170,8 +170,14 @@ class ParallaxBackdrop(StaticGameObject):
         # Draw image for the body
         if self.image is not None:
             f = self.parallax_factor
-            image_rect = self.image.get_rect(
-                center=(
-                    SCREEN_WIDTH /2 - PPM * game.CAMERA_POSITION[0]/f,
-                    SCREEN_HEIGHT/2 + PPM * game.CAMERA_POSITION[1]/f) )
+            if f > 0:
+                image_rect = self.image.get_rect(
+                    midbottom=(
+                        SCREEN_WIDTH/2 - PPM * game.CAMERA_POSITION[0]/f,
+                        SCREEN_HEIGHT  + PPM * game.CAMERA_POSITION[1]/f) )
+            else:
+                image_rect = self.image.get_rect(
+                    midtop=(
+                        SCREEN_WIDTH/2 - PPM * game.CAMERA_POSITION[0]/f,
+                        PPM * game.CAMERA_POSITION[1]/f) )
             screen.blit(self.image, image_rect)
