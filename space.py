@@ -147,6 +147,15 @@ class SpaceScene(GameScene):
 
         # Called once per game, when game starts
 
+
+
+
+    def on_enter(self, previous_scene):
+        # Called every time the game switches to this scene
+
+        global change_to_lander_scene
+        change_to_lander_scene = False
+
         self.planet_info = None
         self.timeSinceLastFired = 10000
         self.planets = []
@@ -154,7 +163,7 @@ class SpaceScene(GameScene):
         self.asteroids = []
         self.suns = []
 
-        self.world = b2World([0,0], contactListener=ContactListener())
+        self.world = b2World([0, 0], contactListener=ContactListener())
 
         space_ship = SpaceShip(self.world, (20, 20))
         self.space_ship = space_ship
@@ -163,17 +172,11 @@ class SpaceScene(GameScene):
 
         self.arrow_imamge = pygame.image.load("assets/arrow.png").convert_alpha()
         image_rect = self.arrow_imamge.get_rect()
-        self.arrow_imamge = pygame.transform.smoothscale(self.arrow_imamge, ( int(0.2*image_rect[2]), int(0.2*image_rect[2])))
-
+        self.arrow_imamge = pygame.transform.smoothscale(self.arrow_imamge,
+                                                         (int(0.2 * image_rect[2]), int(0.2 * image_rect[2])))
 
         width = 1000
-        self.backdrop = shapes.ParallaxBackdrop(-100, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width )
-
-
-
-    def on_enter(self, previous_scene):
-        # Called every time the game switches to this scene
-        pass
+        self.backdrop = shapes.ParallaxBackdrop(-100, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
 
 
 

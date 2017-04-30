@@ -16,6 +16,13 @@ class LanderScene(GameScene):
     def __init__(self):
         super(LanderScene, self).__init__()
 
+
+    def on_enter(self, previous_scene):
+        # Called every time the game switches to this scene
+
+        global change_to_space_scene
+        change_to_space_scene = False
+
         self.planet_info = {
             "name": "Earth",
             "size": 10,
@@ -24,52 +31,52 @@ class LanderScene(GameScene):
             "orbit_radius_y": 35,
             "orbit_angle": 0.13,
             "type": "other",
-            "orbit_centre": (0,0),
+            "orbit_centre": (0, 0),
             "seed": 6
         }
 
-        #Set countdown for landing
+        # Set countdown for landing
         self.countdown = None
 
         # Called once per game, when game starts
 
         self.world = b2World(contactListener=ContactListener())  # default gravity is (0,-10) and doSleep is True
 
-        #Set gravity depending on planet type.
+        # Set gravity depending on planet type.
         self.world.gravity = (0, -5)
 
-        #Set camera to centre
-        set_camera_position((SCREEN_WIDTH/PPM)/2,(SCREEN_HEIGHT/PPM)/2)
+        # Set camera to centre
+        set_camera_position((SCREEN_WIDTH / PPM) / 2, (SCREEN_HEIGHT / PPM) / 2)
 
-        #Need to generate a seed
-        #Need to set height and xgap based on planet info
+        # Need to generate a seed
+        # Need to set height and xgap based on planet info
         numPoints = 100
 
-        terrain = generate_fractal_heightmap(self.planet_info['seed'] +117, numPoints, int(SCREEN_HEIGHT/PPM)/4, 1)
+        terrain = generate_fractal_heightmap(self.planet_info['seed'] + 117, numPoints, int(SCREEN_HEIGHT / PPM) / 4, 1)
 
-        #polygons can't have many edges so split into separate polygons
+        # polygons can't have many edges so split into separate polygons
         starty = -100
         pointCountDown = 10
-        startCoords = [0,starty]
+        startCoords = [0, starty]
         xGap = 5
 
         polygonArray = []
         polygonPoints = [startCoords]
 
-        for index,terrainVal in enumerate(terrain):
+        for index, terrainVal in enumerate(terrain):
 
             polygonPoints.append([index * xGap, terrainVal])
 
             if pointCountDown > 0:
                 pointCountDown -= 1
             else:
-                #finish block and reset counter
+                # finish block and reset counter
                 polygonPoints.append([index * xGap, starty])
                 polygonArray.append(polygonPoints)
 
-                #Use 9 here because we initialise with two values
+                # Use 9 here because we initialise with two values
                 pointCountDown = 9
-                polygonPoints = [[index*xGap, starty], [index*xGap, terrainVal]]
+                polygonPoints = [[index * xGap, starty], [index * xGap, terrainVal]]
 
         print(polygonArray)
 
@@ -88,16 +95,12 @@ class LanderScene(GameScene):
             self.ground.colour = (224, 167, 130, 0)
         else:
             self.ground.colour = (43, 109, 49, 0)
-        #Add the lander in the middle of the ground
+        # Add the lander in the middle of the ground
         landerStartHeight = 5
-        self.lander = landershapes.Lander(self.world, ((xGap*numPoints)/2, landerStartHeight + (SCREEN_HEIGHT/PPM)/2))
-        self.ship = landershapes.StationarySpaceship(self.world, ((xGap*numPoints)/2 -(SCREEN_WIDTH/PPM)/3, landerStartHeight + (3*SCREEN_HEIGHT/PPM)/4))
-
-    def on_enter(self, previous_scene):
-        # Called every time the game switches to this scene
-
-        #     self.planet_info = get_space_scene().planet_info
-        pass
+        self.lander = landershapes.Lander(self.world,
+                                          ((xGap * numPoints) / 2, landerStartHeight + (SCREEN_HEIGHT / PPM) / 2))
+        self.ship = landershapes.StationarySpaceship(self.world, (
+        (xGap * numPoints) / 2 - (SCREEN_WIDTH / PPM) / 3, landerStartHeight + (3 * SCREEN_HEIGHT / PPM) / 4))
 
     def handle_event(self, event):
         # Called every time a pygame event is fired
