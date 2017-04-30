@@ -20,7 +20,7 @@ class WinScene(MenuScene):
         self.add_option("Quit", sys.exit, 48)
 
     def draw(self, screen):
-        screen.fill(black)
+        screen.fill((50, 100, 255))
 
         self.draw_menu_options(screen)
 
