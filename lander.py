@@ -6,6 +6,7 @@ import lander_shapes as landershapes
 from game import *
 from terraingen import *
 from GameScene import GameScene
+import terrain_utils
 
 from GameObject import *
 
@@ -24,6 +25,7 @@ class LanderScene(GameScene):
         change_to_space_scene = False
 
         #self.planet_info = get_space_scene().planet_info
+        params = terrain_utils.get_planet_params( self.planet_info["type"], self.planet_info)
 
         # print(self.planet_info)
 
@@ -47,7 +49,7 @@ class LanderScene(GameScene):
         self.world = b2World(contactListener=ContactListener())  # default gravity is (0,-10) and doSleep is True
 
         # Set gravity depending on planet type.
-        self.world.gravity = (0, -5)
+        self.world.gravity = (0, -params["gravity"])
 
         # Set camera to centre
         set_camera_position((SCREEN_WIDTH / PPM) / 2, (SCREEN_HEIGHT / PPM) / 2)
@@ -56,7 +58,32 @@ class LanderScene(GameScene):
         # Need to set height and xgap based on planet info
         numPoints = 100
 
-        terrain = generate_fractal_heightmap(self.planet_info['seed'] + 117, numPoints, int(SCREEN_HEIGHT / PPM) / 4, 1)
+
+
+
+        if self.planet_info['type'] == "rock":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "earth":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "desert":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "gas":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "ice":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "other":
+            height_multi = 0.25
+        else:
+            height_multi = 0.25
+
+
+        print("-----------------")
+        print(terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
+        print("-----------------")
+
+        terrain = generate_fractal_heightmap(self.planet_info['seed'] + 117, numPoints, int(SCREEN_HEIGHT / PPM) * height_multi, 2*terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
+
+        print(terrain)
 
         # polygons can't have many edges so split into separate polygons
         starty = -100

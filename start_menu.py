@@ -22,10 +22,11 @@ class StartMenuScene(MenuScene):
         self.title_image = title_font.render("Every Woman's Ground", True, (255, 255, 255))
 
     def draw(self, screen):
-        super(StartMenuScene, self).draw(screen)
+        screen.fill(black)
+
+        self.draw_menu_options(screen)
 
         screen.blit(self.title_image, (SCREEN_WIDTH / 2 - self.title_image.get_rect().width / 2, 100))
-
 
 if __name__ == '__main__':
     app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
