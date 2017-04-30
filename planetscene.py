@@ -41,15 +41,17 @@ class DataBox:
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07))
 
-        text = "Graverty: " + ("???" if self.gravity is None else str(self.gravity) + "m/s/s")
+        text = "Gravity: " + ("???" if self.gravity is None else str(self.gravity) + "m/s/s")
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07+line_height))
 
         text = "Water: " + ("???" if self.water is None else ("Yes" if self.water else "No"))
+
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07+2*line_height))
 
         text = "Tempurature: " + ("???" if self.tempurature is None else str(self.tempurature) + "K")
+
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.07+3*line_height))
 
@@ -103,7 +105,7 @@ class PlanetScene(GameScene):
             r = random.Random(planet_info['seed'])
             params['gravity_mean'] = planet_info['size']
             archetype = planet_info['type']
-            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.2, 1.0 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
+            params['modifier_params']['crater']['frequency'] = 0.01 + min(0.1, 0.5 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
         else:
             print(self.seed)
             r = random.Random(self.seed)
@@ -131,7 +133,7 @@ class PlanetScene(GameScene):
         self.world = b2World(gravity=(0, -gravity), contactListener=ContactListener())
 
         params['modifier_params']['vegetation']['seed_mod'] = 1.0 - abs(atmosphere - 0.5)
-        params['modifier_params']['crater']['radius_mean'] = max(6.0, 3.0 / max(0.2, atmosphere))
+        params['modifier_params']['crater']['radius_mean'] = max(6.0, 2.0 / max(0.2, atmosphere))
         params['modifier_params']['tunnel']['width_mean'] = 2.0 * tparams['softness']
         params['modifier_params']['tunnel']['width_sd']   = 0.1 * tparams['softness']
 
@@ -264,9 +266,9 @@ class PlanetScene(GameScene):
             # TODO Close to game over screen
 
         # Move left and right
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             self.person.body.ApplyForce((-constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.person.body.ApplyForce((constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
 
         if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:

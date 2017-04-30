@@ -65,11 +65,11 @@ class GameScene(ezpygame.Scene):
     """
 
     def __init__(self):
-        self.fuel_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=30,
+        self.fuel_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=25,
                                 text="Fuel", colour=(200, 200, 0))
-        self.health_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=30,
+        self.health_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=25,
                                   text="Health", colour=(150, 50, 50))
-        self.oxygen_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=30,
+        self.oxygen_bar = FillBar(font="assets/TitilliumWeb-Regular.ttf", font_size=25,
                                   text="Oxygen", colour=(50, 150, 150))
 
 
@@ -102,7 +102,7 @@ class GameScene(ezpygame.Scene):
                            bar_border_colour=(200, 200, 200),
                            bar_value=get_shared_values().fuel, bar_max_value=constants.MAX_FUEL)
 
-        self.health_bar.draw(screen, text_left=220, text_top=10, text_bar_padding=10,
+        self.health_bar.draw(screen, text_left=205, text_top=10, text_bar_padding=10,
                              bar_width=20, bar_length=100, bar_border_width=3,
                              bar_background_colour=(50, 50, 50), bar_foreground_colour=(150, 50, 50),
                              bar_border_colour=(200, 200, 200),
