@@ -44,7 +44,32 @@ class LanderScene(GameScene):
         # Need to set height and xgap based on planet info
         numPoints = 100
 
-        terrain = generate_fractal_heightmap(self.planet_info['seed'] + 117, numPoints, int(SCREEN_HEIGHT / PPM) / 4, 1)
+
+
+
+        if self.planet_info['type'] == "rock":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "earth":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "desert":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "gas":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "ice":
+            height_multi = 0.25
+        elif self.planet_info['type'] == "other":
+            height_multi = 0.25
+        else:
+            height_multi = 0.25
+
+
+        print("-----------------")
+        print(terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
+        print("-----------------")
+
+        terrain = generate_fractal_heightmap(self.planet_info['seed'] + 117, numPoints, int(SCREEN_HEIGHT / PPM) * height_multi, 2*terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
+
+        print(terrain)
 
         # polygons can't have many edges so split into separate polygons
         starty = -100
