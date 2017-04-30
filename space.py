@@ -45,9 +45,9 @@ class ContactListener(b2ContactListener):
 
 class SpaceScene(GameScene):
 
-    def createSolarSystem(self, numPlanets, numBelt, position):
+    def createSolarSystem(self, numPlanets, numBelt, numAsteroids, position):
 
-        self.r = random.Random(13)
+        self.r = random.Random(random.getrandbits(32))
 
         size = self.r.randint(20, 50)
         sun = Sun(self.world, position, size)
@@ -76,7 +76,12 @@ class SpaceScene(GameScene):
             self.createAsteroidBelt(sun, radius, width, dencity)
 
 
-        self.createAsteroid(5, (22,22))
+        for x in range(numAsteroids):
+            xPos = self.r.randint(10, 100)
+            yPos = self.r.randint(10, 100)
+            size = self.r.randint(1, 5)
+
+            self.createAsteroid(size, (xPos,yPos))
 
 
     def createPlanet(self, name, size, ptype, centre, angular_vel, radius_x, radius_y, num_moons):
@@ -154,7 +159,7 @@ class SpaceScene(GameScene):
         space_ship = SpaceShip(self.world, (20, 20))
         self.space_ship = space_ship
 
-        self.createSolarSystem(9, 2, (0, 0))
+        self.createSolarSystem(9, 2, 50, (0, 0))
 
         self.arrow_imamge = pygame.image.load("assets/arrow.png").convert_alpha()
         image_rect = self.arrow_imamge.get_rect()
@@ -232,7 +237,7 @@ class SpaceScene(GameScene):
 
 
         # print(angle(ship_position, nearest_planet_position))
-        print(nearest_planet_dist)
+        # print(nearest_planet_dist)
 
         # direction = (ship_position[0] - nearest_planet_position[0], ship_position[1] - nearest_planet_position[1])
         # aaa = math.atan2(direction[1], direction[0])
