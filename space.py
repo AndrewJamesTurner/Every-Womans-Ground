@@ -76,7 +76,7 @@ class SpaceScene(GameScene):
 
             radius = self.r.randint(20, 100)
             width = self.r.randint(5, 20)
-            dencity = self.r.randint(100, 500)
+            dencity = self.r.randint(100, 200)
 
             self.createAsteroidBelt(sun, radius, width, dencity)
             asteroidBeltRadiuseseses.append(radius)
@@ -139,7 +139,7 @@ class SpaceScene(GameScene):
             pos_x = centre.body.position[0] + radius * math.sin(angle) + self.r.random() * thickness
             pos_y = centre.body.position[1] + radius * math.cos(angle) + self.r.random() * thickness
 
-            if self.r.random() < 0.05:
+            if self.r.random() < 0.10:
                 size = self.r.randint(1, 5)
                 self.createAsteroid(size, (pos_x,pos_y))
             else:
@@ -308,6 +308,10 @@ class SpaceScene(GameScene):
         if keys[pygame.K_w] or keys[pygame.K_UP]:
             shared_values.fuel -= 1
             self.space_ship.body.ApplyLinearImpulse((xxx * power, yyy * power), self.space_ship.body.worldCenter, True)
+
+        if keys[pygame.K_e]:
+            shared_values.fuel -= 100
+            self.space_ship.body.ApplyLinearImpulse((xxx * power*10, yyy * power*10), self.space_ship.body.worldCenter, True)
 
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.space_ship.body.ApplyAngularImpulse(-spin, True)

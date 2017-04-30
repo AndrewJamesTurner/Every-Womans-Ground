@@ -19,10 +19,10 @@ to_remove = []
 
 class PlanetScene(GameScene):
 
-    def __init__(self, seed=2):
+    def __init__(self, seed=5):
         super(PlanetScene, self).__init__()
-        self.seed = seed
 
+        self.seed = seed
 
     def on_enter(self, previous_scene):
 
@@ -31,6 +31,7 @@ class PlanetScene(GameScene):
 
         # Planet defaults
         defs = terrain_utils.default_values
+
         params = defs
 
         if hasattr( get_space_scene(), 'planet_info' ):
@@ -38,8 +39,8 @@ class PlanetScene(GameScene):
             # TODO Derive planet specific parameters from the higher level values provided!
             # This will include calculations of things like tunnel frequency from number of asteroids in vicinity
             r = random.Random(planet_info['seed'])
-            params['gravity_mean'] = math.pow(  planet_info['size'], 1.5 )
-            archetype = params['type']
+            params['gravity_mean'] = planet_info['size']
+            archetype = planet_info['type']
             params['modifier_params']['crater']['frequency'] = 0.01 + min(0.2, 2.0 / (0.1 + planet_info['dist_to_asteroid_belt'] ))
         else:
             print(self.seed)
