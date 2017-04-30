@@ -21,8 +21,15 @@ class StartMenuScene(MenuScene):
         title_font = pygame.font.Font("assets/Courgette-Regular.ttf", 56)
         self.title_image = title_font.render("Every Woman's Ground", True, (255, 255, 255))
 
+        self.backdrop = pygame.image.load("assets/backdrop1.jpg").convert()
+        scale_down = 1
+        backdrop_rect = self.backdrop.get_rect()
+        self.backdrop = pygame.transform.smoothscale(self.backdrop, (int(backdrop_rect.width * scale_down), int(backdrop_rect.height * scale_down)))
+
     def draw(self, screen):
         screen.fill(black)
+
+        screen.blit(self.backdrop, (0, 0))
 
         self.draw_menu_options(screen)
 
