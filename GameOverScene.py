@@ -14,6 +14,7 @@ class GameOverScene(MenuScene):
         self.title_image = message_font.render("Game Over", True, (255, 255, 255))
 
         def new_game():
+            get_shared_values().reset()
             self.application.change_scene(get_space_scene())
 
         self.add_option("Restart Game", new_game, 48)
