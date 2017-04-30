@@ -32,15 +32,6 @@ class MenuScene(ezpygame.Scene):
         self.next_y = 0.4 * SCREEN_HEIGHT
         self.selected_idx = 0
 
-        def new_game():
-            self.application.change_scene(get_space_scene())
-
-        self.add_option("New Game", new_game, 48)
-        self.add_option("Exit", sys.exit, 48)
-
-        title_font = pygame.font.Font("assets/Courgette-Regular.ttf", 56)
-        self.title_image = title_font.render("Every Woman's Ground", True, (255, 255, 255))
-
         self.left_indicator_icon = pygame.image.load("assets/spaceship-side.png")
         scale_down = 0.4
         indicator_rect = self.left_indicator_icon.get_rect()
@@ -80,8 +71,6 @@ class MenuScene(ezpygame.Scene):
 
         screen.fill(black)
 
-        screen.blit(self.title_image, (SCREEN_WIDTH / 2 - self.title_image.get_rect().width / 2, 100))
-
         for menu_option in self.options:
             x = 0.5 * SCREEN_WIDTH
             x -= menu_option.image.get_width() * 0.5
@@ -106,7 +95,3 @@ class MenuScene(ezpygame.Scene):
         # # Box2d physics step
         # self.world.Step(DT_SCALE * dt, VELOCITY_ITERATIONS, POSITION_ITERATIONS)
         # self.world.ClearForces()
-
-if __name__ == '__main__':
-    app = ezpygame.Application(title='The Game', resolution=(SCREEN_WIDTH, SCREEN_HEIGHT), update_rate=FPS)
-    app.run(MenuScene())

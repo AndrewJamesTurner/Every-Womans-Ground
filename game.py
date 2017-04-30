@@ -40,8 +40,8 @@ game_over_scene = None
 def get_menu_scene():
     global menu_scene
     if menu_scene is None:
-        from menu import MenuScene
-        menu_scene = MenuScene()
+        from start_menu import StartMenuScene
+        menu_scene = StartMenuScene()
     return menu_scene
 
 def get_space_scene():
