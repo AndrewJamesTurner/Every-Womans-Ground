@@ -24,6 +24,19 @@ class LanderScene(GameScene):
         global change_to_space_scene
         change_to_space_scene = False
 
+        # self.planet_info = {
+        #     "name": "Earth",
+        #     "size": 10,
+        #     "angular_vel": 0.0001,
+        #     "orbit_radius_x": 30,
+        #     "orbit_radius_y": 35,
+        #     "orbit_angle": 0.13,
+        #     "type": "rock",
+        #     "orbit_centre": (0, 0),
+        #     "seed": 6,
+        #     "dist_to_asteroid_belt": 30
+        # }
+
         self.planet_info = get_space_scene().planet_info
         params = terrain_utils.get_planet_params( self.planet_info["type"], self.planet_info)
 
@@ -100,16 +113,22 @@ class LanderScene(GameScene):
         self.ground = landershapes.PlanetGround(self.world, (0, 0), polygonArray)
         if self.planet_info['type'] == "rock":
             self.ground.colour = (146, 149, 153, 0)
+            self.ground.friction = 0.4
         elif self.planet_info['type'] == "earth":
             self.ground.colour = (43, 109, 49, 0)
+            self.ground.friction = 0.3
         elif self.planet_info['type'] == "desert":
             self.ground.colour = (198, 87, 65, 0)
+            self.ground.friction = 0.25
         elif self.planet_info['type'] == "gas":
             self.ground.colour = (105, 181, 188, 0)
+            self.ground.friction = -0.5
         elif self.planet_info['type'] == "ice":
             self.ground.colour = (142, 239, 249, 0)
+            self.ground.friction = -1.2
         elif self.planet_info['type'] == "other":
             self.ground.colour = (224, 167, 130, 0)
+            self.ground.friction = -0.2
         else:
             self.ground.colour = (43, 109, 49, 0)
         # Add the lander in the middle of the ground
