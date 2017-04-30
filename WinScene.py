@@ -20,7 +20,9 @@ class WinScene(MenuScene):
         self.add_option("Quit", sys.exit, 48)
 
     def draw(self, screen):
-        super(WinScene, self).draw(screen)
+        screen.fill(black)
+
+        self.draw_menu_options(screen)
 
         screen.blit(self.title_image, (SCREEN_WIDTH / 2 - self.title_image.get_rect().width / 2, 100))
 

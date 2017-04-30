@@ -66,10 +66,7 @@ class MenuScene(ezpygame.Scene):
                 self.selected_idx += adjustment
                 self.selected_idx %= len(self.options)
 
-    def draw(self, screen):
-        # Called once per frame, to draw to the screen
-
-        screen.fill(black)
+    def draw_menu_options(self, screen):
 
         for menu_option in self.options:
             x = 0.5 * SCREEN_WIDTH
