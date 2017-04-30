@@ -36,6 +36,8 @@ if we need physics pybox2d (very simple good 2D physics engine, uses box2d under
 * `pip install box2d`
 * `sudo pip3 install -r requirements.txt`
 
+NB: swig must be version 3
+
 ### install windows ###
 * Install Visual C++ build tools from `http://landinghub.visualstudio.com/visual-cpp-build-tools`
 * Install SWIG from `http://www.swig.org/`
