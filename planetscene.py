@@ -43,7 +43,7 @@ class PlanetScene(GameScene):
         gravity = r.gauss(params['gravity_mean'], params['gravity_sd'])
         self.world = b2World(gravity=(0, gravity), contactListener=EnterLanderListener())
 
-        terrain_raw = terraingen.generate_planet_test(r.random(), 500, 80)
+        terrain_raw = terraingen.generate_planet_terrain(r.random(), 'earth', 500, 80)
         #terrain_raw = terraingen.generate_terrain_test(200, 80)
 
         # Terrain Modifiers

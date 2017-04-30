@@ -21,7 +21,7 @@ BLOCK_DEFS = [
     ['rock.png',     0xff8000ff, 1.0,     0.2,      0.3], # 13 Orange Rock
     ['moss.png',     0xff30c0ff, 1.0,     0.3,      1.1], # 14 Pink sponge
     ['granular.png', 0xc0d0ffff, 1.0,     0.2,      0.1], # 15 Permafrost
-    ['leaves.png',   0xffffffff, 1.0,     0.5,      0.0], # 16 Snow
+    ['smooth.png',   0xffffffff, 1.0,     0.5,      0.0], # 16 Snow
 ]
 
 BLOCK_IMAGES = []

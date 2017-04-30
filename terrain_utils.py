@@ -6,8 +6,8 @@ import numpy as np
 def get_modifiers():
     """
     Obtains a reference to all the modifier functions.
-    
-    :return: 
+
+    :return:
     """
     return [terrain_modifiers.__dict__.get(a) for a in dir(terrain_modifiers) if isinstance(getattr(terrain_modifiers, a, None), types.FunctionType)]
 
@@ -15,7 +15,7 @@ def get_modifiers():
 def destroy_circle(terrain, radius, origin):
     """
     Sets terrain within a certain radius of a point to 0.
-    
+
     :param terrain: 2D numpy array of the entire terrain.
     :param radius: Int.
     :param origin: Tuple of (x, y)
@@ -49,24 +49,81 @@ default_values = {
         },
         'vegetation': {
             'types':  [
-                {
+                {   # Blue fungus
+                    'grow_block':4,
                     'seedrate':0.8,
                     'root_block':5,
                     'root_depth':1,
-                    'grow_block':4,
-                    'grow_height':1
+                    'grow_height':1,
                 },
-                {
+                {   # Purple leaves
+                    'grow_block':3,
                     'seedrate':0.1,
                     'root_block':4,
                     'root_depth':2,
-                    'grow_block':3,
-                    'grow_height':5
-                }
+                    'grow_height':5,
+                },
+                {   # Grass
+                    'grow_block':9,
+                    'seedrate':0.9,
+                    'root_block':2,
+                    'root_depth':1,
+                    'grow_height':1,
+                },
             ]
         },
         'water': {
             # ...
         }
     }
+}
+
+# Ground "ground level"
+# Layers are "dig depth"
+terrain_params = {
+    # Type: [ [ depth, ratio, blocktype ] ... ]
+    'earth': {
+        'depth': 80,
+        'ratio': 0.5,
+        'base': 1,          # Rock
+        'layers': [
+            [ 10, 0.6, 2 ],  # Dirt
+        ]
+    },
+    'rock': {
+        'depth': 80,
+        'ratio': 0.7,
+        'base': 1,          # Rock
+        'layers': [
+            [ 10, 0.3, 8 ],  # Dust
+            [ 16, 0.6, 7 ],  # Cobble
+        ]
+    },
+    'desert': {
+        'depth': 80,
+        'ratio': 0.2,
+        'base': 10,          # Mars
+        'layers': [
+            [ 10, 0.2, 12 ], # Sand
+            [ 16, 0.4, 11 ], # Red Sand
+        ]
+    },
+    'other': {
+        'depth': 80,
+        'ratio': 0.7,
+        'base': 13,          # Orange Rock
+        'layers': [
+            [ 10, 0.9, 14 ],  # Pink Sponge
+        ]
+    },
+    'ice': {
+        'depth': 80,
+        'ratio': 0.5,
+        'base': 1,           # Rock
+        'layers': [
+            [ 15, 0.3, 16 ], # Snow
+            [ 10, 0.2, 5  ], # Ice
+            [ 16, 0.8, 15 ], # Permafrost
+        ]
+    },
 }
