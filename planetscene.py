@@ -89,7 +89,9 @@ class PlanetScene(GameScene):
         halfwidth = SCREEN_WIDTH / 2 / PPM
         cam_right = width/2 - halfwidth
         cam_left  = -cam_right
+        cam_base  = SCREEN_HEIGHT / 2 / PPM
         cam_x = min(cam_right, max(cam_left, cam_x))
+        cam_y = max(cam_base, cam_y)
 
         set_camera_position(cam_x, cam_y)
 
