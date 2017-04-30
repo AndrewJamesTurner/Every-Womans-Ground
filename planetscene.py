@@ -5,6 +5,7 @@ import lander_shapes
 import terrain_utils
 import terraingen
 import constants
+import numpy as np
 
 import shapes
 from game import *
@@ -160,6 +161,7 @@ class PlanetScene(GameScene):
 
         terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500)
 
+
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
         for modifier in modifiers:
@@ -280,15 +282,30 @@ class PlanetScene(GameScene):
 
         keys = pygame.key.get_pressed()
 
-        # Move left and right
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            self.person.body.ApplyForce((-constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            self.person.body.ApplyForce((constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
+        #print("On ground: {}".format(self.on_ground()))
 
-        if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:
-            self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
-            get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
+        # Move left and right and jump
+        if self.on_ground():
+            if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+                self.person.body.ApplyForce((-constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
+            if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+                self.person.body.ApplyForce((constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
+
+            if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:
+                self.person.body.ApplyLinearImpulse((0, constants.PLAYER_JUMP_THRUST), self.person.body.position, True)
+
+        # Jetpack
+        else:
+            if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+                self.person.body.ApplyLinearImpulse((-constants.JETPACK_THRUST, 0), self.person.body.position, True)
+                get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
+            if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+                self.person.body.ApplyLinearImpulse((constants.JETPACK_THRUST, 0), self.person.body.position, True)
+                get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
+
+            if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:
+                self.person.body.ApplyLinearImpulse((0, constants.JETPACK_THRUST), self.person.body.position, True)
+                get_shared_values().fuel -= constants.JETPACK_FUEL_USAGE
 
         if keys[pygame.K_ESCAPE]:
             exit()
@@ -328,6 +345,18 @@ class PlanetScene(GameScene):
 
         if self.data_box.is_new_home():
             self.application.change_scene(get_win_scene())
+
+    def on_ground(self):
+        """
+        Returns a boolean whether the person is on the ground or not.
+        :return: 
+        """
+        pass
+        x = int(self.person.body.position.x)
+        y = int(self.person.body.position.y - 1)
+        ground_at_this_val = self.terrain.terrain[x + int(self.terrain.terrain.shape[0]/2), y]
+
+        return ground_at_this_val >= 1
 
 
 
