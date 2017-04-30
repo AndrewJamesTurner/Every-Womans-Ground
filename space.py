@@ -47,29 +47,31 @@ class SpaceScene(GameScene):
 
     def createSolarSystem(self, numPlanets, numBelt, position):
 
-        size = random.randint(20, 50)
+        self.r = random.Random(13)
+
+        size = self.r.randint(20, 50)
         sun = Sun(self.world, position, size)
         self.suns.append(sun)
 
-        x_radius = random.randint(size, size+20)
+        x_radius = self.r.randint(size, size+20)
 
         for x in range(numPlanets):
 
-            size = random.randint(5, 15)
-            ptype = random.choice(ptypes)
-            x_radius += random.randint(5, 20)
-            angle_vel = random.randint(10, 100) * 0.01 / (x_radius * x_radius)
-            y_radius = x_radius + random.randint(0,  x_radius) - x_radius/2;
-            num_moons = random.randint(0, 4)
+            size = self.r.randint(5, 15)
+            ptype = self.r.choice(ptypes)
+            x_radius += self.r.randint(5, 20)
+            angle_vel = self.r.randint(10, 100) * 0.01 / (x_radius * x_radius)
+            y_radius = x_radius + self.r.randint(0,  x_radius) - x_radius/2;
+            num_moons = self.r.randint(0, 4)
 
             planet = self.createPlanet("Andy", size, ptype, sun, angle_vel, x_radius, y_radius, num_moons)
 
 
         for x in range(numBelt):
 
-            radius = random.randint(10, 100)
-            width = random.randint(5, 20)
-            dencity = random.randint(100, 1000)
+            radius = self.r.randint(10, 100)
+            width = self.r.randint(5, 20)
+            dencity = self.r.randint(100, 1000)
 
             self.createAsteroidBelt(sun, radius, width, dencity)
 
@@ -87,9 +89,10 @@ class SpaceScene(GameScene):
                 "angular_vel": angular_vel,
                 "orbit_radius_x": radius_x,
                 "orbit_radius_y": radius_y,
-                "orbit_angle": random.random() * 2 * math.pi,
+                "orbit_angle": self.r.random() * 2 * math.pi,
                 "type": ptype,
                 "orbit_centre": centre,
+                "seed": self.r.getrandbits(32),
             }
 
             planet.info = info
@@ -97,8 +100,8 @@ class SpaceScene(GameScene):
             self.planets.append(planet)
 
             for i in range(num_moons):
-                radius_x = random.randint(size, 3*size);
-                radius_y = radius_x + random.randint(0,6) - 3;
+                radius_x = self.r.randint(size, 3*size);
+                radius_y = radius_x + self.r.randint(0,6) - 3;
 
                 moon = self.createPlanet("Moon", 1, ptype, planet, 0.0005, radius_x, radius_y, 0)
 
@@ -110,8 +113,8 @@ class SpaceScene(GameScene):
         for index in range(dencity):
 
             angle = 2 * math.pi * index / dencity
-            pos_x = centre.body.position[0] + radius * math.sin(angle) + random.random() * thickness
-            pos_y = centre.body.position[1] + radius * math.cos(angle) + random.random() * thickness
+            pos_x = centre.body.position[0] + radius * math.sin(angle) + self.r.random() * thickness
+            pos_y = centre.body.position[1] + radius * math.cos(angle) + self.r.random() * thickness
 
             bullet = AsteroidBeltBit(self.world, (pos_x, pos_y))
 
@@ -331,8 +334,8 @@ class SpaceScene(GameScene):
 
                     for i in range(new_size):
 
-                        self.createAsteroid(new_size, (position[0]+random.random()*new_size, position[1]+random.random()*new_size))
-                        self.createAsteroid(new_size, (position[0]+random.random()*new_size, position[1]+random.random()*new_size))
+                        self.createAsteroid(new_size, (position[0]+self.r.random()*new_size, position[1]+self.r.random()*new_size))
+                        self.createAsteroid(new_size, (position[0]+self.r.random()*new_size, position[1]+self.r.random()*new_size))
 
         set_camera_position(self.space_ship.body.position[0], self.space_ship.body.position[1])
 
