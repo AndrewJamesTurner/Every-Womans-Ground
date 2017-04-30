@@ -16,7 +16,7 @@ class LanderScene(GameScene):
 
     def __init__(self):
         super(LanderScene, self).__init__()
-
+        self.savedLanderPos = None
 
     def on_enter(self, previous_scene):
         # Called every time the game switches to this scene
@@ -31,9 +31,9 @@ class LanderScene(GameScene):
         #     "orbit_radius_x": 30,
         #     "orbit_radius_y": 35,
         #     "orbit_angle": 0.13,
-        #     "type": "rock",
+        #     "type": "ice",
         #     "orbit_centre": (0, 0),
-        #     "seed": 6,
+        #     "seed": 53,
         #     "dist_to_asteroid_belt": 30
         # }
 
@@ -55,23 +55,27 @@ class LanderScene(GameScene):
 
         # Need to generate a seed
         # Need to set height and xgap based on planet info
-        numPoints = 100
-
-
+        numPoints = 1000
 
 
         if self.planet_info['type'] == "rock":
-            height_multi = 0.25
+            height_multi = 0.4
+            xGap = 3
         elif self.planet_info['type'] == "earth":
-            height_multi = 0.25
+            height_multi = 0.3
+            xGap = 4
         elif self.planet_info['type'] == "desert":
-            height_multi = 0.25
+            height_multi = 0.2
+            xGap = 6
         elif self.planet_info['type'] == "gas":
-            height_multi = 0.25
+            height_multi = 0.1
+            xGap = 5
         elif self.planet_info['type'] == "ice":
-            height_multi = 0.25
+            height_multi = 0.15
+            xGap = 6
         elif self.planet_info['type'] == "other":
             height_multi = 0.25
+            xGap = 5
         else:
             height_multi = 0.25
 
@@ -88,7 +92,7 @@ class LanderScene(GameScene):
         starty = -100
         pointCountDown = 10
         startCoords = [0, starty]
-        xGap = 5
+
 
         polygonArray = []
         polygonPoints = [startCoords]
@@ -133,7 +137,12 @@ class LanderScene(GameScene):
             self.ground.colour = (43, 109, 49, 0)
         # Add the lander in the middle of the ground
         landerStartHeight = 5
-        self.lander = landershapes.Lander(self.world,
+
+
+        if previous_scene == get_planet_scene():
+            self.lander = landershapes.Lander(self.world, self.savedLanderPos)
+        else:
+            self.lander = landershapes.Lander(self.world,
                                           ((xGap * numPoints) / 2, landerStartHeight + (SCREEN_HEIGHT / PPM) / 2))
         self.ship = landershapes.StationarySpaceship(self.world, (
         (xGap * numPoints) / 2 - (SCREEN_WIDTH / PPM) / 3, landerStartHeight + (3 * SCREEN_HEIGHT / PPM) / 4))
@@ -183,7 +192,7 @@ class LanderScene(GameScene):
         xxx = -math.sin(self.lander.body.angle)
         yyy = math.cos(self.lander.body.angle)
 
-        power = 1
+        power = 1.2
 
         landerPos = self.lander.body.position
 
@@ -224,6 +233,8 @@ class LanderScene(GameScene):
         if self.countdown != None:
             if self.countdown >= countDownLen:
                 print('landed')
+
+                self.savedLanderPos = (self.lander.body.position[0], self.lander.body.position[1])
 
                 self.application.change_scene(get_planet_scene())
 
