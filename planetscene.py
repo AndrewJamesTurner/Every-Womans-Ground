@@ -37,11 +37,11 @@ class DataBox:
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05))
 
-        text = "graverty: 9.9 m/s/s"
+        text = "Gravity: 9.9 m/s/s"
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05+line_height))
 
-        text = "distace from sun: 4"
+        text = "Distace from sun: 4"
         text_surface = self.font.render(text, True, black)
         screen.blit(text_surface, (SCREEN_WIDTH-width*1.05, SCREEN_HEIGHT-health*1.05+2*line_height))
 
@@ -232,9 +232,9 @@ class PlanetScene(GameScene):
             # TODO Close to game over screen
 
         # Move left and right
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             self.person.body.ApplyForce((-constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.person.body.ApplyForce((constants.PLAYER_MOVEMENT_SPEED, 0), self.person.body.position, True)
 
         if keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]:
