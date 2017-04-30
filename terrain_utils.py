@@ -93,8 +93,8 @@ default_values = {
     'gravity_mean': 10,
     'gravity_sd': 0.3,
     'water_prob': 0.15,
-    'oxygen_mean': 20,
-    'oxygen_sd': 2,
+    'oxygen_mean': 0.20,
+    'oxygen_sd': 0.02,
     'temp_mean': 300,
     'temp_sd': 4,
     'modifier_params':
@@ -155,10 +155,10 @@ terrain_params = {
         'ratio': 0.5,
         'base': 1,          # Rock
         'mean_temp': 300,
-        'mean_oxygen': 0.23,
-        'sd_oxygen': 0.02,
+        'mean_oxygen': 0.21,
+        'sd_oxygen': 0.04,
         'mean_water': 0.8,
-        'sd_water': 0.05,
+        'sd_water': 0.07,
         'layers': [
             [ 10, 0.6, 2 ],  # Dirt
         ]
