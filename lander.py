@@ -55,7 +55,7 @@ class LanderScene(GameScene):
 
         # Need to generate a seed
         # Need to set height and xgap based on planet info
-        numPoints = 100
+        numPoints = 200
 
 
         if self.planet_info['type'] == "rock":
@@ -202,7 +202,7 @@ class LanderScene(GameScene):
             get_shared_values().fuel -= 0.25;
 
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.lander.body.ApplyLinearImpulse((xxx * power, yyy * power), landerPos, True)
+            self.lander.body.ApplyLinearImpulse((xxx * power, yyy * power), (landerPos[0]+0.005, landerPos[1]), True)
             get_shared_values().fuel -= 1;
 
         if keys[pygame.K_ESCAPE]:
