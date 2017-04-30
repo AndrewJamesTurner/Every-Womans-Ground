@@ -31,11 +31,11 @@ class PlanetScene(GameScene):
         defs = terrain_utils.default_values
 
         r = random.Random(self.seed)
-        planet_info = get_space_scene().planet_info
+        #planet_info = get_space_scene().planet_info
 
         # TODO Derive planet specific parameters from the higher level values provided!
         # This will include calculations of things like tunnel frequency from number of asteroids in vicinity
-        params = defs if planet_info is None else defs
+        params = defs #if planet_info is None else defs
 
         # Called once per game, when game starts
         terrainblocks.make_blocks(1.0)
@@ -44,6 +44,7 @@ class PlanetScene(GameScene):
         self.world = b2World(gravity=(0, gravity), contactListener=EnterLanderListener())
 
         terrain_raw = terraingen.generate_planet_test(r.random(), 500, 80)
+        #terrain_raw = terraingen.generate_terrain_test(200, 80)
 
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()

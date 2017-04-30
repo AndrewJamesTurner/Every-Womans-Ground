@@ -4,6 +4,7 @@ import numpy
 import shapes
 
 from game import *
+import terrainblocks
 
 def generate_fractal_heightmap(seed, length, max_height, ratio):
     elements = 2 ** math.ceil( math.log( length - 1, 2) ) + 1
@@ -85,7 +86,7 @@ def generate_planet_test(seed, width, height):
 def generate_terrain_test(width, height):
     # Generate a stripe test of the terrain
     terrain = new_terrain_array(width, height)
-    layers = [ [[b],b] * width for b in length(BLOCK_DEFS) ]
+    layers = [ [[b] * width,b] for b in range(0,len(terrainblocks.BLOCK_DEFS)) ]
     rasterize_heightmap_layers(terrain, layers )
 
     return terrain
