@@ -231,7 +231,7 @@ class LanderScene(GameScene):
             if self.countdown >= self.countDownLen:
                 #print('landed')
 
-                self.savedLanderPos = (self.lander.body.position[0], self.lander.body.position[1])
+                self.savedLanderPos = (self.lander.body.position[0], self.lander.body.position[1]+0.2)
 
                 self.application.change_scene(get_planet_scene())
 
