@@ -84,8 +84,6 @@ def get_planet_params(archetype, planet_info):
     params['water_prob'] = min(0, max(1, r_params.gauss(tparams['mean_water'], tparams['sd_water'])))
     params['water'] = r_params.uniform(0, 1) < water_prob
 
-    #print("Temp: {}\tOxygen: {}\tWater prob: {}\tWater: {}".format(params['temp'], params['oxygen'], water_prob, params['water']))
-
     return params
 
 

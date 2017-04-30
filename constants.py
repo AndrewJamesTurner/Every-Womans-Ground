@@ -34,17 +34,9 @@ grey = 160, 160, 160, 0
 green = 0, 255, 0, 0
 
 PLAYER_MOVEMENT_SPEED = 30
-PLAYER_JUMP_SPEED = 15
+PLAYER_JUMP_THRUST = 5
 JETPACK_THRUST = 1.0
 JETPACK_FUEL_USAGE = 3
 
 ASSETS_PATH = 'assets'
 BIOMES = ['desert', 'water', 'ice', 'lava', 'forest']
-
-# TODO Fill in other textures
-BIOME_TEXTURES = {0: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  1: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  2: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  3: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  4: os.path.join(ASSETS_PATH, 'terrain_block_blue.png'),
-                  }
