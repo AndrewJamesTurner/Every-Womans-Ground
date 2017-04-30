@@ -166,8 +166,8 @@ class PlanetScene(GameScene):
         self.person.body.linearDamping = 0.3
 
         width, height = self.terrain.terrain.shape
-        self.backdrop = shapes.ParallaxBackdrop(10, os.path.join(ASSETS_PATH, 'planets', archetype + '.png'), width)
-        self.skydrop = shapes.ParallaxBackdrop(-20, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
+        self.backdrop = shapes.ParallaxBackdrop(5, os.path.join(ASSETS_PATH, 'planets', archetype + '.png'), width)
+        self.skydrop = shapes.ParallaxBackdrop(-15, os.path.join(ASSETS_PATH, 'backdrop1.jpg'), width)
 
         # TODO Debugging
         self.person_init = init_pos
