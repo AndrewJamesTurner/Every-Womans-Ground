@@ -69,7 +69,7 @@ class SpaceScene(GameScene):
 
         for x in range(numBelt):
 
-            radius = self.r.randint(10, 100)
+            radius = self.r.randint(20, 100)
             width = self.r.randint(5, 20)
             dencity = self.r.randint(100, 1000)
 
