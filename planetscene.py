@@ -349,12 +349,18 @@ class PlanetScene(GameScene):
     def on_ground(self):
         """
         Returns a boolean whether the person is on the ground or not.
-        :return: 
+        :return:
         """
         pass
-        x = int(self.person.body.position.x)
-        y = int(self.person.body.position.y - 1)
-        ground_at_this_val = self.terrain.terrain[x + int(self.terrain.terrain.shape[0]/2), y]
+        x = int(self.person.body.position.x) - 1
+        y = int(self.person.body.position.y) - 1
+
+        width, height = self.terrain.terrain.shape
+
+        x = min(x, width)
+        y = min(y, height)
+
+        ground_at_this_val = self.terrain.terrain[x + int(self.terrain.terrain.shape[0]/2), y - 1]
 
         return ground_at_this_val >= 1
 
