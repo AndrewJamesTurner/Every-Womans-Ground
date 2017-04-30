@@ -9,7 +9,7 @@ import random
 import shapes
 
 
-ptypes = ["rock", "earth", "desert", "gas", "other"]
+ptypes = ["rock", "earth", "desert", "gas", "other", "ice"]
 FIRE_TIMEOUT = 200
 to_remove = []
 
@@ -179,7 +179,7 @@ class SpaceScene(GameScene):
 
         screen.fill(black)
 
-        self.backdrop.draw(screen)
+        # self.backdrop.draw(screen)
 
 
         self.space_ship.draw(screen)

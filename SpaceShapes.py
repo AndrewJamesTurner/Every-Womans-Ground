@@ -128,6 +128,10 @@ class Planet(StaticGameObject):
             "assets/oddPlanet.png",
         ]
 
+        ice_images = [
+            "assets/uranus.png",
+        ]
+
         gas_images = [
             "assets/planet.png",
             "assets/uranus.png",
@@ -142,6 +146,8 @@ class Planet(StaticGameObject):
             image_path = random.choice(desert_images)
         elif ptype == "gas":
             image_path = random.choice(gas_images)
+        elif ptype == "ice":
+            image_path = random.choice(ice_images)
         else:
             image_path = random.choice(other_images)
 
