@@ -82,7 +82,7 @@ class SpaceScene(GameScene):
             asteroidBeltRadiuseseses.append(radius)
 
         for x in range(numPlanets):
-
+            # TODO: Weight some of the parameters based on ptype
             size = self.r.randint(5, 15)
             ptype = self.r.choice(ptypes)
             x_radius += self.r.randint(5, 20)
@@ -124,8 +124,9 @@ class SpaceScene(GameScene):
                 radius_x = self.r.randint(size, 3 * size);
                 radius_y = radius_x + self.r.randint(0,6) - 3;
                 size = self.r.randint(2, size);
-
-                self.createPlanet("Moon", size, ptype, planet, 0.0005, radius_x, radius_y, 0, dist_to_asteroid_belt)
+                # TODO: Randomly choose mtype based on ptype using some weighting system
+                mtype=ptype
+                self.createPlanet("Moon", size, mtype, planet, 0.0005, radius_x, radius_y, 0, dist_to_asteroid_belt)
 
             return planet
 
