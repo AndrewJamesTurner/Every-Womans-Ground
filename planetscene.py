@@ -144,7 +144,7 @@ class PlanetScene(GameScene):
             planet_info = None
 
         # Called once per game, when game starts
-        terrainblocks.make_blocks(1.0)
+        terrainblocks.make_blocks()
 
         terrain_seed = r.getrandbits(32)
         modifier_seed = r.getrandbits(32)
