@@ -54,50 +54,36 @@ class LanderScene(GameScene):
         # Set camera to centre
         set_camera_position(0, (SCREEN_HEIGHT / PPM) / 2)
 
-        # Need to generate a seed
-        # Need to set height and xgap based on planet info
-        numPoints = 200
+        # Match values to zoomed-in scale
+        planet_lander_scale = 3.0
+        numPoints = 32
 
-
-        if self.planet_info['type'] == "rock":
-            height_multi = 0.4
-            xGap = 2
-        elif self.planet_info['type'] == "earth":
-            height_multi = 0.33
-            xGap = 2.5
-        elif self.planet_info['type'] == "desert":
-            height_multi = 0.3
-            xGap = 3
-        elif self.planet_info['type'] == "gas":
-            height_multi = 0.25
-            xGap = 4
-        elif self.planet_info['type'] == "ice":
-            height_multi = 0.4
-            xGap = 3
-        elif self.planet_info['type'] == "other":
-            height_multi = 0.33
-            xGap = 2.5
-        else:
-            height_multi = 0.25
-
+        # There are 500 points in the planet view
+        xGap = 500 / numPoints / planet_lander_scale
+        height_multi = 1 / planet_lander_scale
 
         #print("-----------------")
         #print(terrain_utils.terrain_params[self.planet_info['type']]["ratio"])
         #print("-----------------")
-        terrain_seed = self.planet_info['seed'] + 117
-        height =  (SCREEN_HEIGHT / PPM) * height_multi
-        ratio  = terrain_utils.terrain_params[self.planet_info['type']]["ratio"]
 
-        terrain = generate_fractal_heightmap(terrain_seed, numPoints, height, ratio)
+        # Use the same randomizer as the on-planet gen to get the same terrain
+        r = random.Random(self.planet_info['seed'])
+        terrain_seed = r.getrandbits(32)
+        r = random.Random(terrain_seed)
+        seed_groundbase = r.getrandbits(32)
+
+        tparams = terrain_utils.terrain_params[self.planet_info['type']]
+        height = tparams['depth'] * height_multi
+        terrain = generate_fractal_heightmap(seed_groundbase, numPoints, height, tparams['ratio'])
 
         # polygons can't have many edges so split into separate polygons
-        bottom = -100
+        bottom = -(SCREEN_HEIGHT / PPM)
 
         polygonArray = []
 
         for index, terrainVal in enumerate(terrain):
             x = (index - numPoints / 2) * xGap
-            y = terrainVal - height  /2
+            y = terrainVal
             if index > 0:
                 polygonPoints=[ [x-xGap,bottom],[x-xGap, lasty],
                                 [ x    , y ],[ x       , bottom ] ]
@@ -109,26 +95,38 @@ class LanderScene(GameScene):
         self.ground = landershapes.PlanetGround(self.world, (0, 0), polygonArray)
         if self.planet_info['type'] == "rock":
             self.ground.colour = (146, 149, 153, 0)
-            self.ground.friction = 0.4
+            friction    = 0.4
+            restitution = 0.1
         elif self.planet_info['type'] == "earth":
             self.ground.colour = (43, 109, 49, 0)
-            self.ground.friction = 0.3
+            friction    = 0.4
+            restitution = 0.4
         elif self.planet_info['type'] == "desert":
             self.ground.colour = (198, 87, 65, 0)
-            self.ground.friction = 0.25
+            friction    = 0.3
+            restitution = 0.2
         elif self.planet_info['type'] == "gas":
             self.ground.colour = (105, 181, 188, 0)
-            self.ground.friction = -0.5
+            friction = 0.1
+            restitution = 0.2
         elif self.planet_info['type'] == "ice":
             self.ground.colour = (142, 239, 249, 0)
-            self.ground.friction = -1.2
+            friction    = 0.01
+            restitution = 0.1
         elif self.planet_info['type'] == "other":
             self.ground.colour = (224, 167, 130, 0)
-            self.ground.friction = -0.2
+            friction = 0.3
+            restitution = 1.1
         else:
             self.ground.colour = (43, 109, 49, 0)
+            friction    = 1.0
+            restitution = 0.0
+
+        self.ground.body.friction = friction
+        self.ground.body.restitution = restitution
+
         # Add the lander in the middle of the ground
-        landerStartHeight = 5
+        landerStartHeight = max(terrain) + 2
 
 
         if previous_scene == get_planet_scene():
@@ -138,6 +136,8 @@ class LanderScene(GameScene):
             self.lander = landershapes.Lander(self.world,
                                           (0, landerStartHeight + (SCREEN_HEIGHT / PPM) / 2))
             self.countDownLen = 2000
+
+        self.lander.body.angularDamping = 0.2
 
 
         self.ship = landershapes.StationarySpaceship(self.world, ( -(SCREEN_WIDTH / PPM) / 3, landerStartHeight + (3 * SCREEN_HEIGHT / PPM) / 4))
@@ -197,10 +197,10 @@ class LanderScene(GameScene):
         # Processing keyboard input here gives one event per key press
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.lander.body.angle += 0.01
+            self.lander.body.angle += 0.02
             get_shared_values().fuel -= 0.25;
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.lander.body.angle -= 0.01
+            self.lander.body.angle -= 0.02
             get_shared_values().fuel -= 0.25;
 
         if keys[pygame.K_UP] or keys[pygame.K_w]:
@@ -232,7 +232,6 @@ class LanderScene(GameScene):
                 #print('landed')
 
                 self.savedLanderPos = (self.lander.body.position[0], self.lander.body.position[1]+0.2)
-
                 self.application.change_scene(get_planet_scene())
 
         self.check_game_over()

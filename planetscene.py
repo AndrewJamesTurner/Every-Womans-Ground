@@ -159,7 +159,6 @@ class PlanetScene(GameScene):
 
         terrain_raw = terraingen.generate_planet_terrain(terrain_seed, archetype, 500)
 
-
         # Terrain Modifiers
         modifiers = terrain_utils.get_modifiers()
         for modifier in modifiers:
@@ -168,8 +167,21 @@ class PlanetScene(GameScene):
                                    # Get modifier specific params
                                    modifier_seed)
 
-        init_pos = terraingen.get_initial_position(terrain_raw, 10, 2)
-        init_lander = terraingen.get_initial_position(terrain_raw, -10, 5)
+        # Tie things together
+        if get_lander_scene().savedLanderPos:
+            x_home = round( get_lander_scene().savedLanderPos[0] * 3.0 )
+        else:
+            x_home = 0
+
+        print( x_home )
+
+        if x_home < 0:
+            offset = 10
+        else:
+            offset = -10
+
+        init_pos = terraingen.get_initial_position(terrain_raw, x_home + offset, 2)
+        init_lander = terraingen.get_initial_position(terrain_raw, x_home, 6)
 
         self.terrain = shapes.TerrainBulk(self.world, terrain_raw)
         width, height = self.terrain.terrain.shape
