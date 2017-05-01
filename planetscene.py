@@ -173,8 +173,6 @@ class PlanetScene(GameScene):
         else:
             x_home = 0
 
-        print( x_home )
-
         if x_home < 0:
             offset = 10
         else:
