@@ -27,6 +27,7 @@ To fix this, you'll need to install Box2D from source as follows:
 
 * `cd <somedir>`
 * `git clone https://github.com/pybox2d/pybox2d`
+* `cd pybox2d`
 * `python setup.py build`
 * `python setup.py install`
 
